@@ -1,0 +1,57 @@
+# listen on all interfaces...
+agentAddress udp:161,udp6:[::1]:161
+
+#view   systemonly  included   .1.3.6.1.2.1.1
+#view   systemonly  included   .1.3.6.1.2.1.25.1
+
+rouser authOnlyUser
+rouser internalUser
+
+#
+# -V systemonly
+rocommunity <%= @community %> localhost
+<% snmpacl.each do |snmphost| -%>
+rocommunity <%= @community %> <%= snmphost %>
+<% end -%>
+
+
+sysLocation    <%= @location %>
+sysContact     noc@emfcamp.org
+sysName	       <%= @fqdn %>
+sysServices    72
+
+
+# 10% free on all disks
+includeAllDisks  10%
+
+#
+# where are we sending traps
+#
+<% if @trapsink %>
+trapsink <%= @trapsink %> <%= @community %>
+<% end %>
+# trapsink localhost <%= @community %>
+
+# iquerySecName   internalUser       
+# rouser          internalUser
+#
+# linkUpDownNotifications  yes
+# defaultMonitors          yes
+# 
+
+#
+# agentx stuff.
+#
+master          agentx
+master		yes
+
+#
+# DNS resolvers
+#
+extend  .1.3.6.1.3.1983.1.1 cache_hits /bin/cat /usr/local/etc/unbound/statistics/cache_hits
+extend  .1.3.6.1.3.1983.1.2 memory_usage /bin/cat /usr/local/etc/unbound/statistics/memory_usage
+extend  .1.3.6.1.3.1983.1.3 queues_by_type /bin/cat /usr/local/etc/unbound/statistics/queues_by_type
+extend  .1.3.6.1.3.1983.1.4 answers_to_queries /bin/cat /usr/local/etc/unbound/statistics/answers_to_queries
+extend  .1.3.6.1.3.1983.1.5 histogram /bin/cat /usr/local/etc/unbound/statistics/histogram
+extend  .1.3.6.1.3.1983.1.6 queues_by_flags /bin/cat /usr/local/etc/unbound/statistics/queues_by_flags
+extend  .1.3.6.1.3.1983.1.7 requestlist /bin/cat /usr/local/etc/unbound/statistics/requestlist

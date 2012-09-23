@@ -1,0 +1,17 @@
+# 
+#
+# *** Managed by puppet ***
+# 
+# 
+
+Defaults	env_reset
+
+
+root	ALL=(ALL) ALL
+
+%sudo ALL=(ALL) ALL
+
+nat	ALL = NOPASSWD: ALL
+jasper	ALL = NOPASSWD: ALL
+david	ALL = NOPASSWD: ALL
+will	ALL = NOPASSWD: ALL
