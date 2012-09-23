@@ -1,0 +1,13 @@
+$ORIGIN .
+$TTL 86400      ; 1 day
+229.45.94.in-addr.arpa IN SOA  ns1.emfcamp.org hostmaster.emfcamp.org (
+                                1343497611 ; serial
+                                900        ; refresh (15 minutes)
+                                600        ; retry (10 minutes)
+                                86400      ; expire (1 day)
+                                3600       ; minimum (1 hour)
+                                )
+                        NS      ns1.emfcamp.org.
+			NS	monstrosity.pointless.net.
+
+$ORIGIN 229.45.94.in-addr.arpa.

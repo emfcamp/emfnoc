@@ -1,0 +1,32 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; bsqmk.emfcamp.org.
+
+$TTL    1h
+$ORIGIN bsqmk.emfcamp.org.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+oob.rt1	IN	A	46.249.195.254
+ge-0-3-0.rt1	IN	A	46.249.197.86
+ge-0-1.sw1	IN	A	94.45.224.73
+ge-0-1.sw1	IN	AAAA	2001:67c:20a1:EEEE:1000::73
+dragon	IN	A	94.45.224.74
+ge-0-2.sw2	IN	A	94.45.224.81
+ge-0-2.sw2	IN	AAAA	2001:67c:20a1:EEEE:1001::81
+ubnt	IN	A	94.45.224.82
+ge-0-1-0.rt1	IN	A	94.45.226.2
+ge-0-2-0.rt1	IN	A	94.45.226.5
+ge-0-3-0.sw1	IN	A	94.45.226.6
+tun0.rt1	IN	A	94.45.226.73
+tun0.rt1	IN	AAAA	2001:67c:20a1:EEEE:19::73
+rt1	IN	A	94.45.227.2
+sw1	IN	A	94.45.227.3

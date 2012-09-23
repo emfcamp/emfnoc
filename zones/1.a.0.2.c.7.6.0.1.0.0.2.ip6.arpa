@@ -1,0 +1,13 @@
+$ORIGIN .
+1.a.0.2.c.7.6.0.1.0.0.2.ip6.arpa IN SOA  ns1.emfcamp.org. hostmaster.emfcamp.org. (
+                                1343497611 ; serial
+                                16384      ; refresh (4 hours 33 minutes 4 seconds)
+                                2048       ; retry (34 minutes 8 seconds)
+                                1209600    ; expire (2 weeks)
+                                86400      ; minimum (1 day)
+                                )
+$TTL 3600
+                        NS      ns1.emfcamp.org.
+                        NS      monstrosity.pointless.net.
+
+$ORIGIN 1.a.0.2.c.7.6.0.1.0.0.2.ip6.arpa.

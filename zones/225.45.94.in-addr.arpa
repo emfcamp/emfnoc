@@ -1,0 +1,87 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; 225.45.94.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 225.45.94.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+1	PTR	vl-2.swnoc1.ppmk.emfcamp.org.
+4	PTR	pdu-a.ppmk.emfcamp.org.
+5	PTR	pdu-b.ppmk.emfcamp.org.
+6	PTR	emu.ppmk.emfcamp.org.
+7	PTR	beasty-pdu.ppmk.emfcamp.org.
+8	PTR	beasty-ipmi.ppmk.emfcamp.org.
+9	PTR	dualpdu.ppmk.emfcamp.org.
+33	PTR	vl-3.swnoc2.ppmk.emfcamp.org.
+34	PTR	shells.ppmk.emfcamp.org.
+65	PTR	fa-1-0-48.swbar1.ppmk.emfcamp.org.
+66	PTR	till.ppmk.emfcamp.org.
+129	PTR	vl-1.swvans1.ppmk.emfcamp.org.
+130	PTR	solarnanode.ppmk.emfcamp.org.
+193	PTR	vl-14-hsrp.ppmk.emfcamp.org.
+194	PTR	vl-14.swcore1.ppmk.emfcamp.org.
+195	PTR	vl-14.swcore2.ppmk.emfcamp.org.
+197	PTR	streaming1.ppmk.emfcamp.org.
+198	PTR	streaming2.ppmk.emfcamp.org.
+225	PTR	resolver2.ppmk.emfcamp.org.
+140	PTR	vans1-225-140.ppmk.emfcamp.org.
+141	PTR	vans1-225-141.ppmk.emfcamp.org.
+142	PTR	vans1-225-142.ppmk.emfcamp.org.
+143	PTR	vans1-225-143.ppmk.emfcamp.org.
+144	PTR	vans1-225-144.ppmk.emfcamp.org.
+145	PTR	vans1-225-145.ppmk.emfcamp.org.
+146	PTR	vans1-225-146.ppmk.emfcamp.org.
+147	PTR	vans1-225-147.ppmk.emfcamp.org.
+148	PTR	vans1-225-148.ppmk.emfcamp.org.
+149	PTR	vans1-225-149.ppmk.emfcamp.org.
+150	PTR	vans1-225-150.ppmk.emfcamp.org.
+151	PTR	vans1-225-151.ppmk.emfcamp.org.
+152	PTR	vans1-225-152.ppmk.emfcamp.org.
+153	PTR	vans1-225-153.ppmk.emfcamp.org.
+154	PTR	vans1-225-154.ppmk.emfcamp.org.
+155	PTR	vans1-225-155.ppmk.emfcamp.org.
+156	PTR	vans1-225-156.ppmk.emfcamp.org.
+157	PTR	vans1-225-157.ppmk.emfcamp.org.
+158	PTR	vans1-225-158.ppmk.emfcamp.org.
+159	PTR	vans1-225-159.ppmk.emfcamp.org.
+160	PTR	vans1-225-160.ppmk.emfcamp.org.
+161	PTR	vans1-225-161.ppmk.emfcamp.org.
+162	PTR	vans1-225-162.ppmk.emfcamp.org.
+163	PTR	vans1-225-163.ppmk.emfcamp.org.
+164	PTR	vans1-225-164.ppmk.emfcamp.org.
+165	PTR	vans1-225-165.ppmk.emfcamp.org.
+166	PTR	vans1-225-166.ppmk.emfcamp.org.
+167	PTR	vans1-225-167.ppmk.emfcamp.org.
+168	PTR	vans1-225-168.ppmk.emfcamp.org.
+169	PTR	vans1-225-169.ppmk.emfcamp.org.
+170	PTR	vans1-225-170.ppmk.emfcamp.org.
+171	PTR	vans1-225-171.ppmk.emfcamp.org.
+172	PTR	vans1-225-172.ppmk.emfcamp.org.
+173	PTR	vans1-225-173.ppmk.emfcamp.org.
+174	PTR	vans1-225-174.ppmk.emfcamp.org.
+175	PTR	vans1-225-175.ppmk.emfcamp.org.
+176	PTR	vans1-225-176.ppmk.emfcamp.org.
+177	PTR	vans1-225-177.ppmk.emfcamp.org.
+178	PTR	vans1-225-178.ppmk.emfcamp.org.
+179	PTR	vans1-225-179.ppmk.emfcamp.org.
+180	PTR	vans1-225-180.ppmk.emfcamp.org.
+181	PTR	vans1-225-181.ppmk.emfcamp.org.
+182	PTR	vans1-225-182.ppmk.emfcamp.org.
+183	PTR	vans1-225-183.ppmk.emfcamp.org.
+184	PTR	vans1-225-184.ppmk.emfcamp.org.
+185	PTR	vans1-225-185.ppmk.emfcamp.org.
+186	PTR	vans1-225-186.ppmk.emfcamp.org.
+187	PTR	vans1-225-187.ppmk.emfcamp.org.
+188	PTR	vans1-225-188.ppmk.emfcamp.org.
+189	PTR	vans1-225-189.ppmk.emfcamp.org.
+190	PTR	vans1-225-190.ppmk.emfcamp.org.

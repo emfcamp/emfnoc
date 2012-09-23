@@ -1,0 +1,58 @@
+$TTL    1h
+$ORIGIN emfcamp.org.
+@   IN  SOA ns1.emfcamp.org.    hostmaster. (
+            2012091300 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+     IN      NS  ns1
+     IN      NS  a.authns.bitfolk.com.
+     IN      NS  b.authns.bitfolk.com.
+     IN      NS  c.authns.bitfolk.com.
+
+     IN      MX 10 gauss
+
+	IN  A       85.119.82.36
+	IN  AAAA    2001:ba8:1f1:f298::2
+
+; site verification for russ
+	IN  TXT		google-site-verification=AFfkI0MPI8sSM0a5Gpxk7qT-fFgM4kwgiXseiigc7ig
+
+www	IN  A       85.119.82.36
+www	IN  AAAA    2001:ba8:1f1:f298::2
+wiki	IN  A       85.119.82.36
+wiki	IN  AAAA    2001:ba8:1f1:f298::2
+ns1	IN  A       85.119.82.36
+ns1	IN  AAAA    2001:ba8:1f1:f298::2
+gauss	IN  A       85.119.82.36
+gauss	IN  AAAA    2001:ba8:1f1:f298::2
+sms	IN  A       77.73.149.95
+stats	IN  CNAME   host3-virt.uk.sargasso.net.
+
+blog    IN  CNAME   domains.tumblr.com.
+
+pentabarf IN  A 85.119.82.36
+
+streaming	IN	CNAME	streaming.split
+
+minecraft IN 	CNAME shells.ppmk
+beasty	  IN	CNAME shells.ppmk
+
+$TTL 1h
+lists	IN	A	91.209.244.43
+lists	IN	AAAA	2001:470:1f09:1caf::1
+lists	IN	MX 10 monstrosity.pointless.net.
+	IN	TXT	"v=spf1 ip4:91.209.244.43 ip6:2001:470:1f09:1caf::1 ~all"
+$TTL 1h
+
+thdo	IN	NS	ns1.emfcamp.org.
+	IN	NS	monstrosity.pointless.net.
+bsqmk	IN	NS	ns1.emfcamp.org.
+	IN	NS	monstrosity.pointless.net.
+ppmk	IN	NS	ns1.emfcamp.org.
+	IN	NS	monstrosity.pointless.net.
+split	IN	NS	ns1.emfcamp.org.
+	IN	NS	monstrosity.pointless.net.

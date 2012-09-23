@@ -1,0 +1,20 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; thdo.emfcamp.org.
+
+$TTL    1h
+$ORIGIN thdo.emfcamp.org.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+oob.rt1	IN	A	195.177.252.220
+ge-0-1-0.rt1	IN	A	94.45.226.1
+rt1	IN	A	94.45.227.1

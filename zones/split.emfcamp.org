@@ -1,0 +1,23 @@
+
+; This zone is used for hosts that should resolve differently inside the camp.
+
+; This version of the file is the EXTERNAL version of this zone.
+
+; The internal version is on resolver[1,2].ppmk.emfcamp.org in /etc/nsd3/zones
+
+$TTL    1h
+$ORIGIN split.emfcamp.org.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            2012082201 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+streaming	IN	A	213.138.100.75
+streaming	IN	AAAA	2001:41c8:51:4b:feff:ff:fe00:8ca
+

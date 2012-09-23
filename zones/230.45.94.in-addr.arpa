@@ -1,0 +1,21 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; 230.45.94.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 230.45.94.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+1	PTR	vl-16-hsrp.ppmk.ppmk.emfcamp.org.
+2	PTR	vl-16.swcore1.ppmk.ppmk.emfcamp.org.
+3	PTR	vl-16.swcore2.ppmk.ppmk.emfcamp.org.
+10	PTR	harrier.ppmk.emfcamp.org.

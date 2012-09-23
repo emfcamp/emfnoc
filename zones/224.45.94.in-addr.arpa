@@ -1,0 +1,113 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; 224.45.94.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 224.45.94.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+1	PTR	vl-10-hsrp.ppmk.emfcamp.org.
+2	PTR	vl-10.swcore1.ppmk.emfcamp.org.
+3	PTR	vl-10.swcore2.ppmk.emfcamp.org.
+5	PTR	deadend.ppmk.emfcamp.org.
+9	PTR	ntp.ppmk.emfcamp.org.
+10	PTR	mgmt.ppmk.emfcamp.org.
+11	PTR	cacti.ppmk.emfcamp.org.
+12	PTR	icinga.ppmk.emfcamp.org.
+13	PTR	spacefed.ppmk.emfcamp.org.
+14	PTR	vcsa.ppmk.emfcamp.org.
+15	PTR	host0.ppmk.emfcamp.org.
+16	PTR	host1.ppmk.emfcamp.org.
+17	PTR	host2.ppmk.emfcamp.org.
+18	PTR	host3.ppmk.emfcamp.org.
+19	PTR	stats.ppmk.emfcamp.org.
+20	PTR	sms.ppmk.emfcamp.org.
+33	PTR	vl-11-hsrp.ppmk.emfcamp.org.
+34	PTR	vl-11.swcore1.ppmk.emfcamp.org.
+35	PTR	vl-11.swcore2.ppmk.emfcamp.org.
+73	PTR	ge-0-1.sw1.bsqmk.emfcamp.org.
+74	PTR	dragon.bsqmk.emfcamp.org.
+75	PTR	dragon.ppmk.emfcamp.org.
+76	PTR	ge-1-0-2.swcore2.ppmk.emfcamp.org.
+81	PTR	ge-0-2.sw2.bsqmk.emfcamp.org.
+82	PTR	ubnt.bsqmk.emfcamp.org.
+83	PTR	ubnt.ppmk.emfcamp.org.
+84	PTR	ge-1-0-2.swcore1.ppmk.emfcamp.org.
+97	PTR	vl-12-hsrp.ppmk.emfcamp.org.
+98	PTR	vl-12.swcore1.ppmk.emfcamp.org.
+99	PTR	vl-12.swcore2.ppmk.emfcamp.org.
+100	PTR	wlc1.ppmk.emfcamp.org.
+101	PTR	wlc1apmgr.ppmk.emfcamp.org.
+102	PTR	wlc2.ppmk.emfcamp.org.
+103	PTR	wlc2apmgr.ppmk.emfcamp.org.
+104	PTR	wcs.ppmk.emfcamp.org.
+129	PTR	vl-1.swnoc1.ppmk.emfcamp.org.
+193	PTR	vl-13-hsrp.ppmk.emfcamp.org.
+194	PTR	vl-13.swcore1.ppmk.emfcamp.org.
+195	PTR	vl-13.swcore2.ppmk.emfcamp.org.
+196	PTR	dhcp1.ppmk.emfcamp.org.
+224	PTR	resolver1.ppmk.emfcamp.org.
+135	PTR	noc1-224-135.ppmk.emfcamp.org.
+136	PTR	noc1-224-136.ppmk.emfcamp.org.
+137	PTR	noc1-224-137.ppmk.emfcamp.org.
+138	PTR	noc1-224-138.ppmk.emfcamp.org.
+139	PTR	noc1-224-139.ppmk.emfcamp.org.
+140	PTR	noc1-224-140.ppmk.emfcamp.org.
+141	PTR	noc1-224-141.ppmk.emfcamp.org.
+142	PTR	noc1-224-142.ppmk.emfcamp.org.
+143	PTR	noc1-224-143.ppmk.emfcamp.org.
+144	PTR	noc1-224-144.ppmk.emfcamp.org.
+145	PTR	noc1-224-145.ppmk.emfcamp.org.
+146	PTR	noc1-224-146.ppmk.emfcamp.org.
+147	PTR	noc1-224-147.ppmk.emfcamp.org.
+148	PTR	noc1-224-148.ppmk.emfcamp.org.
+149	PTR	noc1-224-149.ppmk.emfcamp.org.
+150	PTR	noc1-224-150.ppmk.emfcamp.org.
+151	PTR	noc1-224-151.ppmk.emfcamp.org.
+152	PTR	noc1-224-152.ppmk.emfcamp.org.
+153	PTR	noc1-224-153.ppmk.emfcamp.org.
+154	PTR	noc1-224-154.ppmk.emfcamp.org.
+155	PTR	noc1-224-155.ppmk.emfcamp.org.
+156	PTR	noc1-224-156.ppmk.emfcamp.org.
+157	PTR	noc1-224-157.ppmk.emfcamp.org.
+158	PTR	noc1-224-158.ppmk.emfcamp.org.
+159	PTR	noc1-224-159.ppmk.emfcamp.org.
+160	PTR	noc1-224-160.ppmk.emfcamp.org.
+161	PTR	noc1-224-161.ppmk.emfcamp.org.
+162	PTR	noc1-224-162.ppmk.emfcamp.org.
+163	PTR	noc1-224-163.ppmk.emfcamp.org.
+164	PTR	noc1-224-164.ppmk.emfcamp.org.
+165	PTR	noc1-224-165.ppmk.emfcamp.org.
+166	PTR	noc1-224-166.ppmk.emfcamp.org.
+167	PTR	noc1-224-167.ppmk.emfcamp.org.
+168	PTR	noc1-224-168.ppmk.emfcamp.org.
+169	PTR	noc1-224-169.ppmk.emfcamp.org.
+170	PTR	noc1-224-170.ppmk.emfcamp.org.
+171	PTR	noc1-224-171.ppmk.emfcamp.org.
+172	PTR	noc1-224-172.ppmk.emfcamp.org.
+173	PTR	noc1-224-173.ppmk.emfcamp.org.
+174	PTR	noc1-224-174.ppmk.emfcamp.org.
+175	PTR	noc1-224-175.ppmk.emfcamp.org.
+176	PTR	noc1-224-176.ppmk.emfcamp.org.
+177	PTR	noc1-224-177.ppmk.emfcamp.org.
+178	PTR	noc1-224-178.ppmk.emfcamp.org.
+179	PTR	noc1-224-179.ppmk.emfcamp.org.
+180	PTR	noc1-224-180.ppmk.emfcamp.org.
+181	PTR	noc1-224-181.ppmk.emfcamp.org.
+182	PTR	noc1-224-182.ppmk.emfcamp.org.
+183	PTR	noc1-224-183.ppmk.emfcamp.org.
+184	PTR	noc1-224-184.ppmk.emfcamp.org.
+185	PTR	noc1-224-185.ppmk.emfcamp.org.
+186	PTR	noc1-224-186.ppmk.emfcamp.org.
+187	PTR	noc1-224-187.ppmk.emfcamp.org.
+188	PTR	noc1-224-188.ppmk.emfcamp.org.
+189	PTR	noc1-224-189.ppmk.emfcamp.org.

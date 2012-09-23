@@ -1,0 +1,38 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; 227.45.94.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 227.45.94.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+1	PTR	rt1.thdo.emfcamp.org.
+2	PTR	rt1.bsqmk.emfcamp.org.
+3	PTR	sw1.bsqmk.emfcamp.org.
+4	PTR	swcore1.ppmk.emfcamp.org.
+5	PTR	swcore2.ppmk.emfcamp.org.
+6	PTR	swnoc1.ppmk.emfcamp.org.
+7	PTR	swstagea1.ppmk.emfcamp.org.
+8	PTR	swhalfway1.ppmk.emfcamp.org.
+9	PTR	swbar1.ppmk.emfcamp.org.
+10	PTR	console1.ppmk.emfcamp.org.
+11	PTR	swhackcenter1.ppmk.emfcamp.org.
+12	PTR	swstageb1.ppmk.emfcamp.org.
+13	PTR	swhq1.ppmk.emfcamp.org.
+14	PTR	swgate1.ppmk.emfcamp.org.
+15	PTR	swvans1.ppmk.emfcamp.org.
+16	PTR	swcampa1.ppmk.emfcamp.org.
+17	PTR	swcampa2.ppmk.emfcamp.org.
+18	PTR	swcampb1.ppmk.emfcamp.org.
+19	PTR	swcampb2.ppmk.emfcamp.org.
+20	PTR	swcampc1.ppmk.emfcamp.org.
+21	PTR	swcampd1.ppmk.emfcamp.org.

@@ -1,0 +1,71 @@
+
+; zone file built by gen-zones.py from EMF2012 Google Spreadsheet
+; 226.45.94.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 226.45.94.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (
+            1346463233 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  monstrosity.pointless.net.
+
+1	PTR	ge-0-1-0.rt1.thdo.emfcamp.org.
+2	PTR	ge-0-1-0.rt1.bsqmk.emfcamp.org.
+5	PTR	ge-0-2-0.rt1.bsqmk.emfcamp.org.
+6	PTR	ge-0-3-0.sw1.bsqmk.emfcamp.org.
+13	PTR	vl-9.swcore1.ppmk.emfcamp.org.
+14	PTR	vl-9.swcore2.ppmk.emfcamp.org.
+17	PTR	ge-1-0-3.swcore1.ppmk.emfcamp.org.
+18	PTR	ge-1-0-1.swnoc1.ppmk.emfcamp.org.
+21	PTR	ge-1-0-3.swcore2.ppmk.emfcamp.org.
+22	PTR	ge-1-0-2.swnoc1.ppmk.emfcamp.org.
+25	PTR	ge-1-0-1.swcore1.ppmk.emfcamp.org.
+26	PTR	ge-1-0-1.swstagea1.ppmk.emfcamp.org.
+29	PTR	ge-1-0-1.swcore2.ppmk.emfcamp.org.
+30	PTR	ge-1-0-2.swstagea1.ppmk.emfcamp.org.
+33	PTR	ge-1-0-3.swstagea1.ppmk.emfcamp.org.
+34	PTR	ge-1-0-1.swhalfway1.ppmk.emfcamp.org.
+37	PTR	ge-1-0-2.swhalfway1.ppmk.emfcamp.org.
+38	PTR	ge-1-0-1.swbar1.ppmk.emfcamp.org.
+41	PTR	ge-1-0-7.swcore1.ppmk.emfcamp.org.
+42	PTR	fa-0-0.console1.ppmk.emfcamp.org.
+45	PTR	ge-1-0-7.swcore2.ppmk.emfcamp.org.
+46	PTR	fa-0-1.console1.ppmk.emfcamp.org.
+49	PTR	ge-1-0-8.swcore2.ppmk.emfcamp.org.
+50	PTR	ge-1-0-1.swhackcenter1.ppmk.emfcamp.org.
+53	PTR	ge-1-0-2.swhackcenter1.ppmk.emfcamp.org.
+54	PTR	ge-1-0-1.swhq1.ppmk.emfcamp.org.
+57	PTR	ge-1-0-2.swhq1.ppmk.emfcamp.org.
+58	PTR	ge-1-0-1.swstageb1.ppmk.emfcamp.org.
+61	PTR	ge-1-0-2.swstageb1.ppmk.emfcamp.org.
+62	PTR	ge-1-0-1.swgate1.ppmk.emfcamp.org.
+65	PTR	ge-1-0-2.swgate1.ppmk.emfcamp.org.
+66	PTR	ge-1-0-8.swcore1.ppmk.emfcamp.org.
+69	PTR	ge-1-0-2.swgate1.ppmk.emfcamp.org.
+70	PTR	ge-1-0-8.swvans1.ppmk.emfcamp.org.
+73	PTR	tun0.rt1.bsqmk.emfcamp.org.
+74	PTR	tun0.console1.ppmk.emfcamp.org.
+77	PTR	ge-1-0-9.swcore1.ppmk.emfcamp.org.
+78	PTR	ge-1-0-3.swcampa1.ppmk.emfcamp.org.
+81	PTR	ge-1-0-9.swcore2.ppmk.emfcamp.org.
+82	PTR	ge-1-0-4.swcampa1.ppmk.emfcamp.org.
+85	PTR	ge-1-0-2.swcampa1.ppmk.emfcamp.org.
+86	PTR	ge-1-0-1.swcampa2.ppmk.emfcamp.org.
+89	PTR	ge-1-0-2.swcampa2.ppmk.emfcamp.org.
+90	PTR	ge-1-0-1.swcampb2.ppmk.emfcamp.org.
+93	PTR	ge-1-0-2.swcampb2.ppmk.emfcamp.org.
+94	PTR	ge-1-0-1.swcampb1.ppmk.emfcamp.org.
+97	PTR	ge-1-0-2.swcampb2.ppmk.emfcamp.org.
+98	PTR	ge-1-0-1.swcampc1.ppmk.emfcamp.org.
+101	PTR	ge-1-0-2.swcampc2.ppmk.emfcamp.org.
+102	PTR	ge-1-0-1.swcampd1.ppmk.emfcamp.org.
+105	PTR	ge-1-0-2.swcampd1.ppmk.emfcamp.org.
+106	PTR	ge-1-0-1.swcampa1.ppmk.emfcamp.org.
+109	PTR	ge-1-0-3.swcampd1.ppmk.emfcamp.org.
+110	PTR	ge-1-0-4.swhalfway1.ppmk.emfcamp.org.
