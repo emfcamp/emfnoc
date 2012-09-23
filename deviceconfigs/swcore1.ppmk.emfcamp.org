@@ -1,0 +1,421 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: WS-C3750G-24TS-1U - a WS-C3750G-24TS-1U router
+!CPU: PowerPC405
+!
+!Memory: main 131072K
+!Model revision number           : C0
+!Model number                    : WS-C3750G-24TS-S1U
+!Motherboard assembly number     : 73-9637-08
+!Motherboard serial number       : FOC09431GWX
+!Motherboard revision number     : A0
+!Power supply part number        : 341-0098-01
+!Power supply serial number      : AZS094105EU
+!
+!Processor ID: FOC0943Y0QU
+!
+!Image: Software: C3750-IPSERVICESK9-M, 12.2(55)SE5, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 09-Feb-12 18:59 by prod_rel_team
+!Image: flash:c3750-ipservicesk9-mz.122-55.SE5.bin
+!
+!BOOTLDR: Version 12.2(44)SE5, RELEASE SOFTWARE (fc1)
+!
+!BootFlash: BOOT path-list      : flash:c3750-ipservicesk9-mz.122-55.SE5.bin
+!BootFlash: Config file         : flash:/config.text
+!BootFlash: Private Config file : flash:/private-config.text
+!BootFlash: Enable Break        : no
+!BootFlash: Manual Boot         : no
+!BootFlash: HELPER path-list    : 
+!BootFlash: Auto upgrade        : yes
+!BootFlash: Auto upgrade path   : 
+!BootFlash: NVRAM/Config file
+!BootFlash:       buffer size:   524288
+!BootFlash: Timeout for Config
+!BootFlash:           Download:    0 seconds
+!BootFlash: Config Download 
+!BootFlash:        via DHCP:       disabled (next boot: disabled)
+!
+!
+config-register 0xF
+!
+version 12.2
+no service pad
+service timestamps debug uptime
+service timestamps log uptime
+no service password-encryption
+!
+hostname swcore1.ppmk
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+switch 1 provision ws-c3750g-24ts-1u
+system mtu routing 1500
+no ip source-route
+ip routing
+no ip domain-lookup
+ip domain-name emfcamp.org
+!
+ip multicast-routing distributed
+ipv6 unicast-routing
+!
+crypto pki trustpoint TP-self-signed-4191964032
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-4191964032
+ revocation-check none
+ rsakeypair TP-self-signed-4191964032
+!
+crypto pki certificate chain TP-self-signed-4191964032
+ certificate self-signed 01
+  30820250 308201B9 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 34313931 39363430 3332301E 170D3933 30333031 30303032 
+  33325A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D34 31393139 
+  36343033 3230819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100A467 94464A24 0A038101 32BBF39A 4D617D30 DB4FB0A6 0562D7DD 4C08D028 
+  31408F58 7BBBA8FC C6FF8366 E9981DE8 CDA1AB41 B0E8E740 15076645 A9B9DC3E 
+  3719E125 1D7AE274 3C6A0DAC CC32D72A 98864E8C ABA089B9 0D8F54DA 644A6865 
+  93686582 5E957661 15FB9242 903938B0 09F3CF55 699EE316 C5AF1FA6 5E8E1F99 
+  17EF0203 010001A3 78307630 0F060355 1D130101 FF040530 030101FF 30230603 
+  551D1104 1C301A82 18737763 6F726531 2E70706D 6B2E656D 6663616D 702E6F72 
+  67301F06 03551D23 04183016 80143FE4 15033B9D BE17252F 92AD7268 7B3F8372 
+  84ED301D 0603551D 0E041604 143FE415 033B9DBE 17252F92 AD72687B 3F837284 
+  ED300D06 092A8648 86F70D01 01040500 03818100 2F46ED0F AB5E3287 93278032 
+  7187E750 963D1C78 BED74C67 A424572E B2404BF9 3162499C 7BA775F9 8163F961 
+  B8E186FA 2D7CD2C9 D6FDB8FD 71690108 871F261D 6A5D0FD3 0A4FB634 F8F38A98 
+  24D5EEC9 2679983B 4010EE7B 0BD5001F DB57C8A7 12E58BEA 0D51E1C0 A75FA8FA 
+  F3085A72 8D8AFEC3 F8308FF7 3C769C7B ED95C289
+  quit
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh version 2
+!
+interface Loopback0
+ ip address 94.45.227.4 255.255.255.255
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:FFFF::4/128
+ ipv6 ospf 1 area 0
+!
+interface Port-channel1
+ description swcore1_to_swcore2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/1
+ description To_SWSTAGEA1.PPMK_Gi1/0/1
+ no switchport
+ ip address 94.45.226.25 255.255.255.252
+ ip pim sparse-mode
+ ip ospf cost 10
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:7::25/112
+ ipv6 ospf cost 10
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/2
+ description To_SW1.BSQMK_Ubiquiti
+ no switchport
+ ip address 94.45.224.84 255.255.255.248
+ ip pim sparse-mode
+ ip ospf cost 100
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:1001::84/112
+ ipv6 ospf cost 100
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/3
+ description To_SWNOC1.PPMK_Gi1/0/1
+ no switchport
+ ip address 94.45.226.17 255.255.255.252
+ ip pim sparse-mode
+ ip ospf cost 10
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:5::17/112
+ ipv6 ospf cost 10
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/4
+ description vmware_trunk1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,12-14
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/5
+ description WLC1_Port1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 11,12,15-17
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/6
+ description WLC2_Port1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 11,12,15-17
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/7
+ description To_CONSOLE1.PPMK_Fa0/0
+ no switchport
+ ip address 94.45.226.41 255.255.255.252
+ ip pim sparse-mode
+ ip ospf cost 200
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:11::41/112
+ ipv6 ospf cost 200
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/8
+ description To_SWGATE1.PPMK_Gi1/0/2
+ no switchport
+ ip address 94.45.226.66 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:17::66/112
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/9
+ description To_SWCAMPA1.PPMK_Gi1/0/3
+ no switchport
+ ip address 94.45.226.77 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:20::77/112
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/10
+ description kvmhost1_eth0
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,12-14
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/11
+ description kvmhost2_eth0
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,12-14
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/12
+ description kvmhost3_eth0
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,12-14
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/13
+ shutdown
+!
+interface GigabitEthernet1/0/14
+ shutdown
+!
+interface GigabitEthernet1/0/15
+ shutdown
+!
+interface GigabitEthernet1/0/16
+ shutdown
+!
+interface GigabitEthernet1/0/17
+ shutdown
+!
+interface GigabitEthernet1/0/18
+ shutdown
+!
+interface GigabitEthernet1/0/19
+ shutdown
+!
+interface GigabitEthernet1/0/20
+ shutdown
+!
+interface GigabitEthernet1/0/21
+ shutdown
+!
+interface GigabitEthernet1/0/22
+ shutdown
+!
+interface GigabitEthernet1/0/23
+ description etherchannel to swcore2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface GigabitEthernet1/0/24
+ description etherchannel to swcore2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface GigabitEthernet1/0/25
+!
+interface GigabitEthernet1/0/26
+!
+interface GigabitEthernet1/0/27
+!
+interface GigabitEthernet1/0/28
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan9
+ ip address 94.45.226.13 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:4::13/112
+ ipv6 ospf 1 area 0
+!
+interface Vlan10
+ description nocservices
+ ip address 94.45.224.2 255.255.255.224
+ no ip proxy-arp
+ ip pim sparse-mode
+ ipv6 address 2001:67C:20A1:1::1/64
+ standby version 2
+ standby 10 ip 94.45.224.1
+ standby 10 priority 200
+ standby 10 preempt
+!
+interface Vlan11
+ description nocstaff
+ ip address 94.45.224.34 255.255.255.224
+ no ip proxy-arp
+ ip pim sparse-mode
+ standby version 2
+ standby 11 ip 94.45.224.33
+ standby 11 priority 200
+ standby 11 preempt
+!
+interface Vlan12
+ description wlcmgmt
+ ip address 94.45.224.98 255.255.255.240
+ standby version 2
+ standby 12 ip 94.45.224.97
+ standby 12 priority 200
+ standby 12 preempt
+!
+interface Vlan13
+ description publicservices1
+ ip address 94.45.224.194 255.255.255.192
+ no ip proxy-arp
+ ip pim sparse-mode
+ ipv6 address 2001:67C:20A1:A::1/64
+ standby version 2
+ standby 13 ip 94.45.224.193
+ standby 13 priority 200
+ standby 13 preempt
+!
+interface Vlan14
+ description publicservices2
+ ip address 94.45.225.194 255.255.255.192
+ ip pim sparse-mode
+ ipv6 address 2001:67C:20A1:B::1/64
+ standby version 2
+ standby 14 ip 94.45.225.193
+ standby 14 priority 200
+ standby 14 preempt
+!
+interface Vlan15
+ description spacefedwifi
+ ip address 94.45.228.2 255.255.255.192
+ ip pim sparse-mode
+ standby version 2
+ standby 15 ip 94.45.228.1
+ standby 15 priority 200
+ standby 15 preempt
+!
+interface Vlan16
+ description emfcampwifistatic
+ ip address 94.45.230.2 255.255.255.0
+ no ip proxy-arp
+ ip pim sparse-mode
+ standby version 2
+ standby 16 ip 94.45.230.1
+ standby 16 priority 200
+ standby 16 preempt
+!
+interface Vlan17
+ description emfcampwifi
+ ip address 94.45.248.2 255.255.248.0
+ no ip proxy-arp
+ ip pim sparse-mode
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:67C:20A1:248::1/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2001:67C:20A1:A::196
+ standby version 2
+ standby 17 ip 94.45.248.1
+ standby 17 priority 200
+ standby 17 preempt
+!
+router ospf 1
+ log-adjacency-changes
+ redistribute connected subnets
+ redistribute static subnets
+ default-information originate
+!
+ip classless
+ip http server
+ip http secure-server
+!
+ip pim rp-address 94.45.227.1
+ip pim autorp listener
+!
+ip access-list standard mgmtaccess
+ permit 78.158.92.205
+ permit 78.158.92.196
+ permit 91.209.244.43
+ permit 78.158.68.0
+ permit 77.73.148.52
+ permit 195.177.252.0 0.0.1.255
+ permit 94.45.224.0 0.0.31.255
+ip access-list standard snmpacl
+ permit 195.177.252.110
+ permit 195.177.252.111
+ permit 195.177.252.113
+ permit 94.45.224.0 0.0.0.31
+ permit 94.45.224.32 0.0.0.31
+!
+logging source-interface Loopback0
+logging 94.45.224.10
+ipv6 router ospf 1
+ log-adjacency-changes
+ redistribute connected
+ redistribute static
+!
+snmp-server community emf RO snmpacl
+snmp-server location PinehamPark 
+!
+banner motd ^C
+ 31st Aug 2012
+      to             __,--'\
+ 2nd Sep 2012  __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^C
+!
+line con 0
+ login local
+ stopbits 1
+line vty 0 4
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+line vty 5 15
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+!
+ntp source Loopback0
+ntp server 94.45.224.9
+end

@@ -1,0 +1,221 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: ME-3400G-2CS-A - a ME-3400G-2CS-A router
+!CPU: PowerPC405
+!
+!Memory: main 131072K
+!Model revision number           : F0
+!Model number                    : ME-3400G-2CS-A
+!Motherboard assembly number     : 73-10724-07
+!Motherboard serial number       : FOC14364Z3G
+!Motherboard revision number     : A0
+!Power supply part number        : 341-0208-01
+!Power supply serial number      : LIT14320YU1
+!
+!Processor ID: FOC1436X545
+!
+!Image: Software: ME340x-METROIPACCESSK9-M, 12.2(58)SE2, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 21-Jul-11 03:06 by prod_rel_team
+!Image: flash:me340x-metroipaccessk9-mz.122-58.SE2.bin
+!
+!BOOTLDR: Version 12.2(35r)SE3, RELEASE SOFTWARE (fc1)
+!
+!BootFlash: BOOT path-list      : flash:me340x-metroipaccessk9-mz.122-58.SE2.bin
+!BootFlash: Config file         : flash:/config.text
+!BootFlash: Private Config file : flash:/private-config.text
+!BootFlash: Enable Break        : yes
+!BootFlash: Manual Boot         : no
+!BootFlash: HELPER path-list    : 
+!BootFlash: Auto upgrade        : yes
+!BootFlash: Auto upgrade path   : 
+!BootFlash: NVRAM/Config file
+!BootFlash:       buffer size:   524288
+!BootFlash: Timeout for Config
+!BootFlash:           Download:    0 seconds
+!BootFlash: Config Download 
+!BootFlash:        via DHCP:       disabled (next boot: disabled)
+!
+!
+config-register 0xF
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service unsupported-transceiver
+!
+hostname sw1.bsqmk
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+system mtu routing 1500
+authentication mac-move permit
+no ip source-route
+ip routing
+no ip domain-lookup
+ip domain-name emfcamp.org
+!
+ip multicast-routing distributed
+ipv6 unicast-routing
+!
+crypto pki trustpoint TP-self-signed-3817258496
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3817258496
+ revocation-check none
+ rsakeypair TP-self-signed-3817258496
+!
+crypto pki certificate chain TP-self-signed-3817258496
+ certificate self-signed 01
+  3082024D 308201B6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33383137 32353834 3936301E 170D3933 30333031 30303030 
+  35375A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 38313732 
+  35383439 3630819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100DA2F 9CACB75F 4BFC3BE9 70654E1A B64F3C5C D78F32E8 2F3EDDFE C0B4A3B9 
+  E61E42B0 D6131082 63254312 85A1FAC3 3C80F3E9 F876F187 C0AE77B8 28F9B36D 
+  3F306922 72914FA6 C7B73525 348CB80F C2A986B8 51C0BEB5 03F09C83 FDD2EA0E 
+  9F512585 3124B5D7 B8BAC9D1 0CE6351D E4CF0E94 B52D2A54 D36E1DC2 1460C0D0 
+  49FB0203 010001A3 75307330 0F060355 1D130101 FF040530 030101FF 30200603 
+  551D1104 19301782 15737731 2E627371 6D6B2E65 6D666361 6D702E6F 7267301F 
+  0603551D 23041830 16801412 05F717C9 00C9900D 55A9BFF3 F1239AA5 A846C430 
+  1D060355 1D0E0416 04141205 F717C900 C9900D55 A9BFF3F1 239AA5A8 46C4300D 
+  06092A86 4886F70D 01010405 00038181 00A2FDC0 DC2B5433 AF9EEEA4 EB496BB4 
+  3B2B05F8 F7044583 E9D09DF5 749AE719 A3DF157A FFB8869E 380B7DC6 BE1E53E9 
+  24B34B05 400C64F3 02D69218 FDC5301E 2CD3278B 7A191466 74ABD846 536F5B4D 
+  17C65626 ACF6E88E 39682B25 6D57699E 2FA431DB D01FD57F 87351BBB F254CE19 
+  428509AD BBC5150F BDF7AAFE 9ACBBA5B B6
+  	quit
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 4
+ name v4
+!
+vlan 6
+ name v6
+!
+ip ssh version 2
+!
+interface Loopback0
+ ip address 94.45.227.3 255.255.255.255
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:FFFF::3/128
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/1
+ description DragonWave_to_PPMK
+ no switchport
+ ip address 94.45.224.73 255.255.255.248
+ ip pim sparse-mode
+ ip ospf cost 50
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:1000::73/112
+ ipv6 ospf cost 50
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/2
+ description Ubiquiti_to_PPMK
+ no switchport
+ ip address 94.45.224.81 255.255.255.248
+ ip pim sparse-mode
+ ip ospf cost 100
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:1001::81/112
+ ipv6 ospf cost 100
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/3
+ description sw1.bsqmk_to_rt1.bsqmk_trunk
+ port-type nni
+ switchport mode trunk
+!
+interface GigabitEthernet0/4
+ port-type nni
+ no switchport
+ no ip address
+ shutdown
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan4
+ description sw1.bsqmk_to_rt1.bsqmk_v4
+ ip address 94.45.226.6 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+!
+interface Vlan6
+ no ip address
+ ipv6 address 2001:67C:20A1:EEEE:2::6/112
+ ipv6 ospf 1 area 0
+!
+router ospf 1
+!
+no ip http server
+ip http secure-server
+!
+ip pim rp-address 94.45.227.1
+ip pim autorp listener
+!
+ip access-list standard mgmtaccess
+ permit 78.158.92.205
+ permit 78.158.92.196
+ permit 91.209.244.43
+ permit 78.158.68.0
+ permit 77.73.148.52
+ permit 195.177.252.0 0.0.1.255
+ permit 94.45.224.0 0.0.31.255
+ip access-list standard snmpacl
+ permit 195.177.252.110
+ permit 195.177.252.111
+ permit 195.177.252.113
+ permit 94.45.224.0 0.0.0.31
+ permit 94.45.224.32 0.0.0.31
+!
+ip sla enable reaction-alerts
+logging esm config
+logging source-interface Loopback0
+logging 94.45.224.10
+ipv6 router ospf 1
+!
+snmp-server community emf RO snmpacl
+snmp-server location BluesquareMK
+banner motd ^C
+ 31st Aug 2012
+      to             __,--'\
+ 2nd Sep 2012  __,--'    :. \.
+          _,--'              \`.
+         /|\       `          \ `.
+        / | \        `:        \  `/
+       / '|  \        `:.       \
+      / , |   \ www.emfcamp.org  \             
+     /    |:   \              `:. \
+    /| '  |     \ :.           _,-'`.
+  \' |,  / \   ` \ `:.     _,-'_|    `/
+     '._;   \ .   \   `_,-'_,-'
+   \'    `- .\_   |\,-'_,-'
+               `--|_,`'     $(hostname) ^C
+!
+line con 0
+ login local
+ stopbits 1
+line vty 0 4
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+line vty 5 15
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+!
+ntp source Loopback0
+ntp server 94.45.224.9
+end

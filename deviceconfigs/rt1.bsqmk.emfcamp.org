@@ -1,0 +1,292 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: 7204VXR - a 7200 router
+!CPU: NPE-G2, MPC7448 CPU at 1666Mhz, impl 0, Rev 2.2
+!
+!Memory: main 917504K/65536K
+!Memory: nvram 2045K
+!Memory: bootflash 65536K
+!Memory: pcmcia ATA slot2 63808K
+!
+!Processor ID: 33487255
+!
+!Image: Software: C7200P-ADVIPSERVICESK9-M, 12.2(33)SRE6, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 15-Mar-12 01:58 by prod_rel_team
+!Image: disk2:c7200p-advipservicesk9-mz.122-33.SRE6.bin
+!
+!ROM Bootstrap: Version 12.4(12.2r)T, RELEASE SOFTWARE (fc1)
+!
+config-register 0x2102
+!
+version 12.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname rt1.bsqmk
+!
+boot-start-marker
+boot system disk2:c7200p-advipservicesk9-mz.122-33.SRE6.bin
+boot-end-marker
+!
+security passwords min-length 1
+!
+no aaa new-model
+no ip source-route
+ip vrf mgmt
+ description Management VRF
+ rd 100:100
+!
+ip flow-cache timeout inactive 60
+ip flow-cache timeout active 5
+no ip domain lookup
+ip domain name emfcamp.org
+ip multicast-routing 
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+archive
+ log config
+  hidekeys
+!
+ip tftp source-interface FastEthernet0/2
+ip ssh version 2
+! 
+interface Loopback0
+ ip address 94.45.227.2 255.255.255.255
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:FFFF::2/128
+ ipv6 ospf 1 area 0
+!
+interface Tunnel0
+ description To_Staging_NatsHouse
+ ip address 94.45.226.73 255.255.255.252
+ ip pim sparse-mode
+ ip tcp adjust-mss 1400
+ ip ospf 1 area 0
+ shutdown
+ ipv6 address 2001:67C:20A1:EEEE:19::73/112
+ ipv6 ospf 1 area 0
+ tunnel source Loopback0
+ tunnel destination 195.177.253.41
+!
+interface GigabitEthernet0/1
+ description BSQMK_to_THDO
+ ip address 94.45.226.2 255.255.255.252
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+ ipv6 address 2001:67C:20A1:EEEE:1::2/112
+ ipv6 ospf 1 area 0
+!
+interface FastEthernet0/2
+ description oob_pulsant
+ ip vrf forwarding mgmt
+ ip address 46.249.195.254 255.255.255.252
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet0/2
+ description RT1.BSQMK_to_SW1.BSQMK_trunk
+ no ip address
+ no ip proxy-arp
+ ip ospf 1 area 0
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+!
+interface GigabitEthernet0/2.4
+ description RT1.BSQMK_to_SW1.BSQMK_v4
+ encapsulation dot1Q 4
+ ip address 94.45.226.5 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+!
+interface GigabitEthernet0/2.6
+ description RT1.BSQMK_to_SW1.BSQMK_v6
+ encapsulation dot1Q 6
+ ipv6 address 2001:67C:20A1:EEEE:2::5/112
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/3
+ description Pulsant-MK-Transit
+ ip address 46.249.197.86 255.255.255.252
+ no ip proxy-arp
+ ip flow ingress
+ ip flow egress
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+ ipv6 address 2A02:16E0:0:8::1:2/112
+ no cdp enable
+!
+router ospf 1
+ log-adjacency-changes
+ redistribute connected subnets
+ default-information originate always
+!
+router bgp 13020
+ bgp router-id 94.45.227.2
+ bgp always-compare-med
+ no bgp default ipv4-unicast
+ bgp log-neighbor-changes
+ bgp deterministic-med
+ neighbor ibgp-4 peer-group
+ neighbor ibgp-4 remote-as 13020
+ neighbor ibgp-4 update-source Loopback0
+ neighbor ibgp-6 peer-group
+ neighbor ibgp-6 remote-as 13020
+ neighbor ibgp-6 update-source Loopback0
+ neighbor 2001:67C:20A1:FFFF::1 peer-group ibgp-6
+ neighbor 2A02:16E0:0:8::1:1 remote-as 12703
+ neighbor 2A02:16E0:0:8::1:1 description Pulsant_in_bsqmk
+ neighbor 46.249.197.85 remote-as 12703
+ neighbor 46.249.197.85 description Pulsant_in_bsqmk
+ neighbor 94.45.227.1 peer-group ibgp-4
+ !
+ address-family ipv4
+  no synchronization
+  network 94.45.224.0 mask 255.255.224.0
+  neighbor 46.249.197.85 activate
+  neighbor 46.249.197.85 route-map pulsant-4-in in
+  neighbor 46.249.197.85 route-map pulsant-4-out out
+  neighbor 94.45.227.1 activate
+  no auto-summary
+ exit-address-family
+ !
+ address-family ipv6
+  no synchronization
+  network 2001:67C:20A1::/48
+  neighbor 2001:67C:20A1:FFFF::1 activate
+  neighbor 2A02:16E0:0:8::1:1 activate
+  neighbor 2A02:16E0:0:8::1:1 route-map pulsant-6-in in
+  neighbor 2A02:16E0:0:8::1:1 route-map pulsant-6-out out
+ exit-address-family
+!
+ip bgp-community new-format
+ip flow-export source Loopback0
+ip flow-export version 5 origin-as
+ip flow-aggregation cache as
+ cache entries 16384
+ cache timeout active 5
+ export destination 94.45.224.11 9000
+ enabled
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 94.45.227.1
+ip pim autorp listener
+ip route 94.45.224.0 255.255.224.0 Null0 250
+ip route vrf mgmt 0.0.0.0 0.0.0.0 46.249.195.253
+!
+ip access-list standard mgmtaccess
+ permit 78.158.92.205
+ permit 78.158.92.196
+ permit 91.209.244.43
+ permit 78.158.68.0
+ permit 77.73.148.52
+ permit 195.177.252.0 0.0.1.255
+ permit 94.45.224.0 0.0.31.255
+ip access-list standard snmpacl
+ permit 94.45.224.146
+ permit 195.177.253.40
+ permit 195.177.252.110
+ permit 195.177.252.111
+ permit 195.177.252.113
+ permit 94.45.224.0 0.0.0.31
+ permit 94.45.224.32 0.0.0.31
+!
+ip prefix-list Nothing deny 0.0.0.0/0 le 32
+!
+ip prefix-list emfcamp-4-in permit 0.0.0.0/0 le 24
+!
+ip prefix-list emfcamp-4-out permit 94.45.224.0/19
+logging source-interface Loopback0
+logging 94.45.224.10
+ipv6 route 2001:67C:20A1::/48 Null0 250
+ipv6 router ospf 1
+ log-adjacency-changes
+ default-information originate always
+ redistribute connected
+!
+ipv6 prefix-list Nothing seq 5 deny ::/0 le 128
+!
+ipv6 prefix-list emfcamp-6-in seq 5 permit ::/0 le 48
+!
+ipv6 prefix-list emfcamp-6-out seq 5 permit 2001:67C:20A1::/48
+route-map pulsant-4-in permit 10
+ match ip address prefix-list emfcamp-4-in
+ set metric 100
+ set local-preference 100
+!
+route-map pulsant-4-in deny 999
+!
+route-map pulsant-4-out permit 10
+ match ip address prefix-list emfcamp-4-out
+ set community 13020:2
+!
+route-map pulsant-4-out deny 999
+!
+route-map pulsant-6-in permit 10
+ match ipv6 address prefix-list emfcamp-6-in
+ set metric 100
+ set local-preference 100
+!
+route-map pulsant-6-in deny 999
+!
+route-map pulsant-6-out permit 10
+ match ipv6 address prefix-list emfcamp-6-out
+ set community 13020:2
+!
+route-map pulsant-6-out deny 999
+!
+snmp-server community emf RO snmpacl
+snmp-server location BluesquareMK
+snmp ifmib ifindex persist
+!
+control-plane
+!
+banner motd ^C
+ 31st Aug 2012
+      to             __,--'\
+ 2nd Sep 2012  __,--'    :. \.
+          _,--'              \`.
+         /|\       `          \ `.
+        / | \        `:        \  `/
+       / '|  \        `:.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              `:. \
+    /| '  |     \ :.           _,-'`.
+  \' |,  / \   ` \ `:.     _,-'_|    `/
+     '._;   \ .   \   `_,-'_,-'
+   \'    `- .\_   |\,-'_,-'
+               `--|_,`'     $(hostname) ^C
+!
+line con 0
+ login local
+ stopbits 1
+line aux 0
+ login local
+ stopbits 1
+line vty 0 4
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+line vty 5 15
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+!
+scheduler allocate 20000 1000
+ntp source Loopback0
+ntp server 94.45.224.9
+end

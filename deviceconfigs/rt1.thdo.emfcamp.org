@@ -1,0 +1,361 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: 7204VXR - a 7200 router
+!CPU: NPE-G2, MPC7448 CPU at 1666Mhz, impl 0, Rev 2.2
+!
+!Memory: main 917504K/65536K
+!Memory: nvram 2045K
+!Memory: bootflash 65536K
+!Memory: pcmcia ATA slot2 63808K
+!
+!Processor ID: 21282243
+!
+!Image: Software: C7200P-ADVIPSERVICESK9-M, 12.2(33)SRE6, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 15-Mar-12 01:58 by prod_rel_team
+!Image: disk2:c7200p-advipservicesk9-mz.122-33.SRE6.bin
+!
+!ROM Bootstrap: Version 12.4(12.2r)T, RELEASE SOFTWARE (fc1)
+!
+config-register 0x2102
+!
+version 12.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname rt1.thdo
+!
+boot-start-marker
+boot system disk2:c7200p-advipservicesk9-mz.122-33.SRE6.bin
+boot-end-marker
+!
+security passwords min-length 1
+!
+no aaa new-model
+no ip source-route
+ip vrf mgmt
+ description Management VRF
+ rd 100:100
+!
+ip flow-cache timeout inactive 60
+ip flow-cache timeout active 5
+ip domain lookup source-interface Loopback0
+ip domain name emfcamp.org
+ip name-server 94.45.224.224
+ip name-server 94.45.225.225
+ip multicast-routing 
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+archive
+ log config
+  hidekeys
+!
+ip tftp source-interface FastEthernet0/2
+ip ssh version 2
+! 
+interface Loopback0
+ ip address 94.45.227.1 255.255.255.255
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:FFFF::1/128
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/1
+ description Spare (no Goscomb cable available)
+ no ip address
+ no ip proxy-arp
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+!
+interface FastEthernet0/2
+ description MGMT_to_willnat_AS30746
+ ip vrf forwarding mgmt
+ ip address 195.177.252.220 255.255.255.248
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet0/2
+ description THDO_to_BSQMK
+ ip address 94.45.226.1 255.255.255.252
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+ ipv6 address 2001:67C:20A1:EEEE:1::1/112
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/3
+ description LONAP
+ no ip address
+ no ip proxy-arp
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+ no keepalive
+ no cdp enable
+!
+interface GigabitEthernet0/3.4
+ description LONAP_IPv4
+ encapsulation dot1Q 4
+ ip address 193.203.5.251 255.255.255.0
+ no ip redirects
+ no ip proxy-arp
+ ip flow ingress
+ ip flow egress
+ ipv6 address 2001:7F8:17::32DC:1/64
+!
+interface GigabitEthernet0/3.5
+ description LONAP_Multicast_vlan
+ encapsulation dot1Q 5
+ ip address 195.35.120.251 255.255.255.0
+ ip flow ingress
+ ip flow egress
+ ip pim bsr-border
+ ip pim sparse-mode
+ ip sap listen
+!
+interface GigabitEthernet0/3.325
+ description LONAP_HE_Transit
+ encapsulation dot1Q 325
+ ip flow ingress
+ ip flow egress
+!
+interface GigabitEthernet0/3.367
+ description LONAP_Goscomb_Transit
+ encapsulation dot1Q 367
+ ip address 77.75.109.194 255.255.255.252
+ ip flow ingress
+ ip flow egress
+ ipv6 address 2A01:348:0:4:0:29:1:1/96
+!
+router ospf 1
+ log-adjacency-changes
+ redistribute connected subnets
+ default-information originate always
+!
+router bgp 13020
+ bgp router-id 94.45.227.1
+ bgp always-compare-med
+ no bgp default ipv4-unicast
+ no bgp enforce-first-as
+ bgp log-neighbor-changes
+ bgp deterministic-med
+ neighbor ibgp-4 peer-group
+ neighbor ibgp-4 remote-as 13020
+ neighbor ibgp-4 update-source Loopback0
+ neighbor ibgp-6 peer-group
+ neighbor ibgp-6 remote-as 13020
+ neighbor ibgp-6 update-source Loopback0
+ neighbor lonap-4 peer-group
+ neighbor lonap-4 update-source GigabitEthernet0/3.4
+ neighbor lonap-6 peer-group
+ neighbor 2001:67C:20A1:FFFF::2 peer-group ibgp-6
+ neighbor 2001:7F8:17::1 remote-as 8550
+ neighbor 2001:7F8:17::1 peer-group lonap-6
+ neighbor 2001:7F8:17::2 remote-as 8550
+ neighbor 2001:7F8:17::2 peer-group lonap-6
+ neighbor 2001:7F8:17::208A:1 remote-as 8330
+ neighbor 2001:7F8:17::208A:1 peer-group lonap-6
+ neighbor 2A01:348:0:4:0:29:0:1 remote-as 39326
+ neighbor 2A01:348:0:4:0:29:0:1 description Goscomb_Transit
+ neighbor 77.75.109.193 remote-as 39326
+ neighbor 77.75.109.193 description Goscomb_Transit
+ neighbor 94.45.227.2 peer-group ibgp-4
+ neighbor 193.203.5.1 remote-as 8550
+ neighbor 193.203.5.1 peer-group lonap-4
+ neighbor 193.203.5.2 remote-as 8550
+ neighbor 193.203.5.2 peer-group lonap-4
+ neighbor 193.203.5.250 remote-as 8330
+ neighbor 193.203.5.250 peer-group lonap-4
+ neighbor 195.35.120.92 remote-as 31459
+ !
+ address-family ipv4
+  no synchronization
+  network 94.45.224.0 mask 255.255.224.0
+  neighbor lonap-4 route-map lonap-4-in in
+  neighbor lonap-4 route-map lonap-4-out out
+  neighbor 77.75.109.193 activate
+  neighbor 77.75.109.193 route-map goscomb-4-in in
+  neighbor 77.75.109.193 route-map goscomb-4-out out
+  neighbor 94.45.227.2 activate
+  neighbor 193.203.5.1 activate
+  neighbor 193.203.5.2 activate
+  neighbor 193.203.5.250 activate
+  no auto-summary
+ exit-address-family
+ !
+ address-family ipv4 multicast
+  neighbor 195.35.120.92 activate
+  no auto-summary
+ exit-address-family
+ !
+ address-family ipv6
+  no synchronization
+  network 2001:67C:20A1::/48
+  neighbor lonap-6 route-map lonap-6-in in
+  neighbor lonap-6 route-map lonap-6-out out
+  neighbor 2001:67C:20A1:FFFF::2 activate
+  neighbor 2001:7F8:17::1 activate
+  neighbor 2001:7F8:17::2 activate
+  neighbor 2001:7F8:17::208A:1 activate
+  neighbor 2A01:348:0:4:0:29:0:1 activate
+  neighbor 2A01:348:0:4:0:29:0:1 route-map goscomb-6-in in
+  neighbor 2A01:348:0:4:0:29:0:1 route-map goscomb-6-out out
+ exit-address-family
+!
+ip bgp-community new-format
+ip flow-export source Loopback0
+ip flow-export version 5 origin-as
+ip flow-aggregation cache as
+ cache entries 16384
+ cache timeout active 5
+ export destination 94.45.224.11 9000
+ enabled
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 94.45.227.1
+ip pim autorp listener
+ip pim send-rp-discovery scope 10
+ip pim ssm default
+ip msdp peer 195.35.120.92 connect-source GigabitEthernet0/3.5
+ip msdp cache-sa-state
+ip route vrf mgmt 0.0.0.0 0.0.0.0 195.177.252.217
+!
+ip access-list standard mgmtaccess
+ permit 78.158.92.205
+ permit 78.158.92.196
+ permit 91.209.244.43
+ permit 78.158.68.0
+ permit 77.73.148.52
+ permit 195.177.252.0 0.0.1.255
+ permit 94.45.224.0 0.0.31.255
+ip access-list standard snmpacl
+ permit 195.177.253.40
+ permit 195.177.252.110
+ permit 195.177.252.111
+ permit 195.177.252.113
+ permit 94.45.224.0 0.0.0.31
+ permit 94.45.224.32 0.0.0.31
+!
+ip prefix-list emfcamp-4-in permit 0.0.0.0/0 le 24
+!
+ip prefix-list emfcamp-4-out permit 94.45.224.0/19
+logging source-interface Loopback0
+logging 94.45.224.10
+ipv6 router ospf 1
+ log-adjacency-changes
+ default-information originate always
+ redistribute connected
+!
+ipv6 prefix-list emfcamp-6-in seq 5 permit ::/0 le 48
+!
+ipv6 prefix-list emfcamp-6-out seq 5 permit 2001:67C:20A1::/48
+route-map goscomb-4-in permit 10
+ match ip address prefix-list emfcamp-4-in
+ set metric 100
+ set local-preference 100
+!
+route-map goscomb-4-in deny 999
+!
+route-map goscomb-4-out permit 10
+ match ip address prefix-list emfcamp-4-out
+ set community 13020:3
+!
+route-map goscomb-4-out deny 999
+!
+route-map goscomb-6-in permit 10
+ match ipv6 address prefix-list emfcamp-6-in
+ set metric 100
+ set local-preference 100
+!
+route-map goscomb-6-in deny 999
+!
+route-map goscomb-6-out permit 10
+ match ipv6 address prefix-list emfcamp-6-out
+ set community 13020:3
+!
+route-map goscomb-6-out deny 999
+!
+route-map lonap-4-in permit 10
+ match ip address prefix-list emfcamp-4-in
+ set metric 100
+ set local-preference 200
+!
+route-map lonap-4-in deny 999
+!
+route-map lonap-4-out permit 10
+ match ip address prefix-list emfcamp-4-out
+ set community 13020:8330
+!
+route-map lonap-4-out deny 999
+!
+route-map lonap-6-in permit 10
+ match ipv6 address prefix-list emfcamp-6-in
+ set metric 100
+ set local-preference 200
+!
+route-map lonap-6-in deny 999
+!
+route-map lonap-6-out permit 10
+ match ipv6 address prefix-list emfcamp-6-out
+ set community 13020:8330
+!
+route-map lonap-6-out deny 999
+!
+snmp-server community emf RO snmpacl
+snmp-server location Telehouse East
+snmp ifmib ifindex persist
+!
+control-plane
+!
+banner motd ^C
+ 31st Aug 2012
+      to             __,--'\
+ 2nd Sep 2012  __,--'    :. \.
+          _,--'              \`.
+         /|\       `          \ `.
+        / | \        `:        \  `/
+       / '|  \        `:.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              `:. \
+    /| '  |     \ :.           _,-'`.
+  \' |,  / \   ` \ `:.     _,-'_|    `/
+     '._;   \ .   \   `_,-'_,-'
+   \'    `- .\_   |\,-'_,-'
+               `--|_,`'     $(hostname) ^C
+alias exec bgp4 show bgp ipv4 unicast summary
+alias exec bgp6 show bgp ipv6 unicast summary
+!
+line con 0
+ login local
+ stopbits 1
+line aux 0
+ login local
+ stopbits 1
+line vty 0 4
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 1869
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+ transport preferred none
+ transport input ssh
+!
+scheduler allocate 20000 1000
+ntp source Loopback0
+ntp server 94.45.224.9
+end

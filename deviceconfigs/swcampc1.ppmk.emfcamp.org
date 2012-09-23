@@ -1,0 +1,1083 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: WS-C3750-48P - a WS-C3750-48P router
+!CPU: PowerPC405
+!
+!Memory: main 131072K
+!Model revision number           : D0
+!Model number                    : WS-C3750-48PS-S
+!Motherboard assembly number     : 73-8310-07
+!Motherboard serial number       : CAT08410A2P
+!Motherboard revision number     : A0
+!Power supply part number        : 341-0029-03
+!Power supply serial number      : LIT083802SH
+!
+!Processor ID: CAT0841K0HK
+!
+!Image: Software: C3750-IPSERVICESK9-M, 12.2(55)SE5, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 09-Feb-12 18:59 by prod_rel_team
+!Image: flash:c3750-ipservicesk9-mz.122-55.SE5.bin
+!
+!BOOTLDR: Version 12.2(44)SE5, RELEASE SOFTWARE (fc1)
+!
+!BootFlash: BOOT path-list      : flash:c3750-ipservicesk9-mz.122-55.SE5.bin
+!BootFlash: Config file         : flash:/config.text
+!BootFlash: Private Config file : flash:/private-config.text
+!BootFlash: Enable Break        : no
+!BootFlash: Manual Boot         : no
+!BootFlash: HELPER path-list    : 
+!BootFlash: Auto upgrade        : yes
+!BootFlash: Auto upgrade path   : 
+!BootFlash: NVRAM/Config file
+!BootFlash:       buffer size:   524288
+!BootFlash: Timeout for Config
+!BootFlash:           Download:    0 seconds
+!BootFlash: Config Download 
+!BootFlash:        via DHCP:       disabled (next boot: disabled)
+!
+!
+config-register 0xF
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname swcampc1.ppmk
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+switch 1 provision ws-c3750-48p
+system mtu routing 1500
+no ip source-route
+ip routing
+no ip domain-lookup
+ip domain-name emfcamp.org
+!
+ip dhcp snooping vlan 1
+ip dhcp snooping information option format remote-id hostname
+ip dhcp snooping
+ip multicast-routing distributed
+ip device tracking
+ip arp inspection vlan 1
+ip arp inspection validate src-mac dst-mac ip 
+ipv6 unicast-routing
+!
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig (STP)
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause pppoe-ia-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause loopback
+errdisable recovery cause small-frame
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+no spanning-tree vlan 1
+!
+vlan internal allocation policy ascending
+!
+interface Loopback0
+ ip address 94.45.227.20 255.255.255.255
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:FFFF::20/128
+ ipv6 ospf 1 area 0
+!
+interface FastEthernet1/0/1
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/2
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/3
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/4
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/5
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/6
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/7
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/8
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/9
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/10
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/11
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/12
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/13
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/14
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/15
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/16
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/17
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/18
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/19
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/20
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/21
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/22
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/23
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/24
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/25
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/26
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/27
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/28
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/29
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/30
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/31
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/32
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/33
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/34
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/35
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/36
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/37
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/38
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/39
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/40
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/41
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/42
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/43
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/44
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/45
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/46
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/47
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface FastEthernet1/0/48
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group v4_in in
+ small-frame violation-rate 1000
+ ipv6 traffic-filter v6_in in
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no lldp transmit
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+!
+interface GigabitEthernet1/0/1
+ description To_SWCAMPB1.PPMK_Gi1/0/2
+ no switchport
+ ip address 94.45.226.98 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:25::98/112
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/2
+ description To_SWCAMPD1.PPMK_Gi1/0/1
+ no switchport
+ ip address 94.45.226.101 255.255.255.252
+ ip pim sparse-mode
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:EEEE:26::101/112
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0/3
+ no switchport
+ no ip address
+!
+interface GigabitEthernet1/0/4
+ no switchport
+ no ip address
+!
+interface Vlan1
+ ip address 94.45.237.1 255.255.255.0
+ ip helper-address 94.45.224.196
+ ip pim sparse-mode
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:67C:20A1:237::1/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2001:67C:20A1:A::196
+!
+router ospf 1
+ log-adjacency-changes
+ redistribute connected subnets
+!
+ip classless
+no ip forward-protocol udp tftp
+no ip forward-protocol udp nameserver
+no ip forward-protocol udp domain
+no ip forward-protocol udp time
+no ip forward-protocol udp netbios-ns
+no ip forward-protocol udp netbios-dgm
+no ip forward-protocol udp tacacs
+no ip http server
+no ip http secure-server
+!
+ip pim rp-address 94.45.227.1
+ip pim autorp listener
+!
+ip access-list standard mgmtaccess
+ permit 78.158.92.205
+ permit 78.158.92.196
+ permit 91.209.244.43
+ permit 78.158.68.0
+ permit 77.73.148.52
+ permit 195.177.252.0 0.0.1.255
+ permit 94.45.224.0 0.0.31.255
+ip access-list standard snmpacl
+ permit 195.177.252.110
+ permit 195.177.252.111
+ permit 195.177.252.113
+ permit 94.45.224.0 0.0.0.31
+ permit 94.45.224.32 0.0.0.31
+!
+ip access-list extended v4_in
+ permit ip any any
+ permit ip 94.45.224.0 0.0.16.255 any
+ deny   ip any any log-input
+!
+logging source-interface Loopback0
+logging 94.45.224.10
+ipv6 router ospf 1
+ log-adjacency-changes
+ redistribute connected
+!
+snmp-server community emf RO snmpacl
+snmp-server location PinehamPark
+!
+ipv6 access-list v6_in
+ permit ipv6 2001:67C:20A1::/48 any
+ deny ipv6 any any log-input
+!
+banner motd ^CCCCCCC
+ 31st Aug 2012
+      to             __,--'\
+ 2nd Sep 2012  __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^C
+!
+line con 0
+ login local
+ stopbits 1
+line vty 0 4
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+line vty 5 15
+ access-class mgmtaccess in
+ login
+!
+ntp source Loopback0
+ntp server 94.45.224.9
+end

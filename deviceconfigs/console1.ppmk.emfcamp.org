@@ -1,0 +1,252 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: 1841 - a 1841 router
+!
+!Memory: main 120832K/10240K
+!Memory: nvram 191K
+!
+!Processor ID: FCZ112574M0
+!
+!Image: Software: C1841-ADVENTERPRISEK9-M, 12.4(24)T1, RELEASE SOFTWARE (fc3)
+!Image: Compiled: Fri 19-Jun-09 13:52 by prod_rel_team
+!Image: flash:c1841-adventerprisek9-mz.124-24.T1.bin
+!
+!ROM Bootstrap: Version 12.4(13r)T, RELEASE SOFTWARE (fc1)
+!
+config-register 0x2102
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname console1.ppmk
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+!
+no aaa new-model
+dot11 syslog
+ip source-route
+!
+ip cef
+no ip domain lookup
+ip domain name emfcamp.org
+ip host c1 2002 94.45.227.10
+ip host c2 2003 94.45.227.10
+ip host c3 2004 94.45.227.10
+ip host c4 2005 94.45.227.10
+ip host c5 2006 94.45.227.10
+ip host c6 2007 94.45.227.10
+ip host c7 2008 94.45.227.10
+ip host c8 2009 94.45.227.10
+ip multicast-routing 
+ipv6 unicast-routing
+ipv6 cef
+ntp server 94.45.224.9
+!
+multilink bundle-name authenticated
+!
+archive
+ log config
+  hidekeys
+! 
+ip ssh version 2
+!
+interface Loopback0
+ ip address 94.45.227.10 255.255.255.255
+ ip ospf 1 area 0
+ ipv6 address 2001:67C:20A1:FFFF::10/128
+ ipv6 ospf 1 area 0
+!
+interface FastEthernet0/0
+ description To_SWCORE1.PPMK_Gi1/0/7
+ ip address 94.45.226.42 255.255.255.252
+ ip pim sparse-mode
+ ip ospf cost 200
+ ip ospf 1 area 0
+ duplex auto
+ speed auto
+ ipv6 address 2001:67C:20A1:EEEE:11::42/112
+ ipv6 ospf cost 200
+ ipv6 ospf 1 area 0
+!
+interface FastEthernet0/1
+ description To_SWCORE2.PPMK_Gi1/0/7
+ ip address 94.45.226.46 255.255.255.252
+ ip pim sparse-mode
+ ip ospf cost 250
+ ip ospf 1 area 0
+ duplex auto
+ speed auto
+ ipv6 address 2001:67C:20A1:EEEE:12::46/112
+ ipv6 ospf cost 250
+ ipv6 ospf 1 area 0
+!
+interface FastEthernet0/1/0
+ description To_NatHome_Net
+!
+interface FastEthernet0/1/1
+ switchport access vlan 2
+!
+interface FastEthernet0/1/2
+!
+interface FastEthernet0/1/3
+!
+interface Vlan1
+ no ip address
+!
+interface Async0/0/0
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/1
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/2
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/3
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/4
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/5
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/6
+ no ip address
+ encapsulation slip
+!
+interface Async0/0/7
+ no ip address
+ encapsulation slip
+!
+router ospf 1
+ log-adjacency-changes
+ redistribute connected subnets
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+ip pim rp-address 94.45.227.1
+ip pim autorp listener
+ip pim send-rp-discovery scope 10
+!
+ip access-list standard mgmtaccess
+ permit 78.158.92.205
+ permit 78.158.92.196
+ permit 91.209.244.43
+ permit 78.158.68.0
+ permit 77.73.148.52
+ permit 195.177.252.0 0.0.1.255
+ permit 94.45.224.0 0.0.31.255
+ip access-list standard snmpacl
+ permit 195.177.252.110
+ permit 195.177.252.111
+ permit 195.177.252.113
+ permit 94.45.224.0 0.0.0.31
+ permit 94.45.224.32 0.0.0.31
+!
+logging source-interface Loopback0
+logging 94.45.224.10
+ipv6 router ospf 1
+ log-adjacency-changes
+!
+menu cserver title ^CC
+If you have problems connecting to your device
+   clear the connection via cl+# (ie:cl1) and try again.
+
+   To exit back out to the menu press "CTRL+SHIFT+6"
+   then "X".   You must then clear the connection and
+   begin a new console session to re-connect to
+   that device.
+--------------------------------------------------------          
+   1    - Connect to Console1  
+   2    - Connect to Console2   
+   3    - Connect to Console3
+   4    - Connect to Console4  
+   5    - Connect to Console5    
+   6    - Connect to Console6                 
+   7    - Connect to Console7
+   8    - Connect to Console8    
+--------------------------------------------------------          
+                             | show - show lines in use          
+   Exit - logout             | menuexit - exit menu
+^C
+menu cserver prompt ^CC
+Please enter command or selection:
+^C
+menu cserver command 1 tn c1
+menu cserver command 2 tn c2
+menu cserver command 3 tn c3
+menu cserver command 4 tn c4
+menu cserver command 5 tn c5
+menu cserver command 6 tn c6
+menu cserver command 7 tn c7
+menu cserver command 8 tn c8
+menu cserver command cl1 cl1
+menu cserver command cl2 cl2
+menu cserver command cl3 cl3
+menu cserver command cl4 cl4
+menu cserver command cl5 cl5
+menu cserver command cl6 cl6
+menu cserver command cl7 cl7
+menu cserver command cl8 cl8
+menu cserver command menuexit menu-exit
+menu cserver command exit exit
+menu cserver command show show line tty 2 9 | include \*
+menu cserver options show pause
+menu cserver clear-screen
+menu cserver single-space
+!
+snmp-server community emf RO snmpacl
+snmp-server location PinehamPark
+!
+control-plane
+!
+alias exec cl1 clear line 2
+alias exec cl2 clear line 3
+alias exec cl3 clear line 4
+alias exec cl4 clear line 5
+alias exec cl5 clear line 6
+alias exec cl6 clear line 7
+alias exec cl7 clear line 8
+alias exec cl8 clear line 9
+alias exec tn telnet
+privilege exec level 0 clear line
+privilege exec level 1 clear
+!
+line con 0
+ login local
+ stopbits 1
+line aux 0
+ login local
+ stopbits 1
+line 0/0/0 0/0/7
+ exec-timeout 0 0
+ no exec
+ transport input telnet
+ transport output none
+ stopbits 1
+ flowcontrol hardware
+line vty 0 4
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+line vty 5 15
+ access-class mgmtaccess in
+ exec-timeout 6000 0
+ login local
+!
+scheduler allocate 20000 1000
+end
