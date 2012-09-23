@@ -1,0 +1,44 @@
+auto lo
+iface lo inet loopback
+
+auto bond0
+iface bond0 inet manual
+        slaves eth0 eth1
+        bond-mode active-backup
+        bond-miimon 100
+        bond-downdelay 200
+        bond-updelay 200
+        post-up ifup br-vlan10 br-vlan12 br-vlan13 br-vlan14
+
+# VLAN10 - NOC Services
+iface bond0.10 inet manual
+        vlan-raw-device bond0
+
+iface br-vlan10 inet static
+        bridge_ports bond0.10
+        address 94.45.224.15
+        netmask 255.255.255.224
+        network 94.45.224.0
+        broadcast 94.45.224.31
+        gateway 94.45.224.1
+
+# VLAN12 - WLC Management
+iface bond0.12 inet manual
+        vlan-raw-device bond0
+
+iface br-vlan12 inet manual
+        bridge_ports bond0.12
+
+# VLAN13 - Public Services 1
+iface bond0.13 inet manual
+        vlan-raw-device bond0
+
+iface br-vlan13 inet manual
+        bridge_ports bond0.13
+
+# VLAN14 - Public Services 2
+iface bond0.14 inet manual
+        vlan-raw-device bond0
+
+iface br-vlan14 inet manual
+        bridge_ports bond0.14
