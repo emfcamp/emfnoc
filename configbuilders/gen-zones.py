@@ -84,7 +84,8 @@ def reloadzone(domain):
   reloadresult = os.popen(reloadcmd).read()
   return
 
-spreadsheet_key = "0AriFdfLzFu4-dHlsX21Fd2tNSldIVGhabTc1WnZpeEE"
+# old sheet was "0AriFdfLzFu4-dHlsX21Fd2tNSldIVGhabTc1WnZpeEE"
+spreadsheet_key = "0AkRqDVqGxmpFdHc3UTMxTFZpY1VqWVM2ZURfMzZHSFE"
 worksheet_subnets = "ocx"
 worksheet_dhcp = "od0"
 domain = "emfcamp.org"
@@ -96,6 +97,21 @@ print "Connecting to spreadsheet"
 spr_client = gdata.spreadsheet.service.SpreadsheetsService()
 spr_client.email = ""
 spr_client.password = ""
+
+if spr_client.email == "":
+  if os.getenv("HOME") != None:
+    if os.path.exists(os.getenv("HOME") + os.path.sep + ".google.account"):
+      fh = open(os.getenv("HOME") + os.path.sep + ".google.account", "r")
+      spr_client.email = fh.read().strip()
+      fh.close()
+
+if spr_client.email == "":
+  print "No gdocs email address setup, either edit this file or put it in ~/.google.account"
+  exit()
+
+if spr_client.password == "":
+  spr_client.password = getpass.getpass("Please enter the password for " + spr_client.email + ":")
+
 spr_client.source = "emfcamp dns generator"
 spr_client.ProgrammaticLogin()
 
@@ -148,7 +164,11 @@ for row_entry in feedscopes.entry:
   record = gdata.spreadsheet.text_db.Record(row_entry=row_entry)
   version = record.content['version']
   if version == "4":
-    net4 = ipaddr.ip_network(record.content['subnet'])
+    if "ip_network" in dir(ipaddr):
+      # the ipaddr module seems to of changed api's at some point?!?
+      net4 = ipaddr.ip_network(record.content['subnet'])
+    else:
+      net4 = ipaddr.IPNetwork(record.content['subnet'])
     scopestart = record.content['start']
     scopefinish = record.content['finish']
     scopename = record.content['name']
