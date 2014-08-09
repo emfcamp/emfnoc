@@ -4,6 +4,8 @@
 # generate zone files from google spreadsheet
 # nat@nuqe.net
 #
+# Updated by JasperW to handle DNSSEC
+#
 
 import gdata.spreadsheet.service
 import gdata.spreadsheet.text_db
@@ -75,6 +77,12 @@ def makezonelive(domain,file):
   livepath = "/etc/bind/master/%s" % (domain)
   shutil.copyfile(file,livepath)
   os.remove(file)
+  
+  # tell zkt-signer that the zone has changed
+  if os.path.exists("/etc/bind/signed-zones/" + domain + "/zone.db"):
+    os.utime("/etc/bind/signed-zones/" + domain + "/zone.db", None)
+    os.system("zkt-signer -v " + domain)
+
   reloadzone(domain)
   return True
 
@@ -84,14 +92,36 @@ def reloadzone(domain):
   reloadresult = os.popen(reloadcmd).read()
   return
 
+def get_sshfps():
+  #
+  # There is a way of getting puppet to grab the keys
+  # from the hosts it manages and then generating the records
+  # but this was quicker
+  #
+  fps = {}
+  if not os.path.exists("sshfps"):
+    print "no sshfps records"
+    return fps
+
+  fh = open("sshfps", "r")
+  for line in fh:
+    host = line.split()[0]
+    if host not in fps:
+      fps[host] = []
+    fps[host].append(line.strip())
+  fh.close()
+  return fps
+
 # old sheet was "0AriFdfLzFu4-dHlsX21Fd2tNSldIVGhabTc1WnZpeEE"
 spreadsheet_key = "0AkRqDVqGxmpFdHc3UTMxTFZpY1VqWVM2ZURfMzZHSFE"
+
 worksheet_subnets = "ocx"
 worksheet_dhcp = "od0"
 domain = "emfcamp.org"
 
 fwdentries = {}
 reventries = {}
+sshfps = get_sshfps()
 
 print "Connecting to spreadsheet"
 spr_client = gdata.spreadsheet.service.SpreadsheetsService()
@@ -142,6 +172,10 @@ for row_entry in feedsubnets.entry:
       # fwd
       row = "%s\tIN\tA\t%s" % (hostname,hostin4net(subnet4,host4))
       fwdentries[zone].append(row)
+
+      if hostname in sshfps:
+        for r in sshfps[hostname]:
+          fwdentries[zone].append(r)
 
       # rev
       row = "%s\tPTR\t%s.%s.%s." % (host4,hostname,zone,domain)
@@ -194,18 +228,42 @@ for row_entry in feedscopes.entry:
 
 
 # write out  zone files
+
+oserial = None
 zoneserial = time.strftime("%Y%m%d%H")
 zoneserial = int(time.time())
+
+def get_serial(zone):
+  realzone = "/etc/bind/master/" + domainname
+  if not os.path.exists(realzone):
+    print "Can't open " + realzone + ", using default serial number".
+    return int(time.time())
+  zfh = open(realzone, "r")
+  got = False
+  for line in zfh:
+    if got:
+      line = line.strip()
+      line = line.split()[0]
+      zoneserial = int(line)
+      zoneserial += 1
+      got = False
+      break
+    if "SOA ns1.emfcamp.org" in line:
+      got = True
+  zfh.close()
+  return zoneserial
+
 
 # forward zones
 print "Generating forward zones"
 for zonekey in fwdentries.keys():
   domainname = "%s.%s" % (zonekey,domain)
   tempfile = "/tmp/tmp.%s" % (domainname)
+  zoneserial = get_serial(domainname)
   print "* %s" % (domainname)
-  writezone(domainname,zoneserial,fwdentries[zonekey],tempfile)
-  if checkzone(domainname,tempfile) == True:
-    makezonelive(domainname,tempfile)
+  writezone(domainname, zoneserial, fwdentries[zonekey], tempfile)
+  if checkzone(domainname, tempfile) == True:
+    makezonelive(domainname, tempfile)
   else:
     print "  - Zone problems: %s" % (tempfile)
 
@@ -217,8 +275,9 @@ for zonekey in reventries.keys():
   domainname = zonekey
   tempfile = "/tmp/tmp.%s" % (domainname)
   print "* %s" % (domainname)
-  writezone(domainname,zoneserial,reventries[zonekey],tempfile)
-  if checkzone(domainname,tempfile) == True:
-    makezonelive(domainname,tempfile)
+  zoneserial = get_serial(domainname)
+  writezone(domainname, zoneserial, reventries[zonekey], tempfile)
+  if checkzone(domainname, tempfile) == True:
+    makezonelive(domainname, tempfile)
   else:
     print "  - Zone problems: %s" % (tempfile)
