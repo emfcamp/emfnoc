@@ -37,7 +37,7 @@ def writezone(domainname,serial,entries,tempfile):
     os.remove(tempfile)
   f = open(tempfile, "w")
   f.write("\n")
-  f.write("; zone file built by gen-zones.py from EMF2012 Google Spreadsheet\n")
+  f.write("; zone file built by gen-zones.py from EMF2014 Google Spreadsheet\n")
   f.write("; %s.\n" % (domainname))
   f.write("\n")
   f.write("$TTL    1h\n")
@@ -51,7 +51,9 @@ def writezone(domainname,serial,entries,tempfile):
   f.write("        )\n")
   f.write("\n")
   f.write("      IN      NS  ns1.emfcamp.org.\n")
-  f.write("      IN      NS  monstrosity.pointless.net.\n")
+  f.write("      IN      NS  auth1.ns.sargasso.net.\n")
+  f.write("      IN      NS  auth2.ns.sargasso.net.\n")
+  f.write("      IN      NS  auth3.ns.sargasso.net.\n")
   f.write("\n")
   for row in entries:
     f.write("%s\n" % (row))
@@ -94,7 +96,7 @@ print "Connecting to spreadsheet"
 spr_client = gdata.spreadsheet.service.SpreadsheetsService()
 spr_client.email = ""
 spr_client.password = ""
-spr_client.source = "emfcamp dns geneartor"
+spr_client.source = "emfcamp dns generator"
 spr_client.ProgrammaticLogin()
 
 print "Querying hosts"
