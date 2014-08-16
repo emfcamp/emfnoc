@@ -43,13 +43,24 @@ scopes = 0
 for row in ipv4:
   if "VLAN" in row and 'dhcp' in row and row['dhcp'] == 'y':
     scopes += 1
+
     ipv4 = ipaddr.IPNetwork(row['IPv4-Subnet'])
-    print ipv4
-    ipv6 = ipaddr.IPNetwork('2001:7f8:8c:'+row['VLAN']+'::/64')
+    ipv6 = ipaddr.IPNetwork(row['IPv6'])
+
+    if "Domain" in row:
+      domain = row["Domain"]
+    else:
+      domain = "emf.camp"
+    if "Subdomain" in row:
+      domain = row["Subdomain"] + "." + domain
+
+    print "%s %s %s" % (ipv4, ipv6, domain)
+
     f4.write("\n")
     f4.write("# %s\n" % (row['Description']))
     f4.write("shared-network vlan%s {\n" % (row['VLAN']))
     f4.write("  subnet %s netmask %s {\n" % (ipv4.network, ipv4.netmask))
+    f4.write("    option domain-name \"" + domain + "\";\n")
     f4.write("    option domain-name-servers 78.158.87.11,78.158.87.12;\n")
     f4.write("    option routers %s;\n" % (ipv4.network + 1))
     f4.write("    pool {\n")
@@ -63,11 +74,9 @@ for row in ipv4:
     f6.write("# %s\n" % (row['Description']))
     f6.write("shared-network vlan%s {\n" % (row['VLAN']))
     f6.write("  subnet6 %s {\n" % (ipv6))
+    f6.write("    option dhcp6.domain-search \"" + domain + "\";\n")
     f6.write("    option dhcp6.name-servers 2001:7f8:8c:57::11,2001:7f8:8c:57::12;\n")
-    f6.write("    pool {\n")
-    f6.write("      failover peer \"failover-partner\";\n")
-    f6.write("      range6 %s %s;\n" % (ipv6.network + 0x11, ipv6.network + 0xffff))
-    f6.write("    }\n")
+#stateful:    f6.write("    range6 %s %s;\n" % (ipv6.network + 0x11, ipv6.network + 0xffff))
     f6.write("  }\n")
     f6.write("}\n")
 
