@@ -4,8 +4,6 @@
 
 import ipaddr, time, os, sys, ConfigParser
 
-sys.path.insert(0, '../../cisco-configbuilder')
-
 from nocsheet import login, get_worksheets, get_worksheet_data
 
 if not os.path.exists('out'):

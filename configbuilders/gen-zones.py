@@ -14,8 +14,6 @@ import os, pprint, ConfigParser, argparse
 import shutil, sys, getpass
 
 from subprocess import Popen, PIPE
-
-sys.path.insert(0, '../../cisco-configbuilder')
 from nocsheet import login, get_worksheets, get_worksheet_data
 
 def hostin4net(network,hostoctet):

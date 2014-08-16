@@ -1,0 +1,284 @@
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+
+hostname {{ switch["Hostname"] }}
+
+no aaa new-model
+
+enable secret 0 {{ config.get("switchconfig", "enable") }}
+
+{% for user in users %}
+username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
+{%- endfor %}
+
+no ip source-route
+no ip routing
+no ipv6 unicast-routing
+ip ssh version 2
+lldp run
+cdp run
+
+no ip domain-lookup
+ip domain-name emf.camp
+
+{% if switch["Camper-VLAN"] %}
+! Only perform DHCP snooping if this switch supports campers
+ip dhcp snooping vlan 10,{{ switch["Camper-VLAN"] }}
+ip dhcp snooping information option format remote-id hostname
+ip dhcp snooping
+ip device tracking
+ip arp inspection vlan 10,{{ switch["Camper-VLAN"] }}
+ip arp inspection validate src-mac dst-mac ip
+{% endif %}
+
+ip multicast-routing distributed
+
+errdisable recovery cause all
+errdisable recovery interval 120
+
+spanning-tree mode pvst
+spanning-tree extend system-id
+
+vtp mode transparent
+
+{% for vlan in vlans|sort %}
+vlan {{ vlans[vlan]['vlan'] }}
+ name {{ vlans[vlan]["name"] }}
+{%- endfor %}
+exit
+
+ip default-gateway 94.45.255.129
+interface Vlan256
+ ip address {{ switch["Mgmt-IP"] }} 255.255.255.128
+ no ip redirects
+ no ip proxy-arp
+ no ip route-cache
+
+{% if switch["Port-Prefix"]%}
+{% for port in switch["camper"] %}
+interface {{ switch["Port-Prefix"] }}{{ port }}
+ switchport mode access
+ switchport access vlan {{ switch["Camper-VLAN"] }}
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group camperv4_in in
+ ipv6 traffic-filter camperv6_in in
+ small-frame violation-rate 1000
+ small-frame violation rate 1000         ! yes this is twice; some switches have different syntax
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ lldp transmit
+ lldp receive
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ load-interval 30
+ no shutdown
+{% endfor %}
+{% endif %}
+
+{% if switch["artnet"] %}
+{% for anetp in switch["artnet"] %}
+interface {{ switch["Port-Prefix"] }}{{anetp}}
+ switchport mode access
+ switchport access vlan 10
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group artnetv4_in in
+ small-frame violation-rate 1000
+ small-frame violation rate 1000         ! yes this is twice; some switches have different syntax
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ lldp transmit
+ lldp receive
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard disable
+ ip verify source
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ load-interval 30
+ no shutdown
+
+{% endfor %}
+{% endif %}
+
+
+{% set downPortChannel = 2 %}
+
+{% for link in switch["Links"] %}
+
+{% if link["Dir"] == "up" %}
+! {{ link["Dir"] }}link to {{ link["To"] }}
+
+{% for port in link["Ports"] %}
+
+interface {{ port[0] }}
+ description Uplink to {{ link["To"] }} port {{ port[1] }}
+ speed 1000
+ duplex full
+ full-duplex ! different syntax for some switches
+ channel-group 1 mode active
+ load-interval 30
+ cdp enable
+ lldp receive
+ lldp transmit
+ no shutdown
+
+{% endfor %}
+
+interface Port-channel1
+ description Uplink to {{ link["To"] }}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlans 10,171,256{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
+ ip arp inspection trust
+ ip dhcp snooping trust
+ load-interval 30
+ no shutdown
+
+{% endif %}{# Dir == up #}
+
+{% if link["Dir"] == "down" %}
+! {{ link["Dir"] }}link to {{ link["To"] }}
+
+{% for port in link["Ports"] %}
+
+interface {{ port[0] }}
+ description Downlink to {{ link["To"] }} port {{ port[1] }}
+ speed 1000
+ duplex full
+ full-duplex ! different syntax for some switches
+ channel-group {{ downPortChannel }} mode active
+ load-interval 30
+ cdp enable
+ lldp receive
+ lldp transmit
+ no shutdown
+
+{% endfor %}
+
+interface Port-channel{{ downPortChannel }}
+ description Downlink to {{ link["To"] }}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,171,256{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
+ ip arp inspection trust
+ ip dhcp snooping trust
+ load-interval 30
+ no shutdown
+
+{% set downPortChannel = downPortChannel + 1 %}
+
+{% endif %}
+{% endfor %}
+
+ip classless
+no ip http server
+no ip http secure-server
+
+! ssh
+no ip access-list standard 22
+ip access-list standard 22
+ permit 78.158.92.196 ! david
+ permit 77.73.148.52 ! david
+ permit 91.209.244.43 ! jasper
+ permit 94.45.250.0 0.0.1.255    ! noc wired + wireless
+ permit 78.158.87.0 0.0.0.63 ! noc servers
+ deny any log
+
+! ntp
+no ip access-list standard 23
+ip access-list standard 23
+ permit host 78.158.87.11
+ permit host 78.158.87.12
+ deny any log
+
+! snmp
+ip access-list standard 61
+ permit 94.45.250.0  0.0.1.255    ! noc wired + wireless
+ permit 78.158.87.0 0.0.0.63 ! noc servers
+ deny any log
+
+! deny all
+ip access-list standard 99
+ deny any log
+
+ip access-list extended artnetv4_in
+  permit ip 192.168.0.0 0.0.3.255 any
+  deny ip any any log-input
+
+{% if mycampervlan %}
+ip access-list extended camperv4_in
+ permit ip {{ mycampervlan["ipv4-subnet"].network }} {{ mycampervlan["ipv4-subnet"].hostmask }} any
+ deny   ip any any log-input
+
+ipv6 access-list camperv6_in
+ permit ipv6 {{ mycampervlan["ipv6-subnet"] }} any
+ deny ipv6 any any log-input
+{% endif %}
+
+snmp-server community {{ config.get("switchconfig", "community") }} RO 61
+snmp-server location EMF
+snmp-server contact EMF NOC
+snmp-server ifindex persist
+snmp ifmib ifindex persist ! different syntax for some switches
+
+banner motd ^
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^
+
+line con 0
+ login local
+ exec-timeout 30 0
+ stopbits 1
+ transport preferred none
+line vty 0 15
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+
+ntp update-calendar
+ntp source Vlan256
+ntp server 78.158.87.11
+ntp server 78.158.87.12
+ntp access-group query-only 99
+ntp access-group serve 99
+ntp access-group peer 23
+ntp access-group serve-only 99
+
+logging source-interface Vlan256
+logging 78.158.87.14
+
+! Don't forget to crypto key generate rsa general-keys modulus 2048
