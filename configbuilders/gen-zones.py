@@ -124,9 +124,14 @@ def writezone(domainname, serial, entries, tempfile):
   f.write("        )\n")
   f.write("\n")
   f.write("      IN      NS  ns1.emfcamp.org.\n")
-  f.write("      IN      NS  auth1.ns.sargasso.net.\n")
-  f.write("      IN      NS  auth2.ns.sargasso.net.\n")
-  f.write("      IN      NS  auth3.ns.sargasso.net.\n")
+  if domainname == "emf.camp":
+    f.write("      IN      NS  A.AUTHNS.BITFOLK.COM.\n")
+    f.write("      IN      NS  B.AUTHNS.BITFOLK.COM.\n")
+    f.write("      IN      NS  C.AUTHNS.BITFOLK.COM.\n")
+  else:
+    f.write("      IN      NS  auth1.ns.sargasso.net.\n")
+    f.write("      IN      NS  auth2.ns.sargasso.net.\n")
+    f.write("      IN      NS  auth3.ns.sargasso.net.\n")
   f.write("\n")
   for row in entries:
     f.write("%s\n" % (row))
