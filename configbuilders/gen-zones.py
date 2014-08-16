@@ -148,16 +148,11 @@ def makezonelive(domain,file):
     return False
   livefile = live_zone_file(domain)
   shutil.copyfile(file, livefile)
-  os.remove(file)
 
   if is_zone_signed(domain):
     # append to end of file
     with open(livefile, "a") as f:
       f.write("\n$INCLUDE dnskey.db\n")
-
-    # tell zkt-signer that the zone has changed
-    os.utime(livefile, None)
-    os.system("zkt-signer -v " + domain)
   else:
     reloadzone(domain)
 
@@ -313,3 +308,11 @@ for zonename in zones.keys():
       makezonelive(zonename, tempfile)
   else:
     print " VALIDATION FAILED: %s" % (tempfile)
+
+if args.deploy:
+  print "Signing..."
+  # tell zkt-signer that the zones have changed
+  os.system("zkt-signer -v -r")
+
+  # tell bind that all zones have changed:
+#  os.system("rndc reload")
