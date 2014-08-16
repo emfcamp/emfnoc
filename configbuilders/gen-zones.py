@@ -9,7 +9,7 @@
 
 import ipaddr
 import time
-import string
+import string, re
 import os, pprint, ConfigParser, argparse
 import shutil, sys, getpass
 
@@ -96,9 +96,20 @@ def pretty_host(ipv4):
   octets = ipv4.packed
   return "host-%s-%s-%s-%s" % (ord(octets[0]), ord(octets[1]), ord(octets[2]), ord(octets[3]))
 
+def is_zone_signed(zone):
+  if os.path.isdir("/etc/bind/signed-zones/%s" % zone):
+    return True
+  else:
+    return False
 
+def live_zone_file(zone):
+#  /etc/bind/signed-zones/emf.camp
+  if is_zone_signed(zone):
+    return "/etc/bind/signed-zones/%s/zone.db" % zone
+  else:
+    return "/etc/bind/master/%s" % zone
 
-def writezone(domainname,serial,entries,tempfile):
+def writezone(domainname, serial, entries, tempfile):
   if os.path.exists(tempfile) == True:
     os.remove(tempfile)
   f = open(tempfile, "w")
@@ -123,6 +134,7 @@ def writezone(domainname,serial,entries,tempfile):
   f.write("\n")
   for row in entries:
     f.write("%s\n" % (row))
+
   f.close()
   return
 
@@ -138,16 +150,21 @@ def makezonelive(domain,file):
   if getpass.getuser() != "root":
     print "  - Cannot put zone live, must be run as root"
     return False
-  livepath = "/etc/bind/master/%s" % (domain)
-  shutil.copyfile(file,livepath)
+  livefile = live_zone_file(domain)
+  shutil.copyfile(file, livefile)
   os.remove(file)
 
-  # tell zkt-signer that the zone has changed
-  if os.path.exists("/etc/bind/signed-zones/" + domain + "/zone.db"):
-    os.utime("/etc/bind/signed-zones/" + domain + "/zone.db", None)
-    os.system("zkt-signer -v " + domain)
+  if is_zone_signed(domain):
+    # append to end of file
+    with open(livefile, "a") as f:
+      f.write("\n$INCLUDE dnskey.db\n")
 
-  reloadzone(domain)
+    # tell zkt-signer that the zone has changed
+    os.utime(livefile, None)
+    os.system("zkt-signer -v " + domain)
+  else:
+    reloadzone(domain)
+
   return True
 
 def reloadzone(domain):
@@ -259,19 +276,17 @@ for row in addressing:
 #print "ZONES:"
 #pprint.pprint(zones)
 
-# write out  zone files
-
-oserial = None
-zoneserial = time.strftime("%Y%m%d%H")
-zoneserial = int(time.time())
+# write out zone files
 
 def get_serial(zonename):
-  realzone = "/etc/bind/master/" + zonename
+  realzone = live_zone_file(zonename)
   if not os.path.exists(realzone):
     print "Can't open " + realzone + ", using default serial number"
     return int(time.time())
   zfh = open(realzone, "r")
   got = False
+
+  zoneserial = None
   for line in zfh:
     if got:
       line = line.strip()
@@ -280,9 +295,13 @@ def get_serial(zonename):
       zoneserial += 1
       got = False
       break
-    if "SOA ns1.emfcamp.org" in line:
+    if re.search("SOA\s+ns1\.emfcamp\.org", line):
       got = True
   zfh.close()
+
+  if zoneserial == None:
+    print "Couldn't find serial for " + zonename + " - using default"
+    return int(time.time())
   return zoneserial
 
 
