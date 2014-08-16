@@ -115,7 +115,7 @@ def writezone(domainname, serial, entries, tempfile):
   f.write("\n")
   f.write("$TTL    1h\n")
   f.write("$ORIGIN %s.\n" % (domainname))
-  f.write("@   IN  SOA ns1.emfcamp.org.    noc.emfcamp.org (\n")
+  f.write("@   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (\n")
   f.write("            %s ; serial\n" % (serial))
   f.write("            3H ; refresh\n")
   f.write("            15 ; retry\n")
