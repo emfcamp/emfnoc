@@ -88,10 +88,6 @@ def add_ipv6_host(hostname, fwd_zonename, ipv6):
   record = "%s\tIN\tPTR\t%s.%s." % (rev6_hostname, hostname, fwd_zonename)
   add_record(rev6_zonename, record)
 
-def add_cname(hostname, fwd_zonename, dest):
-  record = "%s\tIN\tCNAME\t%s" % (hostname, dest)
-  add_record(fwd_zonename, record)
-
 def pretty_host(ipv4):
   octets = ipv4.packed
   return "host-%s-%s-%s-%s" % (ord(octets[0]), ord(octets[1]), ord(octets[2]), ord(octets[3]))
@@ -250,11 +246,11 @@ for row in addressing:
       add_ipv4_host(hostname, fwd_zonename, ipv4)
 
   # is it a cname?
-  elif "dns" in row and row["dns"] == "cname":
+  elif "dns" in row and row["dns"] == "record":
     hostname = row["Hostname"]
     if "Subdomain" in row:
       hostname += "." + row["Subdomain"]
-    add_cname(hostname, fwd_zonename, row["Description"])
+    add_record(fwd_zonename, hostname + "\t" + row["Description"])
 
 #print "ZONES:"
 #pprint.pprint(zones)
