@@ -48,8 +48,6 @@ def get_worksheet_data(spr_client, spreadsheet, wks):
     print "worksheet " + wks + " not found"
     exit()
 
-  print "GET SHEET " + wks
-
   wks_key = sheets[wks]
   feed = spr_client.GetCellsFeed(spreadsheet, wks_key)
 

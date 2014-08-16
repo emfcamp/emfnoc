@@ -290,11 +290,11 @@ print "Generating zones"
 for zonename in zones.keys():
   tempfile = "out/zones/%s" % (zonename)
   zoneserial = get_serial(zonename)
-  print "* %s" % (zonename)
+  print "* %s" % (zonename),
   writezone(zonename, zoneserial, zones[zonename], tempfile)
   if checkzone(zonename, tempfile) == True:
-    print "  - Validates"
+    print " ok"
     if args.deploy:
       makezonelive(zonename, tempfile)
   else:
-    print "  - Zone problems: %s" % (tempfile)
+    print " VALIDATION FAILED: %s" % (tempfile)

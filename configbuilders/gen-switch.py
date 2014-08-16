@@ -37,13 +37,6 @@ def download(spr_client, spreadsheet):
   v4["list"] = addressing
   v4.close()
 
-  print "generating VLANs"
-  vlans = get_vlans(addressing)
-
-  vls = shelve.open("data/vlans")
-  vls['list'] = vlans
-  vls.close()
-
   print "downloading Links"
   links = get_worksheet_data(spr_client, spreadsheet, "Links")
   
@@ -58,7 +51,7 @@ def get_vlans(addressing):
 
   for line in addressing:
     if 'VLAN' in line:
-      print  line['VLAN']
+#      print line['VLAN']
       desc = ''
       for c in line['Description']:
         if c.isalnum():
@@ -72,7 +65,7 @@ def get_vlans(addressing):
                               'name': desc,
                               'vlan': int(line['VLAN'])
                               }
-      print vlans[line['VLAN']]
+#      print vlans[line['VLAN']]
 
   return vlans
 
@@ -82,9 +75,10 @@ def dump_worksheet(spr_client, spreadsheet, wks):
 def generate():
   switches = shelve.open("data/switches")["list"]
   users = shelve.open("data/users")["list"]
-  vlans = shelve.open("data/vlans")["list"]
   
   addressing = shelve.open("data/addressing")["list"]
+  print "generating VLANs"
+  vlans = get_vlans(addressing)
 
   links = shelve.open("data/links")["list"]
 
@@ -93,7 +87,7 @@ def generate():
   for link in links:
     o = {"Dir" : "down"}
     o2 = {"Dir" : "up"}
-    print link
+#    print link
     if link["Switch1"] not in sw_links:
       sw_links[link["Switch1"]] = []
 
@@ -102,8 +96,6 @@ def generate():
 
     o["To"] = link["Switch2"]
     o2["To"] = link["Switch1"]
-#    'Switch1-Port1': '3', 'Switch1-Port2': '4', 'Switch1-Port1-SFP': '1000baseT', 'Switch1-Port2-SFP': '1000baseT',
-    # not sure about sfp's
     o["Ports"] = []
     for port in (("Switch1-Port1", "Switch2-Port1"), ("Switch1-Port2", "Switch2-Port2")):
       if port[0] in link:
@@ -120,8 +112,6 @@ def generate():
   loader = FileSystemLoader('templates')
   env = Environment(loader=loader)
 
-  print
-  print
   if not os.path.exists('out'):
     os.mkdir('out')
   if not os.path.exists('out' + os.path.sep + "switches"):
@@ -140,15 +130,13 @@ def generate():
       sw["Links"] = sw_links[sw["Hostname"]]
       for l in sw["Links"]:
         if l["Dir"] == "down":
-          print l["To"], l["Dir"]
+#          print l["To"], l["Dir"]
           if sw["Hostname"] not in sw_children:
             sw_children[sw["Hostname"]] = []
           sw_children[sw["Hostname"]].append(l["To"])
 
-  print
-
-  for k in sw_children:
-    print k, sw_children[k]
+#  for k in sw_children:
+#    print k, sw_children[k]
 
   # graphiz is fun :)
   gfh = open("out/vlans.gv", "w")
@@ -172,10 +160,10 @@ def generate():
 
   gfh.close()
 
-  print sw_to_vlan
-  print
-  print sw_children
-  print
+#  print sw_to_vlan
+#  print
+#  print sw_children
+#  print
 
   def get_swchildren(sw, cs = None):
     if not cs:
@@ -183,11 +171,11 @@ def generate():
     if sw not in sw_children:
       return {}
     for c in sw_children[sw]:
-      if c not in sw_to_vlan:
-        print "no vlan for " + c
-      else:
+      if c in sw_to_vlan:
         if sw_to_vlan[c] not in cs:
           cs[sw_to_vlan[c]] = 1
+#      else:
+#        print "no vlan for " + c
       cs.update(get_swchildren(c, cs))
     return cs
 
@@ -207,11 +195,11 @@ def generate():
 
   sw_uplink_vlans = o    
 
-  for k in sw_uplink_vlans:
-    print k, sw_uplink_vlans[k]
+#  for k in sw_uplink_vlans:
+#    print k, sw_uplink_vlans[k]
 
   for sw in switches:
-    print sw["Hostname"], ":"
+    print "Generating " + sw["Hostname"] + " of type " + sw["Type"]
 
     if "Artnet-Hi" in sw:
       sw["artnet"] = range(int(sw["Artnet-Lo"]), int(sw["Artnet-Hi"]) + 1)
@@ -219,8 +207,8 @@ def generate():
     if "Camper-Hi" in sw:
       sw["camper"] = range(int(sw["Camper-Lo"]), int(sw["Camper-Hi"]) + 1)
     
-    for l in sw["Links"]:
-      print l
+#    for l in sw["Links"]:
+#      print l
 
     if "Links" not in sw:
       print "*** No links found for switch ", sw["Hostname"]
@@ -253,7 +241,7 @@ def generate():
       ofh.write(out)
       ofh.close()
     else:
-      print "no template found for " + sw["Hostname"] + "!"
+      print " - No template found for " + sw["Hostname"] + "!"
 
 
 if __name__ == "__main__":
