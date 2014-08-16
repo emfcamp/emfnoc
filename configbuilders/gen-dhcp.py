@@ -2,10 +2,7 @@
 
 # EMF 2014 dhcpd config generator
 
-import gdata.spreadsheet.service
-import gdata.spreadsheet.text_db
-import ipaddr
-import time, os, sys, ConfigParser
+import ipaddr, time, os, sys, ConfigParser
 
 sys.path.insert(0, '../../cisco-configbuilder')
 
@@ -44,7 +41,7 @@ f6.write("#\n")
 scopes = 0
 
 for row in ipv4:
-  if "VLAN" in row:
+  if "VLAN" in row and 'dhcp' in row and row['dhcp'] == 'y':
     print row["Subnet"]
 
     scopes += 1
