@@ -1,21 +1,22 @@
 #!/usr/bin/python
 
-# 
+#
 # generate zone files from google spreadsheet
-# nat@nuqe.net
 #
 # Updated by JasperW to handle DNSSEC
+# Updated by DavidC for 2014 spreadsheet format and more automation
 #
 
-import gdata.spreadsheet.service
-import gdata.spreadsheet.text_db
 import ipaddr
 import time
 import string
-import os
-import shutil
-import getpass
+import os, pprint, ConfigParser, argparse
+import shutil, sys, getpass
+
 from subprocess import Popen, PIPE
+
+sys.path.insert(0, '../../cisco-configbuilder')
+from nocsheet import login, get_worksheets, get_worksheet_data
 
 def hostin4net(network,hostoctet):
   ssubnet = network.split('/')
@@ -25,7 +26,7 @@ def hostin4net(network,hostoctet):
 
 def hostin6net(network,hostaddr):
   ssubnet = network.split('/')
-  
+
   return "%s%s" % (ssubnet[0],hostaddr)
 
 def subnet4tozone(network):
@@ -33,6 +34,71 @@ def subnet4tozone(network):
   asubnet = ssubnet[0].split('.')
   zonename = "%s.%s.%s.in-addr.arpa" % (asubnet[2],asubnet[1],asubnet[0])
   return zonename
+
+def ip6_arpa(octets, therange):
+  out = ""
+  for i in therange:
+    if out != "":
+      out = "." + out
+    out = "%x.%x" % (ord(octets[i]) & 0xf, ord(octets[i]) >> 4) + out
+  return out
+
+def reverse_zone(address):
+  octets = address.packed
+  if isinstance(address, ipaddr._BaseV4):
+    return "%s.%s.%s.in-addr.arpa" % (ord(octets[2]), ord(octets[1]), ord(octets[0]))
+  elif isinstance(address, ipaddr._BaseV6):
+    # it's a /48, so we want bytes 0-5 (nibbles 0-11)
+    return ip6_arpa(octets, range(0, 6)) + ".ip6.arpa"
+    return zone
+
+#x"c.8.0.0.8.f.7.0.1.0.0.2.ip6.arpa"
+#x = ipaddr.IPAddress("2001:7f8:8c:57::11")
+#print reverse_zone(x)
+#print ip6_arpa(x.packed, range(6,16)) # it's a /48 so we want bytes 6-15
+#exit()
+
+def add_record(zonename, record):
+  if zonename not in zones.keys():
+    zones[zonename] = []
+  zones[zonename].append(record)
+
+def add_ipv4_host(hostname, fwd_zonename, ipv4):
+  #v4 forward
+  record = "%s\tIN\tA\t%s" % (hostname, ipv4.compressed)
+  add_record(fwd_zonename, record)
+
+  if hostname in sshfps:
+    for r in sshfps[hostname]:
+      add_record(fwd_zonename, r)
+
+  #v4 reverse
+  rev4_zonename = reverse_zone(ipv4)
+
+  record = "%s\tIN\tPTR\t%s.%s." % (ord(ipv4.packed[3]), hostname, fwd_zonename)
+  add_record(rev4_zonename, record)
+
+def add_ipv6_host(hostname, fwd_zonename, ipv6):
+  #v6 forward
+  record = "%s\tIN\tAAAA\t%s" % (hostname, ipv6.compressed)
+  add_record(fwd_zonename, record)
+
+  #v6 reverse
+  rev6_zonename = reverse_zone(ipv6)
+  rev6_hostname = ip6_arpa(ipv6.packed, range(6,16)) # it's a /48 so we want bytes 6-15
+
+  record = "%s\tIN\tPTR\t%s.%s." % (rev6_hostname, hostname, fwd_zonename)
+  add_record(rev6_zonename, record)
+
+def add_cname(hostname, fwd_zonename, dest):
+  record = "%s\tIN\tCNAME\t%s" % (hostname, dest)
+  add_record(fwd_zonename, record)
+
+def pretty_host(ipv4):
+  octets = ipv4.packed
+  return "host-%s-%s-%s-%s" % (ord(octets[0]), ord(octets[1]), ord(octets[2]), ord(octets[3]))
+
+
 
 def writezone(domainname,serial,entries,tempfile):
   if os.path.exists(tempfile) == True:
@@ -62,7 +128,7 @@ def writezone(domainname,serial,entries,tempfile):
   f.close()
   return
 
-def checkzone(domain,file):
+def checkzone(domain, file):
   checkcmd = "/usr/sbin/named-checkzone %s %s" % (domain,file)
   checkresult = os.popen(checkcmd).read()
   if checkresult.endswith("OK\n") == True:
@@ -72,12 +138,12 @@ def checkzone(domain,file):
 
 def makezonelive(domain,file):
   if getpass.getuser() != "root":
-    print "  - Cannot put zone live, must be ran as root"
+    print "  - Cannot put zone live, must be run as root"
     return False
   livepath = "/etc/bind/master/%s" % (domain)
   shutil.copyfile(file,livepath)
   os.remove(file)
-  
+
   # tell zkt-signer that the zone has changed
   if os.path.exists("/etc/bind/signed-zones/" + domain + "/zone.db"):
     os.utime("/etc/bind/signed-zones/" + domain + "/zone.db", None)
@@ -112,120 +178,88 @@ def get_sshfps():
   fh.close()
   return fps
 
-# old sheet was "0AriFdfLzFu4-dHlsX21Fd2tNSldIVGhabTc1WnZpeEE"
-spreadsheet_key = "0AkRqDVqGxmpFdHc3UTMxTFZpY1VqWVM2ZURfMzZHSFE"
 
-worksheet_subnets = "ocx"
-worksheet_dhcp = "od0"
-domain = "emfcamp.org"
+default_domain = "emf.camp"
 
-fwdentries = {}
-reventries = {}
+if not os.path.exists('out'):
+  os.mkdir('out')
+if not os.path.exists('out/zones'):
+  os.mkdir('out/zones')
+
+config = ConfigParser.ConfigParser()
+if not config.read("/etc/emf-gdata.conf"):
+  print "Warning: config file /etc/emf-gdata.conf could not be found or read"
+
+
+parser = argparse.ArgumentParser(description='Generate cisco IOS config files from gdocs.')
+
+parser.add_argument('--deploy', action='store_true',
+                    help='deploy zone files after generating')
+
+args = parser.parse_args()
+
+
+spreadsheet = config.get('gdata', 'noc_combined')
+
+spr_client = login("emfcamp DNS zone generator", config)
+
+print "downloading Addressing"
+addressing = get_worksheet_data(spr_client, spreadsheet, "Addressing")
+
 sshfps = get_sshfps()
+zones = {}
 
-print "Connecting to spreadsheet"
-spr_client = gdata.spreadsheet.service.SpreadsheetsService()
-spr_client.email = ""
-spr_client.password = ""
 
-if spr_client.email == "":
-  if os.getenv("HOME") != None:
-    if os.path.exists(os.getenv("HOME") + os.path.sep + ".google.account"):
-      fh = open(os.getenv("HOME") + os.path.sep + ".google.account", "r")
-      spr_client.email = fh.read().strip()
-      fh.close()
 
-if spr_client.email == "":
-  print "No gdocs email address setup, either edit this file or put it in ~/.google.account"
-  exit()
-
-if spr_client.password == "":
-  spr_client.password = getpass.getpass("Please enter the password for " + spr_client.email + ":")
-
-spr_client.source = "emfcamp dns generator"
-spr_client.ProgrammaticLogin()
-
-print "Querying hosts"
-qsubnets = gdata.spreadsheet.service.ListQuery()
-qsubnets.orderby = 'column:v4subnet column:v4'
-feedsubnets = spr_client.GetListFeed(spreadsheet_key, worksheet_subnets, query=qsubnets)
-
-# loop through each row
-for row_entry in feedsubnets.entry:
-  record = gdata.spreadsheet.text_db.Record(row_entry=row_entry)
-  hostname = record.content['hostname']
-  zone = record.content['zone']
+for row in addressing:
+  if "Domain" in row:
+    fwd_zonename = row["Domain"];
+  else:
+    fwd_zonename = default_domain
 
   # is it a host?
-  if hostname != None and zone != None:
-    subnet4 = record.content['v4subnet']
-    host4 = record.content['v4']
-    subnet6 = record.content['v6subnet']
-    host6 = record.content['v6']
+  if "Hostname" in row and "dns" in row and row["dns"] == "y":
+    hostname = row["Hostname"]
+    if "Subdomain" in row:
+      hostname += "." + row["Subdomain"]
 
-    # create zone dict entry if need be
-    if zone not in fwdentries.keys():
-      fwdentries[zone] = []
+    if "IPv4" in row:
+      ipv4 = ipaddr.IPv4Address(row["IPv4"])
+      add_ipv4_host(hostname, fwd_zonename, ipv4)
 
-    # v4
-    if subnet4 != None and host4 != None:
-      # fwd
-      row = "%s\tIN\tA\t%s" % (hostname,hostin4net(subnet4,host4))
-      fwdentries[zone].append(row)
+    if "IPv6" in row:
+      ipv6 = ipaddr.IPv6Address(row["IPv6"])
+      add_ipv6_host(hostname, fwd_zonename, ipv6)
 
-      if hostname in sshfps:
-        for r in sshfps[hostname]:
-          fwdentries[zone].append(r)
+  # is it a subnet with auto dns?
+  elif "IPv4-Subnet" in row and "dns" in row and row["dns"] == "auto":
+    subnet = ipaddr.IPv4Network(row["IPv4-Subnet"])
+    # router entry
+    if "VLAN" in row:
+      vlan = row["VLAN"]
+      add_ipv4_host("vlan" + vlan + ".SWCORE", "emf.camp", subnet.network + 1)
+#      if "IPv6" in row:
+      ipv6 = ipaddr.IPv6Network(row["IPv6"])
+      add_ipv6_host("vlan" + vlan + ".SWCORE", "emf.camp", ipv6.network + 1)
 
-      # rev
-      row = "%s\tPTR\t%s.%s.%s." % (host4,hostname,zone,domain)
-      revzone4 = subnet4tozone(subnet4)
-      if revzone4 not in reventries.keys():
-        reventries[revzone4] = []
-      reventries[revzone4].append(row)
+    # host entries
+    for ipv4 in subnet.iterhosts():
+      if ipv4 == subnet.network + 1: # first host is the gateway
+        continue
+      hostname = pretty_host(ipv4)
+      if "Subdomain" in row:
+        hostname += "." + row["Subdomain"]
+      add_ipv4_host(hostname, fwd_zonename, ipv4)
 
-    # v6 fwd
-    if subnet6 != None and host6 != None:
-      row = "%s\tIN\tAAAA\t%s" % (hostname,hostin6net(subnet6,host6))
-      fwdentries[zone].append(row)	
+  # is it a cname?
+  elif "dns" in row and row["dns"] == "cname":
+    hostname = row["Hostname"]
+    if "Subdomain" in row:
+      hostname += "." + row["Subdomain"]
+    add_cname(hostname, fwd_zonename, row["Description"])
 
-# dhcp fwd and rev entries
-print "Querying DHCP scopes"
-qscopes = gdata.spreadsheet.service.ListQuery()
-qscopes.orderby = 'column:subnet'
-feedscopes = spr_client.GetListFeed(spreadsheet_key, worksheet_dhcp, query=qscopes)
-for row_entry in feedscopes.entry:
-  record = gdata.spreadsheet.text_db.Record(row_entry=row_entry)
-  version = record.content['version']
-  if version == "4":
-    if "ip_network" in dir(ipaddr):
-      # the ipaddr module seems to of changed api's at some point?!?
-      net4 = ipaddr.ip_network(record.content['subnet'])
-    else:
-      net4 = ipaddr.IPNetwork(record.content['subnet'])
-    scopestart = record.content['start']
-    scopefinish = record.content['finish']
-    scopename = record.content['name']
-    scopefwdzone = record.content['fwdzone']
-    paststart = False
-    pastfinish = False
-    for x in net4.iterhosts():
-      ip = str(x)
-      if ip == scopestart:
-        paststart = True
-      if paststart == True and pastfinish == False:
-        iparr = ip.split('.')
-        hostname = "%s-%s-%s" % (scopename,iparr[2],iparr[3])
-        fwdrow = "%s\tIN\tA\t%s" % (hostname,ip)
-        fwdentries[scopefwdzone].append(fwdrow)
-        revzone = subnet4tozone(ip)
-        revrow = "%s\tPTR\t%s.%s.%s." % (iparr[3],hostname,scopefwdzone,domain)
-        if revzone not in reventries.keys():
-          reventries[revzone] = []
-        reventries[revzone].append(revrow)
-      if ip == scopefinish:
-        pastfinish = True
-
+#print "ZONES:"
+#pprint.pprint(zones)
 
 # write out  zone files
 
@@ -233,10 +267,10 @@ oserial = None
 zoneserial = time.strftime("%Y%m%d%H")
 zoneserial = int(time.time())
 
-def get_serial(zone):
-  realzone = "/etc/bind/master/" + domainname
+def get_serial(zonename):
+  realzone = "/etc/bind/master/" + zonename
   if not os.path.exists(realzone):
-    print "Can't open " + realzone + ", using default serial number".
+    print "Can't open " + realzone + ", using default serial number"
     return int(time.time())
   zfh = open(realzone, "r")
   got = False
@@ -254,30 +288,15 @@ def get_serial(zone):
   return zoneserial
 
 
-# forward zones
-print "Generating forward zones"
-for zonekey in fwdentries.keys():
-  domainname = "%s.%s" % (zonekey,domain)
-  tempfile = "/tmp/tmp.%s" % (domainname)
-  zoneserial = get_serial(domainname)
-  print "* %s" % (domainname)
-  writezone(domainname, zoneserial, fwdentries[zonekey], tempfile)
-  if checkzone(domainname, tempfile) == True:
-    makezonelive(domainname, tempfile)
-  else:
-    print "  - Zone problems: %s" % (tempfile)
-
-print ""
-
-# revzones
-print "Generating reverse zones"
-for zonekey in reventries.keys():
-  domainname = zonekey
-  tempfile = "/tmp/tmp.%s" % (domainname)
-  print "* %s" % (domainname)
-  zoneserial = get_serial(domainname)
-  writezone(domainname, zoneserial, reventries[zonekey], tempfile)
-  if checkzone(domainname, tempfile) == True:
-    makezonelive(domainname, tempfile)
+print "Generating zones"
+for zonename in zones.keys():
+  tempfile = "out/zones/%s" % (zonename)
+  zoneserial = get_serial(zonename)
+  print "* %s" % (zonename)
+  writezone(zonename, zoneserial, zones[zonename], tempfile)
+  if checkzone(zonename, tempfile) == True:
+    print "  - Validates"
+    if args.deploy:
+      makezonelive(zonename, tempfile)
   else:
     print "  - Zone problems: %s" % (tempfile)
