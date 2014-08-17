@@ -16,6 +16,9 @@ import shutil, sys, getpass
 from subprocess import Popen, PIPE
 from nocsheet import login, get_worksheets, get_worksheet_data
 
+codenamepos = 0
+
+
 def hostin4net(network,hostoctet):
   ssubnet = network.split('/')
   asubnet = ssubnet[0].split('.')
@@ -88,9 +91,24 @@ def add_ipv6_host(hostname, fwd_zonename, ipv6):
   record = "%s\tIN\tPTR\t%s.%s." % (rev6_hostname, hostname, fwd_zonename)
   add_record(rev6_zonename, record)
 
-def pretty_host(ipv4):
-  octets = ipv4.packed
-  return "host-%s-%s-%s-%s" % (ord(octets[0]), ord(octets[1]), ord(octets[2]), ord(octets[3]))
+def pretty_host(zonename, ipv4):
+  if (zonename == "emf.camp"):
+    octets = ipv4.packed
+    return "host-%s-%s-%s-%s" % (ord(octets[0]), ord(octets[1]), ord(octets[2]), ord(octets[3]))
+  else:
+    global codenamepos
+    if (codenamepos % len(codenames) == codenamepos / len(codenames)):
+      codenamepos += 1
+    code1 = codenamepos / len(codenames)
+    code2 = codenamepos % len(codenames)
+    if code1 >= len(codenames):
+      print "RUN OUT OF CODENAMES AT POS %d" % codenamepos
+      exit(1)
+
+    codename1 = codenames[code1]["Codename"].replace(" ", "-")
+    codename2 = codenames[code2]["Codename"].replace(" ", "-")
+    codenamepos += 1
+    return codename1 + "-" + codename2
 
 def is_zone_signed(zone):
   if os.path.isdir("/etc/bind/signed-zones/%s" % zone):
@@ -217,10 +235,15 @@ spr_client = login("emfcamp DNS zone generator", config)
 print "downloading Addressing"
 addressing = get_worksheet_data(spr_client, spreadsheet, "Addressing")
 
+print "downloading codenames"
+codenames = get_worksheet_data(spr_client, spreadsheet, "Codenames")
+pprint.pprint(codenames)
+
+#for x in range(0, 2560000):
+#  print pretty_host("gchq.org.uk", None)
+
 sshfps = get_sshfps()
 zones = {}
-
-
 
 for row in addressing:
   if "Domain" in row:
@@ -257,7 +280,7 @@ for row in addressing:
     for ipv4 in subnet.iterhosts():
       if ipv4 == subnet.network + 1: # first host is the gateway
         continue
-      hostname = pretty_host(ipv4)
+      hostname = pretty_host(fwd_zonename, ipv4)
       if "Subdomain" in row:
         hostname += "." + row["Subdomain"]
       add_ipv4_host(hostname, fwd_zonename, ipv4)
