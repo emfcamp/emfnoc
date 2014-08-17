@@ -105,8 +105,8 @@ def pretty_host(zonename, ipv4):
       print "RUN OUT OF CODENAMES AT POS %d" % codenamepos
       exit(1)
 
-    codename1 = codenames[code1]["Codename"].strip().replace(" ", "-")
-    codename2 = codenames[code2]["Codename"].strip().replace(" ", "-")
+    codename1 = codenames[code1]["Codename"].strip().replace(" ", "")
+    codename2 = codenames[code2]["Codename"].strip().replace(" ", "")
     codenamepos += 1
     return codename1 + "-" + codename2
 
