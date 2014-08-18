@@ -25,7 +25,10 @@ debug = False
 
 pdf.add_page()
 
-for file in os.listdir("out/switches/"):
+files = os.listdir("out/switches/")
+files.sort()
+
+for file in files:
   with open("out/switches/" + file, "r") as f:
     label = f.read()
 
@@ -54,9 +57,9 @@ for file in os.listdir("out/switches/"):
   n = 0
   for line in label.split("\n"):
     if n == 0:
-      pdf.set_font('','B')
+      pdf.set_font('', 'B', 14)
     else:
-      pdf.set_font('','')
+      pdf.set_font('', '', 9)
     pdf.set_xy(cellx + 25, celly + 5 + (n*3.7))
     pdf.write(0, txt=line)
     n += 1
