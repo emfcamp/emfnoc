@@ -8,7 +8,7 @@ Campers: {{ mycampervlan["ipv4-subnet"] }}
 Campers (VLAN {{ switch["Camper-VLAN"] }}): {{ switch["Port-Prefix"] }}{{ switch["Camper-Lo"] }} - {{ switch["Camper-Hi"] }}
 {%- endif %}
 {%- if switch["artnet"] %}
-ArtNet (VLAN 10): {{ switch["Port-Prefix"] }}{{ switch["Artnet-Lo"] }}{% if (switch["Artnet-Lo"] < ["Artnet-Hi"]) %} - {{ switch["Artnet-Hi"] }}{% endif %}
+ArtNet (VLAN 10): {{ switch["Port-Prefix"] }}{{ switch["Artnet-Lo"] }}{% if switch["Artnet-Lo"]|int < switch["Artnet-Hi"]|int %} - {{ switch["Artnet-Hi"] }}{% endif %}
 {%- endif %}
 
 {% for link in switch["Links"] %}
