@@ -1,10 +1,13 @@
+EMF NOC Config Builders
+=======================
 
 You'll need to:
 
 aptitude install python-gdata python-gdata-doc python-ipaddr
 
 
-== gen-switch.py ==
+Generating switch config
+------------------------
 
 You'll need to:
 
@@ -12,6 +15,7 @@ aptitude install python-gdata python-gdata-doc python-ipaddr python-jinja2 graph
 
 Create configuration file /etc/emf-gdata.conf containing:
 
+```
 [gdata]
 email=
 password=
@@ -19,8 +23,14 @@ noc_combined=
 [switchconfig]
 enable=
 community=
+```
 
-== Generating labels ==
+Then run
+./gen-switch.py --download
+./gen-switch.py --generate
+
+Generating labels
+-----------------
 
 First, run the switch config generator with the special "labels" template.
 
