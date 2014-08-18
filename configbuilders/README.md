@@ -20,6 +20,15 @@ noc_combined=
 enable=
 community=
 
+== Generating labels ==
+
+First, run the switch config generator with the special "labels" template.
+
+./gen-switch.py  --generate --template=labels
+
+Then turn it into a PDF:
+
+./gen-labels.py
 
 Oauth2 stuff:
 

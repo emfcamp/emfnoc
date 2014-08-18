@@ -72,7 +72,7 @@ def get_vlans(addressing):
 def dump_worksheet(spr_client, spreadsheet, wks):
   print get_worksheet_data(spr_client, spreadsheet, wks)
 
-def generate():
+def generate(override_template):
   switches = shelve.open("data/switches")["list"]
   users = shelve.open("data/users")["list"]
   
@@ -223,12 +223,17 @@ def generate():
     if sw["Hostname"] in sw_uplink_vlans:
       sw["Uplink Vlans"] = sw_uplink_vlans[sw["Hostname"]]
 
-    found = False
-    for tname in (sw["Hostname"], sw["Model"], sw["Type"]):
-      if os.path.exists("templates" + os.path.sep + tname + ".j2"):
-        template = env.get_template(tname + ".j2")
-        found = True
-        break
+    if override_template:
+      template = env.get_template(override_template + ".j2")
+      found = True
+    else:
+      found = False
+      for tname in (sw["Hostname"], sw["Model"], sw["Type"]):
+        if os.path.exists("templates" + os.path.sep + tname + ".j2"):
+          template = env.get_template(tname + ".j2")
+          found = True
+          break
+
 
     if found:
       out = template.render(users=users, switch=sw, vlans=vlans, mycampervlan=mycampervlan, config=config, uplink_vlans=sw_uplink_vlans).encode("utf-8", "replace")
@@ -250,15 +255,18 @@ if __name__ == "__main__":
   parser.add_argument('--listws', action='store_true',
     help='list worksheets')
 
+  parser.add_argument('--dumpws', type=str, nargs=1, metavar=('<sheet>'),
+    help='dump the contents of a worksheet, don\'t forget to quote the name!')
+          
   parser.add_argument('--download', action='store_true',
     help='download the relevent bits from the sheet')
 
   parser.add_argument('--generate', action='store_true',
     help='generate the configs')
 
-  parser.add_argument('--dumpws', type=str, nargs=1, metavar=('<sheet>'),
-    help='dump the contents of a worksheet, don\'t forget to quote the name!')
-          
+  parser.add_argument('--template', action='store',
+    help='override the template')
+
   args = parser.parse_args()
 
   config = ConfigParser.ConfigParser()
@@ -285,7 +293,7 @@ if __name__ == "__main__":
     done_something = True
   
   if args.generate:
-    generate()
+    generate(args.template)
     done_something = True
 
   if not done_something:

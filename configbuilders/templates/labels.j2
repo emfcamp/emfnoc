@@ -1,0 +1,21 @@
+{{ switch["Hostname"] }}
+
+Management: {{ switch["Mgmt-IP"] }}
+{% if switch["Model"] %}Model: {{ switch["Model"] }}{%- endif %}
+{% if switch["Serial"] %}Serial: {{ switch["Serial"] }}{%- endif %}
+{% if switch["Camper-VLAN"] %}
+Campers: {{ mycampervlan["ipv4-subnet"] }}
+Campers (VLAN {{ switch["Camper-VLAN"] }}): {{ switch["Port-Prefix"] }}{{ switch["Camper-Lo"] }} - {{ switch["Camper-Hi"] }}
+{%- endif %}
+{%- if switch["artnet"] %}
+ArtNet (VLAN 10): {{ switch["Port-Prefix"] }}{{ switch["Artnet-Lo"] }}{% if (switch["Artnet-Lo"] < ["Artnet-Hi"]) %} - {{ switch["Artnet-Hi"] }}{% endif %}
+{%- endif %}
+
+{% for link in switch["Links"] %}
+{%- if link["Dir"] == "up" %}
+Uplink to {{ link["To"] }}:{% for port in link["Ports"] %} {{ port[0] }}{%- endfor %}
+{%- endif %}
+{%- if link["Dir"] == "down" %}
+Downlink to {{ link["To"] }}:{% for port in link["Ports"] %} {{ port[0] }}{%- endfor %}
+{%- endif %}
+{%- endfor %}
