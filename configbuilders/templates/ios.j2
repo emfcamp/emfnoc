@@ -77,8 +77,8 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  lldp receive
  no cdp enable
  spanning-tree portfast
- spanning-tree bpdufilter enable
- spanning-tree bpduguard disable
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
  ip verify source
  switchport port-security
  switchport port-security maximum 3
@@ -107,8 +107,8 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
  lldp receive
  no cdp enable
  spanning-tree portfast
- spanning-tree bpdufilter enable
- spanning-tree bpduguard disable
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
  ip verify source
  switchport port-security
  switchport port-security maximum 1
