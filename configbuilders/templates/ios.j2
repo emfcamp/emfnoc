@@ -63,8 +63,8 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  switchport access vlan {{ switch["Camper-VLAN"] }}
  switchport nonegotiate
  switchport block unicast
- ip access-group camperv4_in in
-{% if "C3560" not in switch["Model"] %} ipv6 traffic-filter camperv6_in in{% endif %}
+ ip access-group camper_v4_in in
+{% if "C3560" not in switch["Model"] %} ipv6 traffic-filter camper_v6_in in{% endif %}
  small-frame violation-rate 1000
  small-frame violation rate 1000         ! yes this is twice; some switches have different syntax
  storm-control broadcast level 5.00 4.00
@@ -235,14 +235,14 @@ ip access-list extended artnetv4_in
   deny ip any any log-input
 
 {% if mycampervlan %}
-no ip access-list extended camperv4_in
-ip access-list extended camperv4_in
+no ip access-list extended camper_v4_in
+ip access-list extended camper_v4_in
  permit ip {{ mycampervlan["ipv4-subnet"].network }} {{ mycampervlan["ipv4-subnet"].hostmask }} any
  deny   ip any any log-input
 
 {% if "C3560" not in switch["Model"] -%}
-no ipv6 access-list camperv6_in
-ipv6 access-list camperv6_in
+no ipv6 access-list camper_v6_in
+ipv6 access-list camper_v6_in
  permit ipv6 {{ mycampervlan["ipv6-subnet"] }} any
  deny ipv6 any any log-input
 {%- endif %}
