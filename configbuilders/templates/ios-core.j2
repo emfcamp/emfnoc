@@ -1,0 +1,238 @@
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+
+hostname {{ switch["Hostname"] }}
+
+no aaa new-model
+
+enable secret 0 {{ config.get("switchconfig", "enable") }}
+
+{% for user in users %}
+username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
+{%- endfor %}
+
+no ip source-route
+ipv6 unicast-routing
+ip ssh version 2
+lldp run
+cdp run
+
+no ip domain-lookup
+ip domain-name emf.camp
+
+ip multicast-routing
+ip pim rp-address 78.158.87.113
+ip pim autorp listener
+
+errdisable recovery cause all
+errdisable recovery interval 120
+
+spanning-tree mode pvst
+spanning-tree extend system-id
+
+vtp mode transparent
+
+{% for vlan in vlans|sort %}
+vlan {{ vlans[vlan]['vlan'] }}
+ name {{ vlans[vlan]["name"] }}
+{%- endfor %}
+exit
+
+{% for vlan in vlans|sort %}
+interface Vlan{{ vlans[vlan]['vlan'] }}
+ desc {{ vlans[vlan]["name"] }}
+ ip address {{ vlans[vlan]["ipv4_subnet"].network + 1 }} {{ vlans[vlan]["ipv4_subnet"].netmask }}
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ no ip route-cache
+{%- if vlans[vlan]['dhcp'] %}
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+{%- endif %}
+ ip pim sparse-mode
+ ip access-group vlan{{ vlans[vlan]['vlan']}}_v4_in in
+ ip access-group vlan{{ vlans[vlan]['vlan']}}_v4_out out
+{%- if "ipv6" in vlans[vlan] %}
+ ipv6 address FE80::1 link-local
+ ipv6 address {{ vlans[vlan]["ipv6_subnet"].network + 1 }}/{{ vlans[vlan]["ipv6_subnet"].prefixlen }}
+ ipv6 enable
+{%- if vlans[vlan]['dhcp'] %}
+ ipv6 nd prefix default 2592000 604800 autoconfig
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2001:7f8:8c:57::11
+ ipv6 dhcp relay destination 2001:7f8:8c:57::12
+{%- else %}
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+{%- endif %}
+ no ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 traffic-filter vlan{{ vlans[vlan]['vlan']}}_v6_in in
+ ipv6 traffic-filter vlan{{ vlans[vlan]['vlan']}}_v6_out out
+{%- endif %}
+ load-interval 30
+ no shutdown
+
+no ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_in
+ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_in
+ 1000 permit ip {{ vlans[vlan]["ipv4_subnet"].network }} {{ vlans[vlan]["ipv4_subnet"].hostmask }} any
+ 1010 deny   ip any any
+
+no ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_out
+ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_out
+ 1000 permit ip any {{ vlans[vlan]["ipv4_subnet"].network }} {{ vlans[vlan]["ipv4_subnet"].hostmask }}
+ 1010 deny   ip any any
+
+{% if "ipv6" in vlans[vlan] %}
+no ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_in
+ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_in
+ seq 1000 permit ipv6 {{ vlans[vlan]["ipv6_subnet"] }} any
+ seq 1010 deny ipv6 any any
+
+no ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_out
+ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_out
+ seq 1000 permit ipv6 any {{ vlans[vlan]["ipv6_subnet"] }}
+ seq 1010 deny ipv6 any any
+{%- endif %}
+
+{% endfor %}
+exit
+
+
+{% set downPortChannel = 2 %}
+
+{% for link in switch["Links"] %}
+{% if link["Dir"] == "down" %}
+! {{ link["Dir"] }}link to {{ link["To"] }}
+
+{% for port in link["Ports"] %}
+
+interface {{ port[0] }}
+ description Downlink to {{ link["To"] }} port {{ port[1] }}
+ switchport
+{% if not "TenGig" in port[0] %}
+ speed 1000
+ duplex full
+{% endif %}
+ channel-group {{ downPortChannel }} mode active
+ load-interval 30
+ cdp enable
+ lldp receive
+ lldp transmit
+ ip arp inspection trust
+ no shutdown
+
+{% endfor %}
+
+interface Port-channel{{ downPortChannel }}
+ description Downlink to {{ link["To"] }}
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+{%- if not "SWDIST" in link["To"] %}
+ switchport trunk allowed vlan 10,171,256{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
+{%- endif %}
+ load-interval 30
+ ip arp inspection trust
+ no shutdown
+
+{% set downPortChannel = downPortChannel + 1 %}
+
+{% endif %}
+{% endfor %}
+
+ip classless
+no ip http server
+no ip http secure-server
+
+! ssh
+no ip access-list standard 22
+ip access-list standard 22
+ permit 78.158.92.196 ! david
+ permit 77.73.148.52 ! david
+ permit 91.209.244.43 ! jasper
+ permit 94.45.250.0 0.0.1.255    ! noc wired + wireless
+ permit 78.158.87.0 0.0.0.63 ! noc servers
+ deny any log
+
+! ntp
+no ip access-list standard 23
+ip access-list standard 23
+ permit host 78.158.87.11
+ permit host 78.158.87.12
+ deny any log
+
+! snmp
+ip access-list standard 61
+ permit 94.45.250.0  0.0.1.255    ! noc wired + wireless
+ permit 78.158.87.0 0.0.0.63 ! noc servers
+ deny any log
+
+! deny all
+ip access-list standard 99
+ deny any log
+
+ip access-list extended artnetv4_in
+  permit ip 192.168.0.0 0.0.3.255 any
+  deny ip any any log-input
+
+no ip forward-protocol udp tftp
+no ip forward-protocol udp nameserver
+no ip forward-protocol udp domain
+no ip forward-protocol udp time
+no ip forward-protocol udp netbios-ns
+no ip forward-protocol udp netbios-dgm
+no ip forward-protocol udp tacacs
+
+snmp-server community {{ config.get("switchconfig", "community") }} RO 61
+snmp-server location EMF
+snmp-server contact EMF NOC
+snmp-server ifindex persist
+snmp ifmib ifindex persist ! different syntax for some switches
+
+banner motd ^
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^
+
+line con 0
+ login local
+ exec-timeout 30 0
+ stopbits 1
+ transport preferred none
+line vty 0 15
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+
+ntp update-calendar
+ntp source Vlan256
+ntp server 78.158.87.11
+ntp server 78.158.87.12
+ntp access-group query-only 99
+ntp access-group serve 99
+ntp access-group peer 23
+ntp access-group serve-only 99
+
+logging source-interface Vlan256
+logging 78.158.87.14
+
+! Don't forget to crypto key generate rsa general-keys modulus 2048
