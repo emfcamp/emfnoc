@@ -248,6 +248,11 @@ def generate(override_template):
     else:
       print " - No template found for " + sw["Hostname"] + "!"
 
+  # make it eaiser to match switch config to a switch
+  for sw in switches:
+    cnp = "out" + os.path.sep + "switches" + os.path.sep + sw["Hostname"] + ".emf.camp"
+    os.symlink(cnp, "out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
+
   # rancid
   rfh = open("out" + os.path.sep + "routers.db", "w")
   for sw in switches:
