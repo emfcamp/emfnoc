@@ -17,12 +17,12 @@ Create configuration file /etc/emf-gdata.conf containing:
 
 ```
 [gdata]
-email=
-password=
-noc_combined=
+email=<google login>
+password=<google password>
+noc_combined=<spreadsheet id of the spreadsheet, get it from the url>
 [switchconfig]
-enable=
-community=
+enable=<unencrypted enable password>
+community=<unencrypted snmp community>
 ```
 
 Then run
