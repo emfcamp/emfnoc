@@ -17,9 +17,9 @@ username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
 
 no ip source-route
 no ip routing
-no ipv6 unicast-routing
+{% if "C3560" not in switch["Model"] %}no ipv6 unicast-routing{% endif %}
 ip ssh version 2
-lldp run
+{% if "C3560" not in switch["Model"] -%}lldp run{%- endif %}
 cdp run
 
 no ip domain-lookup
@@ -64,15 +64,17 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  switchport nonegotiate
  switchport block unicast
  ip access-group camperv4_in in
- ipv6 traffic-filter camperv6_in in
+{% if "C3560" not in switch["Model"] %} ipv6 traffic-filter camperv6_in in{% endif %}
  small-frame violation-rate 1000
  small-frame violation rate 1000         ! yes this is twice; some switches have different syntax
  storm-control broadcast level 5.00 4.00
  storm-control multicast level 50.00 40.00
  storm-control action shutdown
  no vtp
+{% if "C3560" not in switch["Model"] %}
  lldp transmit
  lldp receive
+{% endif %}
  no cdp enable
  spanning-tree portfast
  spanning-tree bpdufilter disable
@@ -101,8 +103,10 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
  storm-control multicast level 50.00 40.00
  storm-control action shutdown
  no vtp
+{% if "C3560" not in switch["Model"] %}
  lldp transmit
  lldp receive
+{% endif %}
  no cdp enable
  spanning-tree portfast
  spanning-tree bpdufilter disable
@@ -136,8 +140,10 @@ interface {{ port[0] }}
  channel-group 1 mode active
  load-interval 30
  cdp enable
+{% if "C3560" not in switch["Model"] %}
  lldp receive
  lldp transmit
+{% endif %}
  no shutdown
 
 {% endfor %}
@@ -167,8 +173,10 @@ interface {{ port[0] }}
  channel-group {{ downPortChannel }} mode active
  load-interval 30
  cdp enable
+{% if "C3560" not in switch["Model"] %}
  lldp receive
  lldp transmit
+{% endif %}
  no shutdown
 
 {% endfor %}
@@ -210,27 +218,34 @@ ip access-list standard 23
  deny any log
 
 ! snmp
+no ip access-list standard 61
 ip access-list standard 61
  permit 94.45.250.0  0.0.1.255    ! noc wired + wireless
  permit 78.158.87.0 0.0.0.63 ! noc servers
  deny any log
 
 ! deny all
+no ip access-list standard 99
 ip access-list standard 99
  deny any log
 
+no ip access-list extended artnetv4_in
 ip access-list extended artnetv4_in
   permit ip 192.168.0.0 0.0.3.255 any
   deny ip any any log-input
 
 {% if mycampervlan %}
+no ip access-list extended camperv4_in
 ip access-list extended camperv4_in
  permit ip {{ mycampervlan["ipv4-subnet"].network }} {{ mycampervlan["ipv4-subnet"].hostmask }} any
  deny   ip any any log-input
 
+{% if "C3560" not in switch["Model"] -%}
+no ipv6 access-list camperv6_in
 ipv6 access-list camperv6_in
  permit ipv6 {{ mycampervlan["ipv6-subnet"] }} any
  deny ipv6 any any log-input
+{%- endif %}
 {% endif %}
 
 snmp-server community {{ config.get("switchconfig", "community") }} RO 61
