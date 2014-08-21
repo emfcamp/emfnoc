@@ -248,6 +248,19 @@ def generate(override_template):
     else:
       print " - No template found for " + sw["Hostname"] + "!"
 
+  # rancid
+  rfh = open("out" + os.path.sep + "routers.db", "w")
+  for sw in switches:
+    o = sw["Hostname"].lower() + ".emf.camp"
+    if sw["Type"] == "ios":
+      o += ":cisco:up"
+    elif sw["Type"] == "xos":
+      o += ":Extreme:up"
+    else:
+      print "**** unknown type:", sw["Type"]
+      exit()
+    rfh.write(o + "\n")
+  rfh.close()
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Generate cisco IOS config files from gdocs.')
