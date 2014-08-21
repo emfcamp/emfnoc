@@ -62,13 +62,13 @@ for file in files:
   n = 0
   for line in label.split("\n"):
     if n == 0:
-      pdf.set_text_color(0, 0, 128)
+      pdf.set_text_color(0, 0, 192)
       pdf.set_font('', 'B', 14)
     else:
       pdf.set_font('', '', 9)
 
     if "Uplink" in line:
-      pdf.set_text_color(0, 128, 0)
+      pdf.set_text_color(0, 90, 0)
     elif "Downlink" in line:
       pdf.set_text_color(128, 0, 0)
     elif n > 0:
@@ -79,7 +79,7 @@ for file in files:
         
 #  pdf.multi_cell(cellwidth - 25, cellheight-10, "ABC\nDEF", 1, align="C")
   pdf.image('logo-label.png', cellx+3, celly+7, 15)
-#  pdf.image('nocnocnoc.png', cellx+cellwidth-8, celly+2, 4.45)
+  pdf.image('nocnocnoc.png', cellx+cellwidth-8, celly+2, 4.45)
 
 pdf.output('out/labels.pdf', 'F')
 
