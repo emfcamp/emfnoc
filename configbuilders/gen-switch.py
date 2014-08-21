@@ -250,8 +250,7 @@ def generate(override_template):
 
   # make it eaiser to match switch config to a switch
   for sw in switches:
-    cnp = "out" + os.path.sep + "switches" + os.path.sep + sw["Hostname"] + ".emf.camp"
-    os.symlink(cnp, "out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
+    os.symlink(sw["Hostname"] + ".emf.camp", "out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
 
   # rancid
   rfh = open("out" + os.path.sep + "routers.db", "w")
