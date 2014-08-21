@@ -1,0 +1,125 @@
+config default del port all
+
+config snmp sysname {{ switch["Hostname"] }}
+config snmp syslocation EMF
+config snmp syscontact "EMF NOC"
+
+{% for user in users %}
+create account admin {{user["Username"]}} encrypted {{ user["IOS password"]|replace("$1$", "") }}
+{%- endfor %}
+
+tftp get 192.91.199.1 vr vr-mgmt emf_mgmt_access.pol force
+tftp get 192.91.199.1 vr vr-mgmt emf_snmp_access.pol force
+
+config idletimeout 120
+enable dos-protect
+enable edp port all
+enable lldp ports all
+config lldp ports all advertise system-name
+config lldp ports all advertise system-description
+config lldp ports all advertise port-description
+
+config dns-client default-domain emf.camp
+
+# We aren't doing LACP trunks to SWCORE any more
+#enable sharing 1 group 1 algorithm address-based L3_L4 lacp
+#enable sharing 2 group 2 algorithm address-based L3_L4 lacp
+
+enable sharing 3 group 3,4 alg address-based L3_L4 lacp
+enable sharing 5 group 5,6 alg address-based L3_L4 lacp
+enable sharing 7 group 7,8 alg address-based L3_L4 lacp
+enable sharing 9 group 9,10 alg address-based L3_L4 lacp
+enable sharing 11 group 11,12 alg address-based L3_L4 lacp
+enable sharing 13 group 13,14 alg address-based L3_L4 lacp
+enable sharing 15 group 15,16 alg address-based L3_L4 lacp
+
+create vlan eaps_ctrl
+config vlan eaps_ctrl tag 11
+config vlan eaps_ctrl QP8
+config vlan eaps_ctrl add port 1,2 tag
+
+create eaps EMF_core
+config eaps EMF_core mode transit
+config eaps EMF_core primary 1
+config eaps EMF_core second 2
+config eaps EMF_core hellotime 0 400
+config eaps EMF_core failtime 2
+config eaps EMF_core failtime expiry-action open-secondary-port
+config eaps EMF_core add control vlan eaps_ctrl
+enable eaps 
+enable eaps EMF_core
+
+enable elrp-client
+
+{% for vlan in vlans|sort %}
+# VLAN {{ vlans[vlan]["name"] }} ({{ vlans[vlan]['vlan'] }})
+create vlan {{ vlans[vlan]["name"] }}
+config vlan {{ vlans[vlan]["name"] }} tag {{ vlans[vlan]['vlan'] }}
+{% for link in switch["Links"] %}
+{% if link["Dir"] == "down" %}
+# {{ link["Dir"] }}link to {{ link["To"] }}
+config vlan {{ vlans[vlan]["name"] }} add port {{ link["Ports"][0][0] }} tagged
+#config port {{ link["Ports"][0][0] }} descrip "Link to {{ link["To"] }}"
+{%- endif %}{# Dir == down #}
+{% if link["Dir"] == "up" %}
+# core ring to {{ link["To"] }}
+config vlan {{ vlans[vlan]["name"] }} add port {{ link["Ports"][0][0] }} tagged
+#config port {{ link["Ports"][0][0] }} descrip "Link to {{ link["To"] }}"
+{%- endif %}{# Dir == up #}
+{%- endfor %}
+config eaps EMF_core add protected vlan {{ vlans[vlan]["name"] }} 
+config elrp-client periodic {{ vlans[vlan]["name"] }} ports all interval 10 log
+
+{%- endfor %}
+
+config vlan Switch-Mgmt ipaddr {{ switch["Mgmt-IP"] }}/25
+config iproute add default 94.45.255.129
+
+disable web http
+disable web https
+
+configure ssh2 access-profile emf_mgmt_access
+#enable ssh2
+
+config snmp add community readonly {{ config.get("switchconfig", "community") }}
+disable snmp community public
+disable snmp community private
+config snmp access-profile emf_snmp_access
+enable snmp access snmp-v1v2c 
+
+config timezone name UTC 0 noauto
+configure sntp-client pri 78.158.87.11 vr vr-default
+configure sntp-client sec 78.158.87.12 vr vr-default
+configure sntp-client update-int 7300
+enable sntp-client
+
+config syslog add 78.158.87.14:514 vr vr-default local1
+enable log target syslog 78.158.87.14:514 vr vr-default local1
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 from {{ switch["Mgmt-IP"] }}
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 filter DefaultFilter severity Debug-Verbose
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 match Any
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 format timestamp seconds date Mmm-dd event-name none priority tag-name 
+enable syslog
+
+disable ipf
+
+config banner before-login save-to
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     {{ switch["Hostname"] }}
+
+
+
+# you will need to manually 'enable ssh2' (and wait) and then disable telnet when that's done.
+
