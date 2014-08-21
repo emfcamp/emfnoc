@@ -35,8 +35,6 @@ ip arp inspection vlan 10,{{ switch["Camper-VLAN"] }}
 ip arp inspection validate src-mac dst-mac ip
 {% endif %}
 
-ip multicast-routing distributed
-
 errdisable recovery cause all
 errdisable recovery interval 120
 
