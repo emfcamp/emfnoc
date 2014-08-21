@@ -65,8 +65,12 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  switchport block unicast
  ip access-group camper_v4_in in
 {% if "C3560" not in switch["Model"] %} ipv6 traffic-filter camper_v6_in in{% endif %}
+{% if "C3560" in switch["Model"] %} 
  small-frame violation-rate 1000
- small-frame violation rate 1000         ! yes this is twice; some switches have different syntax
+{% else %}
+! yes this is twice; some switches have different syntax
+ small-frame violation rate 1000
+{% endif %}
  storm-control broadcast level 5.00 4.00
  storm-control multicast level 50.00 40.00
  storm-control action shutdown
@@ -97,8 +101,12 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
  switchport nonegotiate
  switchport block unicast
  ip access-group artnetv4_in in
+{% if "C3560" in switch["Model"] %} 
  small-frame violation-rate 1000
- small-frame violation rate 1000         ! yes this is twice; some switches have different syntax
+{% else %}
+! yes this is twice; some switches have different syntax
+ small-frame violation rate 1000
+{% endif %}
  storm-control broadcast level 5.00 4.00
  storm-control multicast level 50.00 40.00
  storm-control action shutdown
@@ -152,7 +160,7 @@ interface Port-channel1
  description Uplink to {{ link["To"] }}
  switchport trunk encapsulation dot1q
  switchport mode trunk
- switchport trunk allowed vlans 10,171,256{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
+ switchport trunk allowed vlan 10,171,256{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
  ip arp inspection trust
  ip dhcp snooping trust
  load-interval 30
