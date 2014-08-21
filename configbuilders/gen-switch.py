@@ -256,7 +256,8 @@ def generate(override_template):
 
   # make it eaiser to match switch config to a switch
   for sw in switches:
-    os.unlink("out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
+    if os.path.islink("out" + os.path.sep + "switches" + os.path.sep + sw["Serial"]):
+      os.unlink("out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
     os.symlink(sw["Hostname"] + ".emf.camp", "out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
 
   # rancid
