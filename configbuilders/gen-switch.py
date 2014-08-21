@@ -61,10 +61,16 @@ def get_vlans(addressing):
             desc += '-'
 
       vlans[line['VLAN']] = { 'ipv4': line['IPv4-Subnet'],
-                              'ipv6': '2001:7f8:8c:'+line['VLAN']+'::/64',
+                              'ipv4_subnet': ipaddr.IPv4Network(line['IPv4-Subnet']),
                               'name': desc,
-                              'vlan': int(line['VLAN'])
+                              'vlan': int(line['VLAN']),
+                              'dhcp': ('dhcp' in line and line['dhcp'] == 'y')
                               }
+
+      if 'IPv6' in line:
+        vlans[line['VLAN']]['ipv6'] = line['IPv6']
+        vlans[line['VLAN']]['ipv6_subnet'] = ipaddr.IPv6Network(line['IPv6'])
+
 #      print vlans[line['VLAN']]
 
   return vlans
