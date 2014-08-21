@@ -250,6 +250,7 @@ def generate(override_template):
 
   # make it eaiser to match switch config to a switch
   for sw in switches:
+    os.unlink("out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
     os.symlink(sw["Hostname"] + ".emf.camp", "out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
 
   # rancid
@@ -257,6 +258,8 @@ def generate(override_template):
   for sw in switches:
     o = sw["Hostname"].lower() + ".emf.camp"
     if sw["Type"] == "ios":
+      o += ":cisco:up"
+    elif sw["Type"] == "ios-core":
       o += ":cisco:up"
     elif sw["Type"] == "xos":
       o += ":Extreme:up"
