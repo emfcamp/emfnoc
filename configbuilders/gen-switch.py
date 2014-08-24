@@ -21,7 +21,7 @@ def download(spr_client, spreadsheet):
   sws.close()
 
   print "downloading users"
-  users = get_worksheet_data(spr_client, spreadsheet, "User Accounts")
+  users = get_worksheet_data(spr_client, spreadsheet, "Users")
   for user in list(users):
     if not "IOS password" in user:
       users.remove(user)
