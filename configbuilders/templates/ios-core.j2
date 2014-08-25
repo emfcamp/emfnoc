@@ -80,22 +80,30 @@ interface Vlan{{ vlans[vlan]['vlan'] }}
 
 no ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_in
 ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_in
+ 980 permit udp any any eq bootpc
+ 990 permit udp any any eq bootps
  1000 permit ip {{ vlans[vlan]["ipv4_subnet"].network }} {{ vlans[vlan]["ipv4_subnet"].hostmask }} any
  1010 deny   ip any any
 
 no ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_out
 ip access-list extended vlan{{ vlans[vlan]['vlan']}}_v4_out
+ 980 permit udp any any eq bootpc
+ 990 permit udp any any eq bootps
  1000 permit ip any {{ vlans[vlan]["ipv4_subnet"].network }} {{ vlans[vlan]["ipv4_subnet"].hostmask }}
  1010 deny   ip any any
 
 {% if "ipv6" in vlans[vlan] %}
 no ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_in
 ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_in
+ seq 980 permit udp any any eq 546
+ seq 990 permit udp any any eq 547
  seq 1000 permit ipv6 {{ vlans[vlan]["ipv6_subnet"] }} any
  seq 1010 deny ipv6 any any
 
 no ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_out
 ipv6 access-list vlan{{ vlans[vlan]['vlan']}}_v6_out
+ seq 980 permit udp any any eq 546
+ seq 990 permit udp any any eq 547
  seq 1000 permit ipv6 any {{ vlans[vlan]["ipv6_subnet"] }}
  seq 1010 deny ipv6 any any
 {%- endif %}
@@ -109,6 +117,8 @@ exit
 {% for link in switch["Links"] %}
 {% if link["Dir"] == "down" %}
 ! {{ link["Dir"] }}link to {{ link["To"] }}
+
+{% if link["Ports"]|length() > 1 %}
 
 {% for port in link["Ports"] %}
 
@@ -142,6 +152,30 @@ interface Port-channel{{ downPortChannel }}
  no shutdown
 
 {% set downPortChannel = downPortChannel + 1 %}
+{% else %}
+
+interface {{ link["Ports"][0][0] }}
+ description Downlink to {{ link["To"] }} port {{ link["Ports"][0][1] }}
+ switchport
+{% if not "TenGig" in link["Ports"][0][0] %}
+ speed 1000
+ duplex full
+{% endif %}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+{%- if not "SWDIST" in link["To"] %}
+ switchport trunk allowed vlan 10,171,256{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
+{%- endif %}
+ load-interval 30
+ cdp enable
+ lldp receive
+ lldp transmit
+ ip arp inspection trust
+ no shutdown
+
+
+{% endif %}
+
 
 {% endif %}
 {% endfor %}
