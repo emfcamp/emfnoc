@@ -61,6 +61,24 @@ for row in ipv4:
     f4.write("    option domain-name \"" + domain + "\";\n")
     f4.write("    option domain-name-servers 78.158.87.11,78.158.87.12;\n")
     f4.write("    option routers %s;\n" % (ipv4.network + 1))
+
+    # hack hack hack
+    if row['Description'] == "Bar":
+      f4.write("""
+    group {
+        host emftill1 {
+            hardware ethernet 00:30:18:A3:0A:4F;
+            fixed-address 151.216.76.2;
+       }
+       host emftill2 {
+            hardware ethernet 00:30:18:A6:F1:8B;
+            fixed-address 151.216.76.3;
+            next-server 151.216.76.2;
+            filename "pxelinux.0";
+        }
+    }
+	""")
+
     f4.write("    pool {\n")
     f4.write("      failover peer \"failover-partner\";\n")
     f4.write("      range %s %s;\n" % (ipv4.network + 11, ipv4.broadcast - 1))
