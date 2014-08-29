@@ -160,9 +160,6 @@ def writezone(domainname, serial, entries, tempfile):
   for row in entries:
     f.write("%s\n" % (row))
 
-  if is_zone_signed(domainname):
-    f.write("\n$INCLUDE dnskey.db\n")
-
   f.close()
   return
 
