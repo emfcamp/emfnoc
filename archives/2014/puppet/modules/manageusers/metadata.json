@@ -1,0 +1,21 @@
+{
+  "name": "duxklr-manageusers",
+  "version": "0.0.4",
+  "author": "duxklr",
+  "summary": "Puppet module to manage users, groups, and ssh keys.",
+  "license": "Licensed under (Apache 2.0)",
+  "source": "https://github.com/duxklr/manageusers",
+  "project_page": "(https://forge.puppetlabs.com/duxklr/manageusers)",
+  "issues_url": "https://github.com/duxklr/manageusers/issues",
+  "tags": [
+    "users",
+    "ssh",
+    "groups"
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_range": ">= 1.0.0"
+    }
+  ]
+}
