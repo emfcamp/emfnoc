@@ -64,14 +64,15 @@ def add_record(zonename, record):
     zones[zonename] = []
   zones[zonename].append(record)
 
-def add_ipv4_host(hostname, fwd_zonename, ipv4, forward_only):
-  #v4 forward
-  record = "%s\tIN\tA\t%s" % (hostname, ipv4.compressed)
-  add_record(fwd_zonename, record)
+def add_ipv4_host(hostname, fwd_zonename, ipv4, forward_only, reverse_only):
+  if not reverse_only:
+    #v4 forward
+    record = "%s\tIN\tA\t%s" % (hostname, ipv4.compressed)
+    add_record(fwd_zonename, record)
 
-  if hostname in sshfps:
-    for r in sshfps[hostname]:
-      add_record(fwd_zonename, r)
+    if hostname in sshfps:
+      for r in sshfps[hostname]:
+        add_record(fwd_zonename, r)
 
   if forward_only:
     return
@@ -79,13 +80,21 @@ def add_ipv4_host(hostname, fwd_zonename, ipv4, forward_only):
   #v4 reverse
   rev4_zonename = reverse_zone(ipv4)
 
+  #remove any existing reverse if it exists
+  if rev4_zonename in zones.keys():
+    for record in zones[rev4_zonename]:
+      if record.startswith("%s\tIN\tPTR\t" % (ord(ipv4.packed[3]))):
+        zones[rev4_zonename].remove(record)
+        break
+
   record = "%s\tIN\tPTR\t%s.%s." % (ord(ipv4.packed[3]), hostname, fwd_zonename)
   add_record(rev4_zonename, record)
 
-def add_ipv6_host(hostname, fwd_zonename, ipv6, forward_only):
-  #v6 forward
-  record = "%s\tIN\tAAAA\t%s" % (hostname, ipv6.compressed)
-  add_record(fwd_zonename, record)
+def add_ipv6_host(hostname, fwd_zonename, ipv6, forward_only, reverse_only):
+  if not reverse_only:
+    #v6 forward
+    record = "%s\tIN\tAAAA\t%s" % (hostname, ipv6.compressed)
+    add_record(fwd_zonename, record)
 
   if forward_only:
     return
@@ -258,18 +267,18 @@ for row in addressing:
     fwd_zonename = default_domain
 
   # is it a host?
-  if "Hostname" in row and "dns" in row and (row["dns"] == "y" or row["dns"] == "fwd"):
+  if "Hostname" in row and "dns" in row and (row["dns"] == "y" or row["dns"] == "fwd" or row["dns"] == "rev"):
     hostname = row["Hostname"]
     if "Subdomain" in row:
       hostname += "." + row["Subdomain"]
 
     if "IPv4" in row:
       ipv4 = ipaddr.IPv4Address(row["IPv4"])
-      add_ipv4_host(hostname, fwd_zonename, ipv4, (row["dns"] == "fwd"))
+      add_ipv4_host(hostname, fwd_zonename, ipv4, (row["dns"] == "fwd"), (row["dns"] == "rev"))
 
     if "IPv6" in row:
       ipv6 = ipaddr.IPv6Address(row["IPv6"])
-      add_ipv6_host(hostname, fwd_zonename, ipv6, (row["dns"] == "fwd"))
+      add_ipv6_host(hostname, fwd_zonename, ipv6, (row["dns"] == "fwd"), (row["dns"] == "rev"))
 
   # is it a subnet with auto dns?
   elif "IPv4-Subnet" in row and "dns" in row and row["dns"] == "auto":
@@ -277,10 +286,10 @@ for row in addressing:
     # router entry
     if "VLAN" in row:
       vlan = row["VLAN"]
-      add_ipv4_host("vlan" + vlan + ".SWCORE", "emf.camp", subnet.network + 1, False)
+      add_ipv4_host("vlan" + vlan + ".SWCORE", "emf.camp", subnet.network + 1, False, False)
 #      if "IPv6" in row:
       ipv6 = ipaddr.IPv6Network(row["IPv6"])
-      add_ipv6_host("vlan" + vlan + ".SWCORE", "emf.camp", ipv6.network + 1, False)
+      add_ipv6_host("vlan" + vlan + ".SWCORE", "emf.camp", ipv6.network + 1, False, False)
 
     # host entries
     for ipv4 in subnet.iterhosts():
@@ -289,7 +298,7 @@ for row in addressing:
       hostname = pretty_host(fwd_zonename, ipv4)
       if "Subdomain" in row:
         hostname += "." + row["Subdomain"]
-      add_ipv4_host(hostname, fwd_zonename, ipv4, False)
+      add_ipv4_host(hostname, fwd_zonename, ipv4, False, False)
 
   # is it a cname?
   elif "dns" in row and row["dns"] == "record":
