@@ -51,7 +51,10 @@ def add_port(f, switch1, switch1port, switch2, servicegroup):
   f.write("  use              generic-ifoperstatus\n")
   f.write("  host_name       " + switch1 + "\n")
   f.write("  service_description " + short_port(switch1port) + " to " + switch2 + "\n")
-  f.write("  check_command    check_ifoperstatus!" + switch1port + "\n")
+  tag = switch1port
+  if "SWDIST" in switch1:
+    tag = "X650-24x\(SSns\) Port " + tag
+  f.write("  check_command    check_ifoperstatus!\"" + tag + "\"\n")
   f.write("  servicegroups    " + servicegroup + "\n")
   f.write("}\n\n")
 
