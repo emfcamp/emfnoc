@@ -1,0 +1,417 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: 7201 - a 7201 router
+!CPU: c7201, MPC7448 CPU at 1666Mhz, impl 0, Rev 2.2
+!
+!Memory: main 917504K/65536K
+!Memory: nvram 2045K
+!Memory: bootflash 65536K
+!Memory: pcmcia ATA slot0 255744K
+!
+!Processor ID: REDACTED
+!
+!Power: Power Supply 1 is C7201 AC Power Supply. Unit is on.
+!Power: Power Supply 2 is C7201 AC Power Supply. Unit is on.
+!
+!Image: Software: C7200P-ADVIPSERVICESK9-M, 15.1(3)S3, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Fri 30-Mar-12 06:19 by prod_rel_team
+!Image: disk0:c7200p-advipservicesk9-mz.151-3.S3.bin
+!
+!ROM Bootstrap: Version 12.4(12.2r)T, RELEASE SOFTWARE (fc1)
+!
+!
+!Variable: BOOT variable = disk0:c7200p-advipservicesk9-mz.151-3.S3.bin,1;
+!Variable: CONFIG_FILE variable does not exist
+!Variable: BOOTLDR variable does not exist
+!Variable: WARM_REBOOT variable = FALSE
+!Variable: Configuration register is 0x2102
+!
+!Flash: nvram: Directory of nvram:/
+!Flash: nvram:  2046  -rw-        9056                    <no date>  startup-config
+!Flash: nvram:  2047  ----        3566                    <no date>  private-config
+!Flash: nvram:  2048  -rw-        9056                    <no date>  underlying-config
+!Flash: nvram:     1  ----          75                    <no date>  persistent-data
+!Flash: nvram:     2  -rw-         310                    <no date>  ifIndex-table
+!Flash: nvram: 2095096 bytes total (2080374 bytes free)
+!
+!Flash: bootflash: Directory of bootflash:/
+!Flash: bootflash:     1  -rw-     8623780  Aug 24 2000 13:47:38 +00:00  [c7200p-boot-mz.124-15.T13.bin]
+!Flash: bootflash: 65536000 bytes total (56912092 bytes free)
+!
+!Flash: disk0: Directory of disk0:/
+!Flash: disk0:     1  -rw-       16119  Jul 14 2014 19:47:06 +00:00  edge01.lnpop01.uk.sargasso.net-20140714
+!Flash: disk0:     2  -rw-    32244020  May 18 2002 17:36:08 +00:00  c7200p-advipservicesk9-mz.151-3.S3.bin
+!Flash: disk0: 261427200 bytes total (229163008 bytes free)
+!
+!Interface: FastEthernet0/0, i82546 Revision A3
+!Interface: GigabitEthernet0/0, MV64460 Internal MAC (Revision MV64460-Ethernet)
+!Interface: GigabitEthernet0/1, MV64460 Internal MAC (Revision MV64460-Ethernet)
+!Interface: GigabitEthernet0/2, MV64460 Internal MAC (Revision MV64460-Ethernet)
+!Interface: GigabitEthernet0/3, i82546 Revision A3
+!
+!Slot Midplane: hvers 2.1 rev UNKNOWN
+!Slot Midplane: part 73-10893-02, serial REDACTED
+!
+!Slot CPU: hvers 2.3 rev F0
+!Slot CPU: part 68-2816-03, serial REDACTED
+!
+!NAME: "Chassis",               DESCR: "Cisco 7201, 1-slot chassis"
+!PID: CISCO7201
+!SN: REDACTED
+!NAME: "I/O and CPU Slot 0",    DESCR: "I/O and Processor Slot Container"
+!NAME: "c7201 0",               DESCR: "Cisco 7201 Network Processing Engine"
+!PID: C7201
+!VID: V02
+!SN: REDACTED
+!NAME: "SFP Port Container 0/0", DESCR: "SFP Port Container"
+!NAME: "SFP Port Container 0/1", DESCR: "SFP Port Container"
+!NAME: "SFP Port Container 0/2", DESCR: "SFP Port Container"
+!NAME: "SFP Port Container 0/3", DESCR: "SFP Port Container"
+!NAME: "Flash Card Slot Container CPU", DESCR: "Flash Card Slot Container CPU"
+!NAME: "disk0",                 DESCR: "256MB Compact Flash Disk for c7201"
+!PID: MEM-7201-FLD256
+!NAME: "NPE Inlet Temperature 0", DESCR: "NPE Inlet Temperature Sensor"
+!NAME: "NPE Outlet Temperature 0", DESCR: "NPE Outlet Temperature Sensor"
+!NAME: "CPU Die Temperature 0", DESCR: "CPU Die Temperature Sensor"
+!NAME: "+3.30 V Voltage 0",     DESCR: "+3.30 V  Voltage Sensor"
+!NAME: "+1.50 V Voltage 0",     DESCR: "+1.50 V  Voltage Sensor"
+!NAME: "+2.50 V Voltage 0",     DESCR: "+2.50 V  Voltage Sensor"
+!NAME: "+5.15 V Voltage 0",     DESCR: "+5.15 V  Voltage Sensor"
+!NAME: "+1.20 V Voltage 0",     DESCR: "+1.20 V  Voltage Sensor"
+!NAME: "VDD_CPU Voltage 0",     DESCR: "VDD_CPU  Voltage Sensor"
+!NAME: "-11.95 Voltage 0",      DESCR: "-11.95  Voltage Sensor"
+!NAME: "VTT Voltage 0",         DESCR: "VTT  Voltage Sensor"
+!NAME: "Gi0/0",                 DESCR: "MV64460 Internal MAC RJ45"
+!NAME: "Gi0/1",                 DESCR: "MV64460 Internal MAC RJ45"
+!NAME: "FastEthernet0/0",       DESCR: "i82546"
+!NAME: "PA Slot 1",             DESCR: "PA Slot Container"
+!NAME: "PEM 0",                 DESCR: "Power Supply Container"
+!NAME: "Power Supply 0",        DESCR: "Cisco 7201 AC Power Supply"
+!PID: PWR-7201-AC
+!NAME: "PEM 1",                 DESCR: "Power Supply Container"
+!NAME: "Power Supply 1",        DESCR: "Cisco 7201 AC Power Supply"
+!PID: PWR-7201-AC
+!
+!
+config-register 0x2102
+!
+version 15.1
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+!
+hostname DOCKLANDS
+!
+boot-start-marker
+boot system flash disk0:c7200p-advipservicesk9-mz.151-3.S3.bin
+boot-end-marker
+!
+enable secret REDACTED
+!
+no aaa new-model
+no ip source-route
+ip cef
+!
+ip vrf MANAGEMENT
+ rd 100:100
+!
+no ip domain lookup
+ip domain name emf.camp
+ip multicast-routing 
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+username ak47 privilege 15 secret REDACTED
+username david privilege 15 secret REDACTED
+username emfnoc1 privilege 15 secret REDACTED
+username emfnoc2 privilege 15 secret REDACTED
+username emfnoc3 privilege 15 secret REDACTED
+username jasper privilege 15 secret REDACTED
+username kay privilege 15 secret REDACTED
+username leon privilege 15 secret REDACTED
+username nihilus privilege 15 secret REDACTED
+username prt privilege 15 secret REDACTED
+username rancid privilege 15 secret REDACTED
+username tom privilege 15 secret REDACTED
+username will privilege 15 secret REDACTED
+!
+ip ssh version 2
+! 
+interface Null0
+ no ip unreachables
+ no ipv6 unreachables
+!
+interface Loopback0
+ ip address 78.158.87.113 255.255.255.255
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ipv6 address 2001:7F8:8C:FFFF::1/128
+ ipv6 enable
+ no ipv6 redirects
+ ipv6 ospf 1 area 0
+!
+interface FastEthernet0/0
+ description OOB via LONAP's OOB switch
+ ip vrf forwarding MANAGEMENT
+ no ip address
+ load-interval 30
+ shutdown
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet0/0
+ description to LONAP switch
+ no ip address
+ ip accounting mac-address input
+ ip accounting mac-address output
+ load-interval 30
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+ no cdp enable
+!
+interface GigabitEthernet0/0.5
+ description LONAP:: multicast
+ encapsulation dot1Q 5
+ ip address 195.35.120.101 255.255.255.0
+ ip pim bsr-border
+ ip pim sparse-mode
+!
+interface GigabitEthernet0/0.300
+ description VLAN to Sargasso AS42579
+ encapsulation dot1Q 300
+ ip address 77.73.144.230 255.255.255.248
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip flow ingress
+ ip flow egress
+ ipv6 address 2A01:550:0:2::1A:5/112
+ ipv6 enable
+ ipv6 nd ra suppress
+ no cdp enable
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ description To Nuco via LINX suite
+ ip address 78.158.87.105 255.255.255.252
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf hello-interval 1
+ ip ospf 1 area 0
+ load-interval 30
+ speed auto
+ duplex auto
+ negotiation auto
+ ipv6 address 2001:7F8:8C:FFFE::1/64
+ ipv6 enable
+ ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 ospf network point-to-point
+ ipv6 ospf hello-interval 1
+ ipv6 ospf 1 area 0
+!
+router ospf 1
+ auto-cost reference-bandwidth 1000000
+ redistribute connected subnets
+ default-information originate always
+!
+router bgp 60079
+ bgp router-id 78.158.87.113
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 2A01:550:0:2::1A:1 remote-as 42579
+ neighbor 2A01:550:0:2::1A:1 description Sargasso Networks (AS42579) Interxion
+ neighbor 2A01:550:0:2::1A:1 version 4
+ neighbor 2A01:550:0:2::1A:2 remote-as 42579
+ neighbor 2A01:550:0:2::1A:2 description Sargasso Networks (AS42579) Telecity HEX6-7
+ neighbor 2A01:550:0:2::1A:2 version 4
+ neighbor 77.73.144.225 remote-as 42579
+ neighbor 77.73.144.225 description Sargasso Networks (AS42579) Interxion
+ neighbor 77.73.144.225 version 4
+ neighbor 77.73.144.226 remote-as 42579
+ neighbor 77.73.144.226 description Sargasso Networks (AS42579) Telecity HEX6-7
+ neighbor 77.73.144.226 version 4
+ neighbor 195.35.120.92 remote-as 31459
+ neighbor 195.35.120.92 description BBC multicast
+ !
+ address-family ipv4
+  network 78.158.87.0 mask 255.255.255.0
+  network 94.45.224.0 mask 255.255.224.0
+  network 151.216.32.0 mask 255.255.224.0
+  network 151.216.64.0 mask 255.255.240.0
+  neighbor 77.73.144.225 activate
+  neighbor 77.73.144.225 route-map AS42579-INX-IMPORT in
+  neighbor 77.73.144.225 route-map AS42579-INX-EXPORT out
+  neighbor 77.73.144.226 activate
+  neighbor 77.73.144.226 route-map AS42579-HEX-IMPORT in
+  neighbor 77.73.144.226 route-map AS42579-HEX-EXPORT out
+ exit-address-family
+ !
+ address-family ipv4 multicast
+  network 78.158.87.0 mask 255.255.255.0
+  network 94.45.224.0 mask 255.255.224.0
+  network 151.216.32.0 mask 255.255.224.0
+  network 151.216.64.0 mask 255.255.240.0
+  neighbor 195.35.120.92 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:7F8:8C::/48
+  neighbor 2A01:550:0:2::1A:1 activate
+  neighbor 2A01:550:0:2::1A:1 route-map AS42579-INX-IMPORTv6 in
+  neighbor 2A01:550:0:2::1A:1 route-map AS42579-INX-EXPORTv6 out
+  neighbor 2A01:550:0:2::1A:2 activate
+  neighbor 2A01:550:0:2::1A:2 route-map AS42579-HEX-IMPORTv6 in
+  neighbor 2A01:550:0:2::1A:2 route-map AS42579-HEX-EXPORTv6 out
+ exit-address-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 78.158.87.113
+ip pim autorp listener
+ip pim send-rp-discovery scope 10
+ip pim ssm default
+ip msdp peer 132.185.239.250 connect-source Loopback0 remote-as 31459
+ip msdp cache-sa-state
+ip route 0.0.0.0 0.0.0.0 77.73.144.225
+ip route 78.158.87.0 255.255.255.0 Null0
+ip route 94.45.224.0 255.255.224.0 Null0
+ip route 151.216.32.0 255.255.224.0 Null0
+ip route 151.216.64.0 255.255.240.0 Null0
+!
+ip prefix-list announcements-v4 permit 78.158.87.0/24
+ip prefix-list announcements-v4 permit 94.45.224.0/19
+ip prefix-list announcements-v4 permit 151.216.32.0/19
+ip prefix-list announcements-v4 permit 151.216.64.0/20
+access-list 22 permit 77.73.148.52
+access-list 22 permit 78.158.87.0 0.0.0.63
+access-list 22 permit 78.158.92.196
+access-list 22 permit 91.209.244.43
+access-list 22 permit 94.45.250.0 0.0.1.255
+access-list 22 deny   any log
+access-list 23 permit 78.158.87.11
+access-list 23 permit 78.158.87.12
+access-list 23 deny   any log
+access-list 61 permit 78.158.87.0 0.0.0.63
+access-list 61 permit 94.45.250.0 0.0.1.255
+access-list 61 deny   any log
+access-list 99 deny   any log
+ipv6 route 2001:7F8:8C::/48 Null0
+ipv6 router ospf 1
+ auto-cost reference-bandwidth 1000000
+ default-information originate always
+ redistribute connected
+!
+ipv6 prefix-list announcements-v6 permit 2001:7F8:8C::/48
+route-map AS42579-HEX-EXPORT permit 1
+ match ip address prefix-list announcements-v4
+ set as-path prepend 60079
+!
+route-map AS42579-HEX-EXPORTv6 permit 1
+ match ipv6 address prefix-list announcements-v6
+ set as-path prepend 60079
+!
+route-map AS42579-HEX-IMPORT permit 1
+ set local-preference 70
+!
+route-map AS42579-HEX-IMPORTv6 permit 1
+ set local-preference 70
+!
+route-map AS42579-INX-EXPORT permit 1
+ match ip address prefix-list announcements-v4
+!
+route-map AS42579-INX-EXPORTv6 permit 1
+ match ipv6 address prefix-list announcements-v6
+!
+route-map AS42579-INX-IMPORT permit 1
+ set local-preference 80
+!
+route-map AS42579-INX-IMPORTv6 permit 1
+ set local-preference 80
+!
+route-map AS42579-INX-IMPORTv6 permit 10
+!
+snmp-server community REDACTED RO 61
+snmp-server location TFM1 Telehouse
+snmp-server contact EMF NOC
+snmp ifmib ifindex persist
+!
+control-plane
+!
+banner motd ^C
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname)
+^C
+alias exec bgp4 show bgp ipv4 unicast summary
+alias exec bgp6 show bgp ipv6 unicast summary
+!
+line con 0
+ exec-timeout 60 0
+ login local
+ transport preferred none
+ stopbits 1
+line aux 0
+ login local
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ access-class 22 in
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 1869
+ access-class 22 in
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ transport input ssh
+!
+ntp source Loopback0
+ntp access-group peer 23
+ntp access-group serve 99
+ntp access-group serve-only 99
+ntp access-group query-only 99
+ntp update-calendar
+ntp server 78.158.87.11
+ntp server 78.158.87.12 prefer
+end

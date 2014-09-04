@@ -1,0 +1,326 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: 7301 - a 7300 router
+!CPU: NPE, SB-1 CPU at 700MHz, impl 1025, Rev 0.2, 512KB L2 Cache
+!
+!Memory: main 983040K/65536K
+!Memory: nvram 509K
+!Memory: bootflash 32768K
+!
+!Processor ID: REDACTED
+!
+!Power: Power Supply is Internal AC Power Supply. Unit is on.
+!
+!Image: Software: C7301-ADVIPSERVICESK9-M, 12.2(33)SRE5, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 15-Sep-11 01:02 by prod_rel_team
+!Image: bootflash:c7301-advipservicesk9-mz.122-33.SRE5.bin
+!
+!ROM Bootstrap: Version 12.3(4r)T4, RELEASE SOFTWARE (fc1)
+!
+!
+!Variable: BOOT variable = disk0:c7301-advipservicesk9_li-mz.152-4.M5.bin,1;
+!Variable: CONFIG_FILE variable does not exist
+!Variable: BOOTLDR variable does not exist
+!Variable: WARM_REBOOT variable = FALSE
+!Variable: Configuration register is 0x2102
+!
+!Flash: nvram: Directory of nvram:/
+!Flash: nvram:   510  -rw-        6541                    <no date>  startup-config
+!Flash: nvram:   511  ----        3566                    <no date>  private-config
+!Flash: nvram:   512  -rw-        6541                    <no date>  underlying-config
+!Flash: nvram:     1  ----          58                    <no date>  persistent-data
+!Flash: nvram:     2  -rw-         663                    <no date>  ifIndex-table
+!Flash: nvram: 522232 bytes total (510025 bytes free)
+!
+!Flash: bootflash: Directory of bootflash:/
+!Flash: bootflash:     1  -rwx    30735180  Aug 28 2014 05:50:36 +00:00  c7301-advipservicesk9-mz.122-33.SRE5.bin
+!Flash: bootflash: 32768000 bytes total (2032692 bytes free)
+!
+!Interface: GigabitEthernet0/0, BCM1250 Internal MAC (Revision B2/B3)
+!Interface: GigabitEthernet0/1, BCM1250 Internal MAC (Revision B2/B3)
+!Interface: GigabitEthernet0/2, BCM1250 Internal MAC (Revision B2/B3)
+!
+!NAME: "Chassis",               DESCR: "Cisco 7301, 1-slot chassis"
+!PID: CISCO7301
+!SN: REDACTED
+!NAME: "PA Slot 1",             DESCR: "PA Slot Container"
+!NAME: "NPE 0",                 DESCR: "Cisco 7301 Network Processing Engine NPE-G1"
+!PID: NPE-G1
+!SN: REDACTED
+!NAME: "SFP Port Container 0/0", DESCR: "SFP Port Container"
+!NAME: "SFP Port Container 0/1", DESCR: "SFP Port Container"
+!NAME: "SFP Port Container 0/2", DESCR: "SFP Port Container"
+!NAME: "module 0/2",            DESCR: "1000BaseLX"
+!NAME: "GigabitEthernet0/2",    DESCR: "BCM1250 Internal MAC"
+!NAME: "Flash Card Slot Container", DESCR: "Flash Card Slot Container"
+!NAME: "Thermal Sensor 1 Temperature 0", DESCR: "Thermal Sensor 1 Temperature Sensor"
+!NAME: "Thermal Sensor 2 Temperature 0", DESCR: "Thermal Sensor 2 Temperature Sensor"
+!NAME: "+3.30 V Voltage 0",     DESCR: "+3.30 V  Voltage Sensor"
+!NAME: "+2.50 V Voltage 0",     DESCR: "+2.50 V  Voltage Sensor"
+!NAME: "+12.25 V Voltage 0",    DESCR: "+12.25 V  Voltage Sensor"
+!NAME: "+5.00 V Voltage 0",     DESCR: "+5.00 V  Voltage Sensor"
+!NAME: "-12.00 V Voltage 0",    DESCR: "-12.00 V  Voltage Sensor"
+!NAME: "+5.20 V Voltage 0",     DESCR: "+5.20 V  Voltage Sensor"
+!NAME: "+1.50 V Voltage 0",     DESCR: "+1.50 V  Voltage Sensor"
+!NAME: "+1.20 V Voltage 0",     DESCR: "+1.20 V  Voltage Sensor"
+!NAME: "+1.25 V Voltage 0",     DESCR: "+1.25 V  Voltage Sensor"
+!NAME: "Gi0/0",                 DESCR: "BCM1250 Internal MAC RJ45"
+!NAME: "Gi0/1",                 DESCR: "BCM1250 Internal MAC RJ45"
+!NAME: "Gi0/2",                 DESCR: "BCM1250 Internal MAC RJ45"
+!
+!
+config-register 0x2102
+!
+version 12.2
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+!
+hostname BLETCHLEY
+!
+boot-start-marker
+boot system flash disk0:c7301-advipservicesk9_li-mz.152-4.M5.bin
+boot-end-marker
+!
+enable secret REDACTED
+!
+no aaa new-model
+no ip source-route
+!
+no ip dhcp use vrf connected
+ip dhcp excluded-address 78.158.87.88 78.158.87.90
+!
+ip dhcp pool local
+   network 78.158.87.124 255.255.255.252
+   dns-server 77.73.148.32 77.73.148.33 
+   default-router 78.158.87.125 
+!
+ip dhcp pool mast
+   network 78.158.87.88 255.255.255.248
+   dns-server 77.73.148.32 77.73.148.33 
+   default-router 78.158.87.89 
+!
+no ip domain lookup
+ip domain name emf.camp
+ip multicast-routing 
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+username ak47 privilege 15 secret REDACTED
+username david privilege 15 secret REDACTED
+username emfnoc1 privilege 15 secret REDACTED
+username emfnoc2 privilege 15 secret REDACTED
+username emfnoc3 privilege 15 secret REDACTED
+username jasper privilege 15 secret REDACTED
+username kay privilege 15 secret REDACTED
+username leon privilege 15 secret REDACTED
+username nihilus privilege 15 secret REDACTED
+username prt privilege 15 secret REDACTED
+username rancid privilege 15 secret REDACTED
+username tom privilege 15 secret REDACTED
+username will privilege 15 secret REDACTED
+!
+ip ssh version 2
+! 
+interface Null0
+ no ip unreachables
+ no ipv6 unreachables
+!
+interface Loopback0
+ ip address 78.158.87.114 255.255.255.255
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip ospf 1 area 0
+ ipv6 address 2001:7F8:8C:FFFF::2/128
+ ipv6 enable
+ no ipv6 redirects
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/0
+ description pseudowire to london
+ ip address 78.158.87.106 255.255.255.252
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf hello-interval 1
+ ip ospf 1 area 0
+ load-interval 30
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+ ipv6 address 2001:7F8:8C:FFFE::2/64
+ ipv6 enable
+ ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 ospf network point-to-point
+ ipv6 ospf hello-interval 1
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/1
+ description to laptop for testing
+ ip address 78.158.87.125 255.255.255.252
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip ospf 1 area 0
+ load-interval 30
+ media-type rj45
+ speed auto
+ duplex auto
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description to me3400 at mast
+ no ip address
+ ip ospf 1 area 0
+ load-interval 30
+ media-type gbic
+ speed auto
+ duplex auto
+ negotiation auto
+!
+interface GigabitEthernet0/2.20
+ description DragonWave via BLETCHLEY-MAST
+ bandwidth 436000
+ encapsulation dot1Q 20
+ ip address 78.158.87.109 255.255.255.252
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf hello-interval 1
+ ip ospf 1 area 0
+ ipv6 address 2001:7F8:8C:FFFD::1/64
+ ipv6 enable
+ ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 ospf network point-to-point
+ ipv6 ospf hello-interval 1
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/2.21
+ description NanoBridge via BLETCHLEY-MAST
+ bandwidth 100000
+ encapsulation dot1Q 21
+ ip address 78.158.87.97 255.255.255.248
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf hello-interval 1
+ ip ospf 1 area 0
+ ipv6 address 2001:7F8:8C:FFFC::1/64
+ ipv6 enable
+ ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 ospf network point-to-point
+ ipv6 ospf hello-interval 1
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/2.50
+ description management/laptops at mast
+ encapsulation dot1Q 50
+ ip address 78.158.87.89 255.255.255.248
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip ospf 1 area 0
+!
+router ospf 1
+ log-adjacency-changes
+ auto-cost reference-bandwidth 1000000
+ redistribute connected subnets
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 78.158.87.113
+ip pim autorp listener
+!
+access-list 22 permit 77.73.148.52
+access-list 22 permit 78.158.87.0 0.0.0.63
+access-list 22 permit 78.158.92.196
+access-list 22 permit 91.209.244.43
+access-list 22 permit 94.45.250.0 0.0.1.255
+access-list 22 deny   any log
+access-list 23 permit 78.158.87.11
+access-list 23 permit 78.158.87.12
+access-list 23 deny   any log
+access-list 61 permit 78.158.87.0 0.0.0.63
+access-list 61 permit 94.45.250.0 0.0.1.255
+access-list 61 deny   any log
+access-list 99 deny   any log
+ipv6 router ospf 1
+ log-adjacency-changes
+ auto-cost reference-bandwidth 1000000
+ redistribute connected
+!
+snmp-server community REDACTED RO 61
+snmp-server location Data centre, Bletchley
+snmp-server contact EMF NOC
+snmp ifmib ifindex persist
+!
+control-plane
+!
+banner motd ^C
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname)
+^C
+alias exec bgp4 show bgp ipv4 unicast summary
+alias exec bgp6 show bgp ipv6 unicast summary
+!
+line con 0
+ exec-timeout 60 0
+ login local
+ transport preferred none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ access-class 22 in
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 15
+ access-class 22 in
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 16 1869
+ login
+ transport input ssh
+!
+ntp source Loopback0
+ntp access-group query-only 99
+ntp access-group peer 23
+ntp access-group serve 99
+ntp access-group serve-only 99
+ntp update-calendar
+ntp server 78.158.87.11
+ntp server 78.158.87.12 prefer
+end

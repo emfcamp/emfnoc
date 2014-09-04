@@ -1,0 +1,938 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: WS-C2950T-24 - a 2900XL switch
+!CPU: RC32300
+!
+!Memory: main 19911K
+!Serial Number: REDACTED
+!Model revision number: R0
+!Model number: WS-C2950T-24
+!Motherboard assembly number: 73-6114-10
+!Motherboard serial REDACTED
+!Motherboard revision number: A0
+!Power supply part number: 34-0965-01
+!Power supply serial REDACTED
+!
+!Processor ID: REDACTED
+!
+!Power: RPS is NOT present
+!
+!Image: Software: C2950-I6K2L2Q4-M, 12.1(22)EA14, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Tue 26-Oct-10 10:35 by nburra
+!Image: flash:c2950-i6k2l2q4-mz.121-22.EA14.bin
+!
+!
+!
+!Variable: BOOT path-list:       flash:c2950-i6k2l2q4-mz.121-22.EA14.bin
+!Variable: Config file:          flash:/config.text
+!Variable: Private Config file:  flash:/private-config.text
+!Variable: Enable Break:         no
+!Variable: Manual Boot:          no
+!Variable: HELPER path-list:     
+!Variable: NVRAM/Config file
+!Variable:       buffer size:    32768
+!Variable: Timeout for Config
+!Variable:           Download:    0 seconds
+!Variable: Config Download 
+!Variable:        via DHCP:       disabled (next boot: disabled)
+!
+!Flash: Directory of flash:/
+!Flash:     2  -rwx         109  Mar 01 1993 00:01:43 +00:00  info
+!Flash:     3  -rwx         316  Mar 01 1993 00:04:21 +00:00  env_vars
+!Flash:     6  -rwx     3722814  Mar 01 1993 00:03:59 +00:00  c2950-i6k2l2q4-mz.121-22.EA14.bin
+!Flash:     7  -rwx        3600  Aug 29 2014 21:29:53 +00:00  private-config.text
+!Flash:   341  -rwx         109  Mar 01 1993 00:04:23 +00:00  info.ver
+!Flash:     9  -rwx       19183  Aug 29 2014 21:29:53 +00:00  config.text
+!Flash: 7741440 bytes total (3986944 bytes free)
+!
+!Flash: nvram: Directory of nvram:/
+!Flash: nvram:     8  -rw-       19183                    <no date>  startup-config
+!Flash: nvram:     9  ----        3600                    <no date>  private-config
+!Flash: nvram:     1  -rw-         950                    <no date>  ifIndex-table
+!Flash: nvram: 32768 bytes total (8909 bytes free)
+!
+!NAME: "SWDK-S2",               DESCR: "Cisco Catalyst c2950 switch with 24 10/100 BaseTX ports and 2 10/100/1000 BaseT ports"
+!PID: WS-C2950T-24
+!VID: R0
+!SN: REDACTED
+!NAME: "FastEthernet0/1",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/2",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/3",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/4",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/5",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/6",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/7",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/8",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/9",       DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/10",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/11",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/12",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/13",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/14",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/15",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/16",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/17",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/18",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/19",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/20",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/21",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/22",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/23",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "FastEthernet0/24",      DESCR: "10/100BaseTXFast Ethernet"
+!NAME: "GigabitEthernet0/1",    DESCR: "Gigabit Ethernet"
+!NAME: "GigabitEthernet0/2",    DESCR: "Gigabit Ethernet"
+!
+!VTP: VTP Version                     : 2
+!VTP: Configuration Revision          : 0
+!VTP: Maximum VLANs supported locally : 250
+!VTP: Number of existing VLANs        : 45
+!VTP: VTP Operating Mode              : Transparent
+!VTP: VTP Domain Name                 : 
+!VTP: VTP Pruning Mode                : Disabled
+!VTP: VTP V2 Mode                     : Disabled
+!VTP: VTP Traps Generation            : Disabled
+!VTP: MD5 digest                      : 0x8D 0x6E 0x6A 0x65 0x4F 0x1F 0x9B 0x7E 
+!
+!VLAN: VLAN Name                             Status    Ports
+!VLAN: ---- -------------------------------- --------- -------------------------------
+!VLAN: 1    default                          active    
+!VLAN: 10   ArtNet                           active    Fa0/24
+!VLAN: 56   VMware-Mgmt                      active    
+!VLAN: 57   Servers-NOC                      active    
+!VLAN: 58   Temp-Staging                     active    
+!VLAN: 59   Servers-Public                   active    
+!VLAN: 60   Deadend                          active    
+!VLAN: 132  DK-E1-Kids                       active    
+!VLAN: 134  DK-E2                            active    
+!VLAN: 136  DK-D1                            active    
+!VLAN: 138  DK-D2                            active    
+!VLAN: 140  DK-C1                            active    
+!VLAN: 142  DK-C2                            active    
+!VLAN: 144  DK-C3                            active    
+!VLAN: 146  DK-B1                            active    
+!VLAN: 148  DK-A1                            active    
+!VLAN: 150  DK-A2                            active    
+!VLAN: 152  DK-B2                            active    
+!VLAN: 154  DK-H1-J1                         active    
+!VLAN: 156  DK-H2-J2                         active    
+!VLAN: 158  DK-G1                            active    
+!VLAN: 160  DK-G2                            active    
+!VLAN: 162  DK-U1-U2                         active    
+!VLAN: 164  DK-S1                            active    
+!VLAN: 166  DK-S2                            active    Fa0/1, Fa0/2, Fa0/3, Fa0/4, Fa0/5, Fa0/6, Fa0/7, Fa0/8, Fa0/9, Fa0/10, Fa0/11
+!VLAN:                                                 Fa0/12, Fa0/13, Fa0/14, Fa0/15, Fa0/16, Fa0/17, Fa0/18, Fa0/19, Fa0/20, Fa0/21
+!VLAN:                                                 Fa0/22, Fa0/23
+!VLAN: 168  Workshop                         active    
+!VLAN: 170  EMFM                             active    
+!VLAN: 171  Static-IP-Wired                  active    
+!VLAN: 172  DK-X1                            active    
+!VLAN: 173  HQ                               active    
+!VLAN: 174  Infodesk                         active    
+!VLAN: 175  Lounge                           active    
+!VLAN: 176  Bar                              active    
+!VLAN: 177  Stage-A                          active    
+!VLAN: 178  Stage-C                          active    
+!VLAN: 179  Stage-B                          active    
+!VLAN: 224  Wireless-Clients                 active    
+!VLAN: 250  NOC                              active    
+!VLAN: 251  NOC-Wifi                         active    
+!VLAN: 252  Static-IP-Wifi                   active    
+!VLAN: 256  Switch-Mgmt                      active    
+!VLAN: 1002 fddi-default                     act/unsup 
+!VLAN: 1003 token-ring-default               act/unsup 
+!VLAN: 1004 fddinet-default                  act/unsup 
+!VLAN: 1005 trnet-default                    act/unsup 
+!VLAN: VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+!VLAN: ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+!VLAN: 1    enet  100001     1500  -      -      -        -    -        0      0   
+!VLAN: 10   enet  100010     1500  -      -      -        -    -        0      0   
+!VLAN: 56   enet  100056     1500  -      -      -        -    -        0      0   
+!VLAN: 57   enet  100057     1500  -      -      -        -    -        0      0   
+!VLAN: 58   enet  100058     1500  -      -      -        -    -        0      0   
+!VLAN: 59   enet  100059     1500  -      -      -        -    -        0      0   
+!VLAN: 60   enet  100060     1500  -      -      -        -    -        0      0   
+!VLAN: 132  enet  100132     1500  -      -      -        -    -        0      0   
+!VLAN: 134  enet  100134     1500  -      -      -        -    -        0      0   
+!VLAN: 136  enet  100136     1500  -      -      -        -    -        0      0   
+!VLAN: 138  enet  100138     1500  -      -      -        -    -        0      0   
+!VLAN: 140  enet  100140     1500  -      -      -        -    -        0      0   
+!VLAN: 142  enet  100142     1500  -      -      -        -    -        0      0   
+!VLAN: 144  enet  100144     1500  -      -      -        -    -        0      0   
+!VLAN: 146  enet  100146     1500  -      -      -        -    -        0      0   
+!VLAN: 148  enet  100148     1500  -      -      -        -    -        0      0   
+!VLAN: 150  enet  100150     1500  -      -      -        -    -        0      0   
+!VLAN: 152  enet  100152     1500  -      -      -        -    -        0      0   
+!VLAN: 154  enet  100154     1500  -      -      -        -    -        0      0   
+!VLAN: 156  enet  100156     1500  -      -      -        -    -        0      0   
+!VLAN: 158  enet  100158     1500  -      -      -        -    -        0      0   
+!VLAN: 160  enet  100160     1500  -      -      -        -    -        0      0   
+!VLAN: 162  enet  100162     1500  -      -      -        -    -        0      0   
+!VLAN: 164  enet  100164     1500  -      -      -        -    -        0      0   
+!VLAN: 166  enet  100166     1500  -      -      -        -    -        0      0   
+!VLAN: 168  enet  100168     1500  -      -      -        -    -        0      0   
+!VLAN: 170  enet  100170     1500  -      -      -        -    -        0      0   
+!VLAN: 171  enet  100171     1500  -      -      -        -    -        0      0   
+!VLAN: 172  enet  100172     1500  -      -      -        -    -        0      0   
+!VLAN: 173  enet  100173     1500  -      -      -        -    -        0      0   
+!VLAN: 174  enet  100174     1500  -      -      -        -    -        0      0   
+!VLAN: 175  enet  100175     1500  -      -      -        -    -        0      0   
+!VLAN: 176  enet  100176     1500  -      -      -        -    -        0      0   
+!VLAN: 177  enet  100177     1500  -      -      -        -    -        0      0   
+!VLAN: 178  enet  100178     1500  -      -      -        -    -        0      0   
+!VLAN: 179  enet  100179     1500  -      -      -        -    -        0      0   
+!VLAN: 224  enet  100224     1500  -      -      -        -    -        0      0   
+!VLAN: 250  enet  100250     1500  -      -      -        -    -        0      0   
+!VLAN: 251  enet  100251     1500  -      -      -        -    -        0      0   
+!VLAN: 252  enet  100252     1500  -      -      -        -    -        0      0   
+!VLAN: 256  enet  100256     1500  -      -      -        -    -        0      0   
+!VLAN: 1002 fddi  101002     1500  -      -      -        -    -        0      0   
+!VLAN: 1003 tr    101003     1500  -      -      -        -    -        0      0   
+!VLAN: 1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+!VLAN: 1005 trnet 101005     1500  -      -      -        ibm  -        0      0   
+!VLAN: Remote SPAN VLANs
+!VLAN: ------------------------------------------------------------------------------
+!VLAN: Primary Secondary Type              Ports
+!VLAN: ------- --------- ----------------- ------------------------------------------
+!
+!
+config-register 0xF
+!
+version 12.1
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+!
+hostname SWDK-S2
+!
+enable secret REDACTED
+!
+username ak47 privilege 15 secret REDACTED
+username david privilege 15 secret REDACTED
+username emfnoc1 privilege 15 secret REDACTED
+username emfnoc2 privilege 15 secret REDACTED
+username emfnoc3 privilege 15 secret REDACTED
+username jasper privilege 15 secret REDACTED
+username kay privilege 15 secret REDACTED
+username leon privilege 15 secret REDACTED
+username mat privilege 15 secret REDACTED
+username nihilus privilege 15 secret REDACTED
+username prt privilege 15 secret REDACTED
+username rancid privilege 15 secret REDACTED
+username russ privilege 15 secret REDACTED
+username tom privilege 15 secret REDACTED
+username will privilege 15 secret REDACTED
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause psecure-violation
+errdisable recovery cause gbic-invalid
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause unicast-flood
+errdisable recovery cause vmps
+errdisable recovery cause loopback
+errdisable recovery interval 120
+ip subnet-zero
+no ip source-route
+!
+ip dhcp snooping vlan 10 166
+ip dhcp snooping
+no ip domain-lookup
+ip domain-name emf.camp
+ip ssh time-out 120
+ip ssh authentication-retries 3
+ip ssh version 2
+vtp mode transparent
+!
+file prompt quiet
+spanning-tree mode pvst
+no spanning-tree optimize bpdu transmission
+spanning-tree extend system-id
+!
+vlan 10
+ name ArtNet
+!
+vlan 56
+ name VMware-Mgmt
+!
+vlan 57
+ name Servers-NOC
+!
+vlan 58
+ name Temp-Staging
+!
+vlan 59
+ name Servers-Public
+!
+vlan 60
+ name Deadend
+!
+vlan 132
+ name DK-E1-Kids
+!
+vlan 134
+ name DK-E2
+!
+vlan 136
+ name DK-D1
+!
+vlan 138
+ name DK-D2
+!
+vlan 140
+ name DK-C1
+!
+vlan 142
+ name DK-C2
+!
+vlan 144
+ name DK-C3
+!
+vlan 146
+ name DK-B1
+!
+vlan 148
+ name DK-A1
+!
+vlan 150
+ name DK-A2
+!
+vlan 152
+ name DK-B2
+!
+vlan 154
+ name DK-H1-J1
+!
+vlan 156
+ name DK-H2-J2
+!
+vlan 158
+ name DK-G1
+!
+vlan 160
+ name DK-G2
+!
+vlan 162
+ name DK-U1-U2
+!
+vlan 164
+ name DK-S1
+!
+vlan 166
+ name DK-S2
+!
+vlan 168
+ name Workshop
+!
+vlan 170
+ name EMFM
+!
+vlan 171
+ name Static-IP-Wired
+!
+vlan 172
+ name DK-X1
+!
+vlan 173
+ name HQ
+!
+vlan 174
+ name Infodesk
+!
+vlan 175
+ name Lounge
+!
+vlan 176
+ name Bar
+!
+vlan 177
+ name Stage-A
+!
+vlan 178
+ name Stage-C
+!
+vlan 179
+ name Stage-B
+!
+vlan 224
+ name Wireless-Clients
+!
+vlan 250
+ name NOC
+!
+vlan 251
+ name NOC-Wifi
+!
+vlan 252
+ name Static-IP-Wifi
+!
+vlan 256
+ name Switch-Mgmt
+!
+interface Port-channel1
+ description Uplink to SWDK-S1
+ switchport trunk allowed vlan 10,166,171,256
+ switchport mode trunk
+ load-interval 30
+ ip dhcp snooping trust
+!
+interface Port-channel2
+ shutdown
+!
+interface FastEthernet0/1
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/2
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/3
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 50
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/4
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/5
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/6
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/7
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/8
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/9
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/10
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/11
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/12
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/13
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/14
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/15
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/16
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/17
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/18
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/19
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/20
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/21
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/22
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/23
+ switchport access vlan 166
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/24
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group artnetv4_in in
+ load-interval 30
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet0/1
+ description Uplink to SWDK-S1 port GigabitEthernet0/3
+ switchport trunk allowed vlan 10,166,171,256
+ switchport mode trunk
+ load-interval 30
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/2
+ description Uplink to SWDK-S1 port GigabitEthernet0/4
+ switchport trunk allowed vlan 10,166,171,256
+ switchport mode trunk
+ load-interval 30
+ channel-group 1 mode active
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan256
+ ip address 94.45.255.160 255.255.255.128
+ no ip redirects
+ no ip proxy-arp
+ no ip route-cache
+!
+ip default-gateway 94.45.255.129
+no ip http server
+!
+ip access-list extended artnetv4_in
+ permit ip 192.168.0.0 0.0.3.255 any
+ deny   ip any any
+ip access-list extended camper_v4_in
+ permit ip 151.216.66.0 0.0.1.255 any
+ permit ip any any
+logging source-interface Vlan256
+logging 78.158.87.14
+access-list 22 permit 77.73.148.52
+access-list 22 permit 78.158.87.0 0.0.0.63
+access-list 22 permit 78.158.92.196
+access-list 22 permit 91.209.244.43
+access-list 22 permit 94.45.250.0 0.0.1.255
+access-list 22 deny   any log
+access-list 23 permit 78.158.87.11
+access-list 23 permit 78.158.87.12
+access-list 23 deny   any log
+access-list 61 permit 78.158.87.0 0.0.0.63
+access-list 61 permit 94.45.250.0 0.0.1.255
+access-list 61 deny   any log
+access-list 99 deny   any log
+snmp-server community REDACTED RO 61
+snmp-server ifindex persist
+snmp-server location EMF
+snmp-server contact EMF NOC
+banner motd ^C
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^C
+!
+line con 0
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 15
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+!
+ntp source Vlan256
+ntp access-group query-only 99
+ntp access-group peer 23
+ntp access-group serve 99
+ntp access-group serve-only 99
+ntp server 78.158.87.11
+ntp server 78.158.87.12
+!
+end

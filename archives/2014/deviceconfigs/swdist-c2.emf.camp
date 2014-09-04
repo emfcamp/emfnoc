@@ -1,0 +1,565 @@
+#RANCID-CONTENT-TYPE: extreme
+#
+#Chassis type: X650-24x(SSns)
+#
+#
+#
+#Image: ExtremeXOS version 15.3.4.6 v1534b6
+#
+#Bootrom: 1.0.5.5
+#
+#
+#
+# Module devmgr configuration.
+#
+configure snmp sysName "SWDIST-C2"
+configure snmp sysLocation "EMF"
+configure snmp sysContact "EMF NOC"
+configure timezone name UTC 0 noautodst
+configure sys-recovery-level switch reset
+#
+# Module vlan configuration.
+#
+configure vlan default delete ports all
+configure vr VR-Default delete ports 1-28
+configure vr VR-Default add ports 1-28
+configure vlan default delete ports 1-28
+create vlan "ArtNet"
+configure vlan ArtNet tag 10
+create vlan "Bar"
+configure vlan Bar tag 176
+create vlan "DK-A1"
+configure vlan DK-A1 tag 148
+create vlan "DK-A2"
+configure vlan DK-A2 tag 150
+create vlan "DK-B1"
+configure vlan DK-B1 tag 146
+create vlan "DK-B2"
+configure vlan DK-B2 tag 152
+create vlan "DK-C1"
+configure vlan DK-C1 tag 140
+create vlan "DK-C2"
+configure vlan DK-C2 tag 142
+create vlan "DK-C3"
+configure vlan DK-C3 tag 144
+create vlan "DK-D1"
+configure vlan DK-D1 tag 136
+create vlan "DK-D2"
+configure vlan DK-D2 tag 138
+create vlan "DK-E1-Kids"
+configure vlan DK-E1-Kids tag 132
+create vlan "DK-E2"
+configure vlan DK-E2 tag 134
+create vlan "DK-G1"
+configure vlan DK-G1 tag 158
+create vlan "DK-G2"
+configure vlan DK-G2 tag 160
+create vlan "DK-H1-J1"
+configure vlan DK-H1-J1 tag 154
+create vlan "DK-H2-J2"
+configure vlan DK-H2-J2 tag 156
+create vlan "DK-S1"
+configure vlan DK-S1 tag 164
+create vlan "DK-S2"
+configure vlan DK-S2 tag 166
+create vlan "DK-U1-U2"
+configure vlan DK-U1-U2 tag 162
+create vlan "DK-X1"
+configure vlan DK-X1 tag 172
+create vlan "eaps_ctrl"
+configure vlan eaps_ctrl tag 11
+configure vlan "eaps_ctrl" qosprofile QP8
+create vlan "EMFM"
+configure vlan EMFM tag 170
+create vlan "HQ"
+configure vlan HQ tag 173
+create vlan "Infodesk"
+configure vlan Infodesk tag 174
+create vlan "Lounge"
+configure vlan Lounge tag 175
+create vlan "NOC"
+configure vlan NOC tag 250
+create vlan "NOC-Wifi"
+configure vlan NOC-Wifi tag 251
+create vlan "Servers-NOC"
+configure vlan Servers-NOC tag 57
+create vlan "Servers-Public"
+configure vlan Servers-Public tag 59
+create vlan "Stage-A"
+configure vlan Stage-A tag 177
+create vlan "Stage-B"
+configure vlan Stage-B tag 179
+create vlan "Stage-C"
+configure vlan Stage-C tag 178
+create vlan "Static-IP-Wifi"
+configure vlan Static-IP-Wifi tag 252
+create vlan "Static-IP-Wired"
+configure vlan Static-IP-Wired tag 171
+create vlan "Switch-Mgmt"
+configure vlan Switch-Mgmt tag 256
+create vlan "Temp-Staging"
+configure vlan Temp-Staging tag 58
+create vlan "Unused"
+configure vlan Unused tag 60
+create vlan "VMware-Mgmt"
+configure vlan VMware-Mgmt tag 56
+create vlan "Wireless-Clients"
+configure vlan Wireless-Clients tag 224
+create vlan "Workshop"
+configure vlan Workshop tag 168
+configure ports 3 auto on speed 1000 
+configure ports 4 auto on speed 1000 
+configure ports 5 auto on speed 1000 
+configure ports 6 auto on speed 1000 
+configure ports 7 auto on speed 1000 
+configure ports 8 auto on speed 1000 
+configure ports 9 auto on speed 1000 
+configure ports 10 auto on speed 1000 
+configure ports 11 auto on speed 1000 
+configure ports 12 auto on speed 1000 
+configure ports 13 auto on speed 1000 
+configure ports 14 auto on speed 1000 
+configure ports 15 auto on speed 1000 
+configure ports 16 auto on speed 1000 
+enable sharing 3 grouping 3-4 algorithm address-based L3_L4 lacp
+enable sharing 5 grouping 5-6 algorithm address-based L3_L4 lacp
+enable sharing 7 grouping 7-8 algorithm address-based L3_L4 lacp
+enable sharing 9 grouping 9-10 algorithm address-based L3_L4 lacp
+enable sharing 11 grouping 11-12 algorithm address-based L3_L4 lacp
+enable sharing 13 grouping 13-14 algorithm address-based L3_L4 lacp
+enable sharing 15 grouping 15-16 algorithm address-based L3_L4 lacp
+configure vlan ArtNet add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Bar add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-A1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-A2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-B1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-B2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-C1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-C2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-C3 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-D1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-D2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-E1-Kids add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-E2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-G1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-G2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-H1-J1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-H2-J2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-S1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-S2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-U1-U2 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan DK-X1 add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan eaps_ctrl add ports 1-2 tagged  
+configure vlan EMFM add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan HQ add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Infodesk add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Lounge add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan NOC add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan NOC-Wifi add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Servers-NOC add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Servers-Public add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Stage-A add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Stage-B add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Stage-C add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Static-IP-Wifi add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Static-IP-Wired add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Switch-Mgmt add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Temp-Staging add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Unused add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan VMware-Mgmt add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Wireless-Clients add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Workshop add ports 1-3, 5, 7, 9, 11, 13 tagged  
+configure vlan Switch-Mgmt ipaddress 94.45.255.132 255.255.255.128
+#
+# Module fdb configuration.
+#
+# Module rtmgr configuration.
+#
+configure iproute add default 94.45.255.129
+#
+# Module mcmgr configuration.
+#
+# Module aaa configuration.
+#
+configure account admin encrypted REDACTED
+create account admin david encrypted REDACTED
+create account admin will encrypted REDACTED
+create account admin jasper encrypted REDACTED
+create account admin ak47 encrypted REDACTED
+create account admin prt encrypted REDACTED
+create account admin nihilus encrypted REDACTED
+create account admin russ encrypted REDACTED
+create account admin kay encrypted REDACTED
+create account admin tom encrypted REDACTED
+create account admin mat encrypted REDACTED
+create account admin leon encrypted REDACTED
+create account admin rancid encrypted REDACTED
+#
+# Module acl configuration.
+#
+# Module bfd configuration.
+#
+# Module bgp configuration.
+#
+# Module ces configuration.
+#
+# Module cfgmgr configuration.
+#
+configure banner before-login save-to-configuration
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     SWDIST-C2 
+configure idletimeout 120
+#
+# Module dosprotect configuration.
+#
+enable dos-protect
+#
+# Module dot1ag configuration.
+#
+# Module eaps configuration.
+#
+enable eaps
+create eaps EMF_core
+configure eaps EMF_core mode transit
+configure eaps EMF_core primary port 1
+configure eaps EMF_core secondary port 2
+configure eaps EMF_core failtime 2 0
+configure eaps EMF_core hellotime 0 400
+configure eaps EMF_core failtime expiry-action open-secondary-port
+enable eaps EMF_core
+configure eaps EMF_core add protected vlan HQ
+configure eaps EMF_core add protected vlan Bar
+configure eaps EMF_core add protected vlan NOC
+configure eaps EMF_core add protected vlan EMFM
+configure eaps EMF_core add protected vlan DK-A1
+configure eaps EMF_core add protected vlan DK-A2
+configure eaps EMF_core add protected vlan DK-B1
+configure eaps EMF_core add protected vlan DK-B2
+configure eaps EMF_core add protected vlan DK-C1
+configure eaps EMF_core add protected vlan DK-C2
+configure eaps EMF_core add protected vlan DK-C3
+configure eaps EMF_core add protected vlan DK-D1
+configure eaps EMF_core add protected vlan DK-D2
+configure eaps EMF_core add protected vlan DK-E2
+configure eaps EMF_core add protected vlan DK-G1
+configure eaps EMF_core add protected vlan DK-G2
+configure eaps EMF_core add protected vlan DK-S1
+configure eaps EMF_core add protected vlan DK-S2
+configure eaps EMF_core add protected vlan DK-X1
+configure eaps EMF_core add protected vlan ArtNet
+configure eaps EMF_core add protected vlan Lounge
+configure eaps EMF_core add protected vlan Unused
+configure eaps EMF_core add protected vlan Stage-A
+configure eaps EMF_core add protected vlan Stage-B
+configure eaps EMF_core add protected vlan Stage-C
+configure eaps EMF_core add protected vlan DK-H1-J1
+configure eaps EMF_core add protected vlan DK-H2-J2
+configure eaps EMF_core add protected vlan DK-U1-U2
+configure eaps EMF_core add protected vlan Infodesk
+configure eaps EMF_core add protected vlan NOC-Wifi
+configure eaps EMF_core add protected vlan Workshop
+configure eaps EMF_core add control vlan eaps_ctrl
+configure eaps EMF_core add protected vlan DK-E1-Kids
+configure eaps EMF_core add protected vlan Servers-NOC
+configure eaps EMF_core add protected vlan Switch-Mgmt
+configure eaps EMF_core add protected vlan VMware-Mgmt
+configure eaps EMF_core add protected vlan Temp-Staging
+configure eaps EMF_core add protected vlan Servers-Public
+configure eaps EMF_core add protected vlan Static-IP-Wifi
+configure eaps EMF_core add protected vlan Static-IP-Wired
+configure eaps EMF_core add protected vlan Wireless-Clients
+#
+# Module edp configuration.
+#
+# Module elrp configuration.
+#
+enable elrp-client
+configure elrp-client periodic ArtNet ports all interval 10 log
+configure elrp-client periodic DK-E1-Kids ports all interval 10 log
+configure elrp-client periodic DK-E2 ports all interval 10 log
+configure elrp-client periodic DK-D1 ports all interval 10 log
+configure elrp-client periodic DK-D2 ports all interval 10 log
+configure elrp-client periodic DK-C1 ports all interval 10 log
+configure elrp-client periodic DK-C2 ports all interval 10 log
+configure elrp-client periodic DK-C3 ports all interval 10 log
+configure elrp-client periodic DK-B1 ports all interval 10 log
+configure elrp-client periodic DK-A1 ports all interval 10 log
+configure elrp-client periodic DK-A2 ports all interval 10 log
+configure elrp-client periodic DK-B2 ports all interval 10 log
+configure elrp-client periodic DK-H1-J1 ports all interval 10 log
+configure elrp-client periodic DK-H2-J2 ports all interval 10 log
+configure elrp-client periodic DK-G1 ports all interval 10 log
+configure elrp-client periodic DK-G2 ports all interval 10 log
+configure elrp-client periodic DK-U1-U2 ports all interval 10 log
+configure elrp-client periodic DK-S1 ports all interval 10 log
+configure elrp-client periodic DK-S2 ports all interval 10 log
+configure elrp-client periodic Workshop ports all interval 10 log
+configure elrp-client periodic EMFM ports all interval 10 log
+configure elrp-client periodic Static-IP-Wired ports all interval 10 log
+configure elrp-client periodic DK-X1 ports all interval 10 log
+configure elrp-client periodic HQ ports all interval 10 log
+configure elrp-client periodic Infodesk ports all interval 10 log
+configure elrp-client periodic Lounge ports all interval 10 log
+configure elrp-client periodic Bar ports all interval 10 log
+configure elrp-client periodic Stage-A ports all interval 10 log
+configure elrp-client periodic Stage-C ports all interval 10 log
+configure elrp-client periodic Stage-B ports all interval 10 log
+configure elrp-client periodic Wireless-Clients ports all interval 10 log
+configure elrp-client periodic NOC ports all interval 10 log
+configure elrp-client periodic NOC-Wifi ports all interval 10 log
+configure elrp-client periodic Static-IP-Wifi ports all interval 10 log
+configure elrp-client periodic Switch-Mgmt ports all interval 10 log
+configure elrp-client periodic VMware-Mgmt ports all interval 10 log
+configure elrp-client periodic Servers-NOC ports all interval 10 log
+configure elrp-client periodic Temp-Staging ports all interval 10 log
+configure elrp-client periodic Servers-Public ports all interval 10 log
+configure elrp-client periodic Unused ports all interval 10 log
+#
+# Module ems configuration.
+#
+configure syslog add 78.158.87.14:514 vr VR-Default local1
+enable log target syslog 78.158.87.14:514 vr VR-Default local1
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 from 94.45.255.132
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 filter DefaultFilter severity Debug-Verbose
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 match Any
+configure log target syslog 78.158.87.14:514 vr VR-Default local1 format timestamp seconds date Mmm-dd event-name none priority tag-name 
+#
+# Module epm configuration.
+#
+# Module erps configuration.
+#
+# Module esrp configuration.
+#
+# Module ethoam configuration.
+#
+# Module etmon configuration.
+#
+# Module exsshd configuration.
+#
+configure ssh2 access-profile emf_mgmt_access
+enable ssh2
+#
+# Module hal configuration.
+#
+# Module idMgr configuration.
+#
+# Module ipSecurity configuration.
+#
+# Module ipfix configuration.
+#
+# Module isis configuration.
+#
+# Module lacp configuration.
+#
+# Module lldp configuration.
+#
+enable lldp ports 1
+configure lldp port 1 advertise port-description
+configure lldp port 1 advertise system-name
+configure lldp port 1 advertise system-capabilities
+configure lldp port 1 advertise management-address
+enable lldp ports 2
+configure lldp port 2 advertise port-description
+configure lldp port 2 advertise system-name
+configure lldp port 2 advertise system-capabilities
+configure lldp port 2 advertise management-address
+enable lldp ports 3
+configure lldp port 3 advertise port-description
+configure lldp port 3 advertise system-name
+configure lldp port 3 advertise system-capabilities
+configure lldp port 3 advertise management-address
+enable lldp ports 4
+configure lldp port 4 advertise port-description
+configure lldp port 4 advertise system-name
+configure lldp port 4 advertise system-capabilities
+configure lldp port 4 advertise management-address
+enable lldp ports 5
+configure lldp port 5 advertise port-description
+configure lldp port 5 advertise system-name
+configure lldp port 5 advertise system-capabilities
+configure lldp port 5 advertise management-address
+enable lldp ports 6
+configure lldp port 6 advertise port-description
+configure lldp port 6 advertise system-name
+configure lldp port 6 advertise system-capabilities
+configure lldp port 6 advertise management-address
+enable lldp ports 7
+configure lldp port 7 advertise port-description
+configure lldp port 7 advertise system-name
+configure lldp port 7 advertise system-capabilities
+configure lldp port 7 advertise management-address
+enable lldp ports 8
+configure lldp port 8 advertise port-description
+configure lldp port 8 advertise system-name
+configure lldp port 8 advertise system-capabilities
+configure lldp port 8 advertise management-address
+enable lldp ports 9
+configure lldp port 9 advertise port-description
+configure lldp port 9 advertise system-name
+configure lldp port 9 advertise system-capabilities
+configure lldp port 9 advertise management-address
+enable lldp ports 10
+configure lldp port 10 advertise port-description
+configure lldp port 10 advertise system-name
+configure lldp port 10 advertise system-capabilities
+configure lldp port 10 advertise management-address
+enable lldp ports 11
+configure lldp port 11 advertise port-description
+configure lldp port 11 advertise system-name
+configure lldp port 11 advertise system-capabilities
+configure lldp port 11 advertise management-address
+enable lldp ports 12
+configure lldp port 12 advertise port-description
+configure lldp port 12 advertise system-name
+configure lldp port 12 advertise system-capabilities
+configure lldp port 12 advertise management-address
+enable lldp ports 13
+configure lldp port 13 advertise port-description
+configure lldp port 13 advertise system-name
+configure lldp port 13 advertise system-capabilities
+configure lldp port 13 advertise management-address
+enable lldp ports 14
+configure lldp port 14 advertise port-description
+configure lldp port 14 advertise system-name
+configure lldp port 14 advertise system-capabilities
+configure lldp port 14 advertise management-address
+enable lldp ports 15
+configure lldp port 15 advertise port-description
+configure lldp port 15 advertise system-name
+configure lldp port 15 advertise system-capabilities
+configure lldp port 15 advertise management-address
+enable lldp ports 16
+configure lldp port 16 advertise port-description
+configure lldp port 16 advertise system-name
+configure lldp port 16 advertise system-capabilities
+configure lldp port 16 advertise management-address
+enable lldp ports 17
+configure lldp port 17 advertise port-description
+configure lldp port 17 advertise system-name
+configure lldp port 17 advertise system-capabilities
+configure lldp port 17 advertise management-address
+enable lldp ports 18
+configure lldp port 18 advertise port-description
+configure lldp port 18 advertise system-name
+configure lldp port 18 advertise system-capabilities
+configure lldp port 18 advertise management-address
+enable lldp ports 19
+configure lldp port 19 advertise port-description
+configure lldp port 19 advertise system-name
+configure lldp port 19 advertise system-capabilities
+configure lldp port 19 advertise management-address
+enable lldp ports 20
+configure lldp port 20 advertise port-description
+configure lldp port 20 advertise system-name
+configure lldp port 20 advertise system-capabilities
+configure lldp port 20 advertise management-address
+enable lldp ports 21
+configure lldp port 21 advertise port-description
+configure lldp port 21 advertise system-name
+configure lldp port 21 advertise system-capabilities
+configure lldp port 21 advertise management-address
+enable lldp ports 22
+configure lldp port 22 advertise port-description
+configure lldp port 22 advertise system-name
+configure lldp port 22 advertise system-capabilities
+configure lldp port 22 advertise management-address
+enable lldp ports 23
+configure lldp port 23 advertise port-description
+configure lldp port 23 advertise system-name
+configure lldp port 23 advertise system-capabilities
+configure lldp port 23 advertise management-address
+enable lldp ports 24
+configure lldp port 24 advertise port-description
+configure lldp port 24 advertise system-name
+configure lldp port 24 advertise system-capabilities
+configure lldp port 24 advertise management-address
+enable lldp ports 25
+configure lldp port 25 advertise port-description
+configure lldp port 25 advertise system-name
+configure lldp port 25 advertise system-capabilities
+configure lldp port 25 advertise management-address
+enable lldp ports 26
+configure lldp port 26 advertise port-description
+configure lldp port 26 advertise system-name
+configure lldp port 26 advertise system-capabilities
+configure lldp port 26 advertise management-address
+enable lldp ports 27
+configure lldp port 27 advertise port-description
+configure lldp port 27 advertise system-name
+configure lldp port 27 advertise system-capabilities
+configure lldp port 27 advertise management-address
+enable lldp ports 28
+configure lldp port 28 advertise port-description
+configure lldp port 28 advertise system-name
+configure lldp port 28 advertise system-capabilities
+configure lldp port 28 advertise management-address
+#
+# Module mrp configuration.
+#
+# Module msdp configuration.
+#
+# Module netLogin configuration.
+#
+# Module netTools configuration.
+#
+configure dns-client add domain-suffix emf.camp 
+configure sntp-client primary 78.158.87.11 vr VR-Default
+configure sntp-client secondary 78.158.87.12 vr VR-Default
+configure sntp-client update-interval 7300 
+enable sntp-client
+#
+# Module ospf configuration.
+#
+# Module ospfv3 configuration.
+#
+# Module pim configuration.
+#
+# Module poe configuration.
+#
+# Module rip configuration.
+#
+# Module ripng configuration.
+#
+# Module snmpMaster configuration.
+#
+configure snmpv3 add community REDACTED name REDACTED user v1v2c_ro 
+disable snmp community REDACTED
+disable snmp community REDACTED
+configure snmp access-profile emf_snmp_access readwrite
+#
+# Module stp configuration.
+#
+configure mstp region 000496375399
+configure stpd s0 delete vlan default ports all
+disable stpd s0 auto-bind vlan default
+enable stpd s0 auto-bind vlan Default
+#
+# Module synce configuration.
+#
+# Module telnetd configuration.
+#
+disable telnet
+#
+# Module tftpd configuration.
+#
+# Module thttpd configuration.
+#
+# Module vmt configuration.
+#
+# Module vrrp configuration.
+#
+# Module vsm configuration.
+#
+#

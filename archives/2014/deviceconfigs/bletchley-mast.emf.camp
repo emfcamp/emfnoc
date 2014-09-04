@@ -1,0 +1,234 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: ME-3400G-2CS-A - a ME-3400G-2CS-A router
+!CPU: PowerPC405
+!
+!Memory: main 131072K
+!Serial Number: REDACTED
+!Model revision number           : F0
+!Model number                    : ME-3400G-2CS-A
+!Motherboard assembly number     : 73-10724-07
+!Motherboard serial number REDACTED
+!Motherboard revision number     : A0
+!Power supply part number        : 341-0208-01
+!Power supply serial number REDACTED
+!
+!Processor ID: REDACTED
+!
+!
+!Image: Software: ME340x-METROIPACCESSK9-M, 12.2(58)SE2, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Thu 21-Jul-11 03:06 by prod_rel_team
+!Image: flash:me340x-metroipaccessk9-mz.122-58.SE2.bin
+!
+!BOOTLDR: Version 12.2(35r)SE3, RELEASE SOFTWARE (fc1)
+!
+!
+!BootFlash: BOOT path-list      : flash:me340x-metroipaccessk9-mz.122-58.SE2.bin
+!BootFlash: Config file         : flash:/config.text
+!BootFlash: Private Config file : flash:/private-config.text
+!BootFlash: Enable Break        : yes
+!BootFlash: Manual Boot         : no
+!BootFlash: HELPER path-list    : 
+!BootFlash: Auto upgrade        : yes
+!BootFlash: Auto upgrade path   : 
+!BootFlash: NVRAM/Config file
+!BootFlash:       buffer size:   524288
+!BootFlash: Timeout for Config
+!BootFlash:           Download:    0 seconds
+!BootFlash: Config Download 
+!BootFlash:        via DHCP:       disabled (next boot: disabled)
+!
+!Flash: Directory of flash:/
+!Flash:     3  -rwx    15349538   Mar 1 1993 01:36:12 +00:00  me340x-metroipaccessk9-mz.122-58.SE2.bin
+!Flash:    10  -rwx        4481  Aug 28 2014 17:56:30 +00:00  private-config.text
+!Flash:     8  -rwx        4286  Aug 28 2014 17:56:30 +00:00  config.text
+!Flash: 27998208 bytes total (12499968 bytes free)
+!
+!Flash: nvram: Directory of nvram:/
+!Flash: nvram:   503  -rw-        4286                    <no date>  startup-config
+!Flash: nvram:   504  ----        4481                    <no date>  private-config
+!Flash: nvram:     1  ----          51                    <no date>  persistent-data
+!Flash: nvram:     2  -rw-          17                    <no date>  ecfm_ieee_mib
+!Flash: nvram:     3  -rw-         200                    <no date>  ifIndex-table
+!Flash: nvram:     4  -rw-         587                    <no date>  IOS-Self-Sig#1.cer
+!Flash: nvram: 524288 bytes total (511373 bytes free)
+!
+!
+!NAME: "1",                     DESCR: "ME-3400G-2CS-A"
+!PID: ME-3400G-2CS-A
+!VID: V03
+!SN: REDACTED
+!NAME: "ME-3400G-2CS-A - Power Supply 0", DESCR: "ME-3400G-2CS-A - Power Supply 0"
+!SN: REDACTED
+!NAME: "ME-3400G-2CS-A - Fan 0", DESCR: "ME-3400G-2CS-A - Fan 0"
+!NAME: "ME-3400G-2CS-A - Sensor 0", DESCR: "ME-3400G-2CS-A - Sensor 0"
+!NAME: "ME-3400G-2CS-A - Fixed Module 0", DESCR: "ME-3400G-2CS-A - Fixed Module 0"
+!NAME: "GigabitEthernet0/1 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/1",    DESCR: "GigabitEthernet0/1"
+!NAME: "GigabitEthernet0/2 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/2",    DESCR: "GigabitEthernet0/2"
+!NAME: "GigabitEthernet0/3 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/4 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/4",    DESCR: "1000BaseLX SFP"
+!PID: GLC-LH-SMD
+!VID: V01
+!SN: REDACTED
+!NAME: "Gi0/4 Module Temperature Sensor", DESCR: "GigabitEthernet0/4 Module Temperature Sensor"
+!NAME: "Gi0/4 Supply Voltage Sensor", DESCR: "GigabitEthernet0/4 Supply Voltage Sensor"
+!NAME: "Gi0/4 Bias Current Sensor", DESCR: "GigabitEthernet0/4 Bias Current Sensor"
+!NAME: "Gi0/4 Transmit Power Sensor", DESCR: "GigabitEthernet0/4 Transmit Power Sensor"
+!NAME: "Gi0/4 Receive Power Sensor", DESCR: "GigabitEthernet0/4 Receive Power Sensor"
+!
+!
+config-register 0xF
+!
+version 12.2
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+!
+hostname BLETCHLEY-MAST
+!
+boot-start-marker
+boot-end-marker
+!
+username ak47 privilege 15 secret REDACTED
+username david privilege 15 secret REDACTED
+username emfnoc1 privilege 15 secret REDACTED
+username emfnoc2 privilege 15 secret REDACTED
+username emfnoc3 privilege 15 secret REDACTED
+username jasper privilege 15 secret REDACTED
+username kay privilege 15 secret REDACTED
+username leon privilege 15 secret REDACTED
+username nihilus privilege 15 secret REDACTED
+username prt privilege 15 secret REDACTED
+username rancid privilege 15 secret REDACTED
+username tom privilege 15 secret REDACTED
+username will privilege 15 secret REDACTED
+no aaa new-model
+system mtu routing 1500
+no ip source-route
+no ip domain-lookup
+ip domain-name emf.camp
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 20
+ name Dragonwave
+!
+vlan 21
+ name NanoBridge
+!
+vlan 50
+ name Management
+!
+ip ssh rsa keypair-name BLETCHLEY-MAST.emf.camp
+ip ssh version 2
+!
+interface GigabitEthernet0/1
+ description to NanoBridge
+ port-type nni
+ switchport access vlan 21
+ load-interval 30
+ media-type rj45
+ spanning-tree portfast
+!
+interface GigabitEthernet0/2
+ description to Dragonwave
+ port-type nni
+ switchport trunk allowed vlan 20
+ switchport mode trunk
+ load-interval 30
+ media-type rj45
+ spanning-tree portfast
+!
+interface GigabitEthernet0/3
+ port-type nni
+ load-interval 30
+!
+interface GigabitEthernet0/4
+ description to colocker
+ port-type nni
+ switchport mode trunk
+ load-interval 30
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan50
+ ip address 78.158.87.90 255.255.255.240
+!
+ip default-gateway 78.158.87.89
+no ip http server
+no ip http secure-server
+!
+logging esm config
+access-list 22 permit 77.73.148.52
+access-list 22 permit 78.158.87.0 0.0.0.63
+access-list 22 permit 78.158.92.196
+access-list 22 permit 91.209.244.43
+access-list 22 permit 94.45.250.0 0.0.1.255
+access-list 22 deny   any log
+access-list 23 permit 78.158.87.11
+access-list 23 permit 78.158.87.12
+access-list 23 deny   any log
+access-list 61 permit 78.158.87.0 0.0.0.63
+access-list 61 permit 94.45.250.0 0.0.1.255
+access-list 61 deny   any log
+access-list 99 deny   any log
+!
+snmp-server community REDACTED RO 61
+snmp-server location Mast, Bletchley
+snmp-server contact EMF NOC
+snmp ifmib ifindex persist
+banner motd ^C
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname)
+^C
+!
+line con 0
+ exec-timeout 60 0
+ login local
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ access-class 22 in
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 15
+ access-class 22 in
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ transport input ssh
+!
+ntp source Vlan50
+ntp access-group peer 23
+ntp access-group serve 99
+ntp access-group serve-only 99
+ntp access-group query-only 99
+ntp server 78.158.87.11
+ntp server 78.158.87.12 prefer
+end

@@ -1,0 +1,1609 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: WS-C3560-48PS - a 3500XL switch
+!CPU: PowerPC405
+!
+!Memory: main 131072K
+!Serial Number: REDACTED
+!Model revision number           : M0
+!Model number                    : WS-C3560-48PS-S
+!Motherboard assembly number     : 73-9676-12
+!Motherboard serial number REDACTED
+!Motherboard revision number     : A0
+!Power supply part number        : 341-0029-05
+!Power supply serial number REDACTED
+!
+!Processor ID: REDACTED
+!
+!
+!Image: Software: C3560-IPSERVICESK9-M, 12.2(55)SE9, RELEASE SOFTWARE (fc1)
+!Image: Compiled: Mon 03-Mar-14 22:36 by prod_rel_team
+!Image: flash:c3560-ipservicesk9-mz.122-55.SE9.bin
+!
+!BOOTLDR: Version 12.2(44)SE5, RELEASE SOFTWARE (fc1)
+!
+!
+!Variable: BOOT path-list      : flash:c3560-ipservicesk9-mz.122-55.SE9.bin
+!Variable: Config file         : flash:/config.text
+!Variable: Private Config file : flash:/private-config.text
+!Variable: Enable Break        : no
+!Variable: Manual Boot         : no
+!Variable: HELPER path-list    : 
+!Variable: Auto upgrade        : yes
+!Variable: Auto upgrade path   : 
+!Variable: NVRAM/Config file
+!Variable:       buffer size:   524288
+!Variable: Timeout for Config
+!Variable:           Download:    0 seconds
+!Variable: Config Download 
+!Variable:        via DHCP:       disabled (next boot: disabled)
+!
+!Flash: Directory of flash:/
+!Flash:     2  -rwx    12747603   Mar 1 1993 00:08:05 +00:00  c3560-ipservicesk9-mz.122-55.SE9.bin
+!Flash:     5  -rwx        3582  Aug 29 2014 12:38:35 +00:00  private-config.text
+!Flash:     7  -rwx       36081  Aug 29 2014 12:38:35 +00:00  config.text
+!Flash: 15998976 bytes total (3203584 bytes free)
+!
+!Flash: nvram: Directory of nvram:/
+!Flash: nvram:   472  -rw-       36081                    <no date>  startup-config
+!Flash: nvram:   473  ----        3582                    <no date>  private-config
+!Flash: nvram:     1  ----          35                    <no date>  persistent-data
+!Flash: nvram:     2  -rw-        1757                    <no date>  ifIndex-table
+!Flash: nvram: 524288 bytes total (481501 bytes free)
+!
+!
+!NAME: "1",                     DESCR: "WS-C3560-48PS"
+!PID: WS-C3560-48PS-S
+!VID: V04
+!SN: REDACTED
+!NAME: "WS-C3560-48PS - Power Supply 0", DESCR: "WS-C3560-48PS - Power Supply 0"
+!SN: REDACTED
+!NAME: "WS-C3560-48PS - Fan 0", DESCR: "WS-C3560-48PS - Fan 0"
+!NAME: "WS-C3560-48PS - Fixed Module 0", DESCR: "WS-C3560-48PS - Fixed Module 0"
+!NAME: "GigabitEthernet0/1 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/1",    DESCR: "10/100/1000BaseTX SFP"
+!PID: GLC-T
+!VID: V02
+!SN: REDACTED
+!NAME: "GigabitEthernet0/2 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/2",    DESCR: "10/100/1000BaseTX SFP"
+!PID: GLC-T
+!VID: V02
+!SN: REDACTED
+!NAME: "GigabitEthernet0/3 Container", DESCR: "GigabitEthernet Container"
+!NAME: "GigabitEthernet0/4 Container", DESCR: "GigabitEthernet Container"
+!NAME: "FastEthernet0/1",       DESCR: "FastEthernet0/1"
+!NAME: "FastEthernet0/2",       DESCR: "FastEthernet0/2"
+!NAME: "FastEthernet0/3",       DESCR: "FastEthernet0/3"
+!NAME: "FastEthernet0/4",       DESCR: "FastEthernet0/4"
+!NAME: "FastEthernet0/5",       DESCR: "FastEthernet0/5"
+!NAME: "FastEthernet0/6",       DESCR: "FastEthernet0/6"
+!NAME: "FastEthernet0/7",       DESCR: "FastEthernet0/7"
+!NAME: "FastEthernet0/8",       DESCR: "FastEthernet0/8"
+!NAME: "FastEthernet0/9",       DESCR: "FastEthernet0/9"
+!NAME: "FastEthernet0/10",      DESCR: "FastEthernet0/10"
+!NAME: "FastEthernet0/11",      DESCR: "FastEthernet0/11"
+!NAME: "FastEthernet0/12",      DESCR: "FastEthernet0/12"
+!NAME: "FastEthernet0/13",      DESCR: "FastEthernet0/13"
+!NAME: "FastEthernet0/14",      DESCR: "FastEthernet0/14"
+!NAME: "FastEthernet0/15",      DESCR: "FastEthernet0/15"
+!NAME: "FastEthernet0/16",      DESCR: "FastEthernet0/16"
+!NAME: "FastEthernet0/17",      DESCR: "FastEthernet0/17"
+!NAME: "FastEthernet0/18",      DESCR: "FastEthernet0/18"
+!NAME: "FastEthernet0/19",      DESCR: "FastEthernet0/19"
+!NAME: "FastEthernet0/20",      DESCR: "FastEthernet0/20"
+!NAME: "FastEthernet0/21",      DESCR: "FastEthernet0/21"
+!NAME: "FastEthernet0/22",      DESCR: "FastEthernet0/22"
+!NAME: "FastEthernet0/23",      DESCR: "FastEthernet0/23"
+!NAME: "FastEthernet0/24",      DESCR: "FastEthernet0/24"
+!NAME: "FastEthernet0/25",      DESCR: "FastEthernet0/25"
+!NAME: "FastEthernet0/26",      DESCR: "FastEthernet0/26"
+!NAME: "FastEthernet0/27",      DESCR: "FastEthernet0/27"
+!NAME: "FastEthernet0/28",      DESCR: "FastEthernet0/28"
+!NAME: "FastEthernet0/29",      DESCR: "FastEthernet0/29"
+!NAME: "FastEthernet0/30",      DESCR: "FastEthernet0/30"
+!NAME: "FastEthernet0/31",      DESCR: "FastEthernet0/31"
+!NAME: "FastEthernet0/32",      DESCR: "FastEthernet0/32"
+!NAME: "FastEthernet0/33",      DESCR: "FastEthernet0/33"
+!NAME: "FastEthernet0/34",      DESCR: "FastEthernet0/34"
+!NAME: "FastEthernet0/35",      DESCR: "FastEthernet0/35"
+!NAME: "FastEthernet0/36",      DESCR: "FastEthernet0/36"
+!NAME: "FastEthernet0/37",      DESCR: "FastEthernet0/37"
+!NAME: "FastEthernet0/38",      DESCR: "FastEthernet0/38"
+!NAME: "FastEthernet0/39",      DESCR: "FastEthernet0/39"
+!NAME: "FastEthernet0/40",      DESCR: "FastEthernet0/40"
+!NAME: "FastEthernet0/41",      DESCR: "FastEthernet0/41"
+!NAME: "FastEthernet0/42",      DESCR: "FastEthernet0/42"
+!NAME: "FastEthernet0/43",      DESCR: "FastEthernet0/43"
+!NAME: "FastEthernet0/44",      DESCR: "FastEthernet0/44"
+!NAME: "FastEthernet0/45",      DESCR: "FastEthernet0/45"
+!NAME: "FastEthernet0/46",      DESCR: "FastEthernet0/46"
+!NAME: "FastEthernet0/47",      DESCR: "FastEthernet0/47"
+!NAME: "FastEthernet0/48",      DESCR: "FastEthernet0/48"
+!
+!VTP: VTP Version capable             : 1 to 3
+!VTP: VTP version running             : 1
+!VTP: VTP Domain Name                 : 
+!VTP: VTP Pruning Mode                : Disabled
+!VTP: VTP Traps Generation            : Disabled
+!VTP: Device ID                       : 0019.55ff.3a00
+!VTP: Feature VLAN:
+!VTP: --------------
+!VTP: VTP Operating Mode                : Transparent
+!VTP: Maximum VLANs supported locally   : 1005
+!VTP: Number of existing VLANs          : 44
+!VTP: Configuration Revision            : 0
+!VTP: MD5 digest                        : 0x1D 0x3B 0x25 0x81 0xEC 0x66 0x78 0x12 
+!VTP:                                     0xD0 0x5F 0xB9 0x52 0x13 0x2A 0xB8 0x33 
+!
+!VLAN: VLAN Name                             Status    Ports
+!VLAN: ---- -------------------------------- --------- -------------------------------
+!VLAN: 1    default                          active    Gi0/3, Gi0/4
+!VLAN: 56   VMware-Mgmt                      active    
+!VLAN: 57   Servers-NOC                      active    
+!VLAN: 58   Temp-Staging                     active    
+!VLAN: 59   Servers-Public                   active    
+!VLAN: 60   Deadend                          active    
+!VLAN: 132  DK-E1-Kids                       active    
+!VLAN: 134  DK-E2                            active    
+!VLAN: 136  DK-D1                            active    
+!VLAN: 138  DK-D2                            active    
+!VLAN: 140  DK-C1                            active    
+!VLAN: 142  DK-C2                            active    
+!VLAN: 144  DK-C3                            active    
+!VLAN: 146  DK-B1                            active    
+!VLAN: 148  DK-A1                            active    
+!VLAN: 150  DK-A2                            active    
+!VLAN: 152  DK-B2                            active    
+!VLAN: 154  DK-H1-J1                         active    
+!VLAN: 156  DK-H2-J2                         active    
+!VLAN: 158  DK-G1                            active    
+!VLAN: 160  DK-G2                            active    
+!VLAN: 162  DK-U1-U2                         active    
+!VLAN: 164  DK-S1                            active    
+!VLAN: 166  DK-S2                            active    
+!VLAN: 168  Workshop                         active    
+!VLAN: 170  EMFM                             active    
+!VLAN: 171  Static-IP-Wired                  active    
+!VLAN: 172  DK-X1                            active    
+!VLAN: 173  HQ                               active    
+!VLAN: 174  Infodesk                         active    
+!VLAN: 175  Lounge                           active    
+!VLAN: 176  Bar                              active    
+!VLAN: 177  Stage-A                          active    
+!VLAN: 178  Stage-C                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4, Fa0/5, Fa0/6, Fa0/7, Fa0/8, Fa0/9, Fa0/10, Fa0/11
+!VLAN:                                                 Fa0/12, Fa0/13, Fa0/14, Fa0/15, Fa0/16, Fa0/17, Fa0/18, Fa0/19, Fa0/20, Fa0/21
+!VLAN:                                                 Fa0/22, Fa0/23, Fa0/24, Fa0/25, Fa0/26, Fa0/27, Fa0/28, Fa0/29, Fa0/30, Fa0/31
+!VLAN:                                                 Fa0/32, Fa0/33, Fa0/34, Fa0/35, Fa0/36, Fa0/37, Fa0/38, Fa0/39, Fa0/40, Fa0/41
+!VLAN:                                                 Fa0/42, Fa0/43, Fa0/44
+!VLAN: 179  Stage-B                          active    
+!VLAN: 224  Wireless-Clients                 active    
+!VLAN: 250  NOC                              active    
+!VLAN: 251  NOC-Wifi                         active    
+!VLAN: 252  Static-IP-Wifi                   active    
+!VLAN: 256  Switch-Mgmt                      active    
+!VLAN: 1002 fddi-default                     act/unsup 
+!VLAN: 1003 token-ring-default               act/unsup 
+!VLAN: 1004 fddinet-default                  act/unsup 
+!VLAN: 1005 trnet-default                    act/unsup 
+!VLAN: VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+!VLAN: ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+!VLAN: 1    enet  100001     1500  -      -      -        -    -        0      0   
+!VLAN: 56   enet  100056     1500  -      -      -        -    -        0      0   
+!VLAN: 57   enet  100057     1500  -      -      -        -    -        0      0   
+!VLAN: 58   enet  100058     1500  -      -      -        -    -        0      0   
+!VLAN: 59   enet  100059     1500  -      -      -        -    -        0      0   
+!VLAN: 60   enet  100060     1500  -      -      -        -    -        0      0   
+!VLAN: 132  enet  100132     1500  -      -      -        -    -        0      0   
+!VLAN: 134  enet  100134     1500  -      -      -        -    -        0      0   
+!VLAN: 136  enet  100136     1500  -      -      -        -    -        0      0   
+!VLAN: 138  enet  100138     1500  -      -      -        -    -        0      0   
+!VLAN: 140  enet  100140     1500  -      -      -        -    -        0      0   
+!VLAN: 142  enet  100142     1500  -      -      -        -    -        0      0   
+!VLAN: 144  enet  100144     1500  -      -      -        -    -        0      0   
+!VLAN: 146  enet  100146     1500  -      -      -        -    -        0      0   
+!VLAN: 148  enet  100148     1500  -      -      -        -    -        0      0   
+!VLAN: 150  enet  100150     1500  -      -      -        -    -        0      0   
+!VLAN: 152  enet  100152     1500  -      -      -        -    -        0      0   
+!VLAN: 154  enet  100154     1500  -      -      -        -    -        0      0   
+!VLAN: 156  enet  100156     1500  -      -      -        -    -        0      0   
+!VLAN: 158  enet  100158     1500  -      -      -        -    -        0      0   
+!VLAN: 160  enet  100160     1500  -      -      -        -    -        0      0   
+!VLAN: 162  enet  100162     1500  -      -      -        -    -        0      0   
+!VLAN: 164  enet  100164     1500  -      -      -        -    -        0      0   
+!VLAN: 166  enet  100166     1500  -      -      -        -    -        0      0   
+!VLAN: 168  enet  100168     1500  -      -      -        -    -        0      0   
+!VLAN: 170  enet  100170     1500  -      -      -        -    -        0      0   
+!VLAN: 171  enet  100171     1500  -      -      -        -    -        0      0   
+!VLAN: 172  enet  100172     1500  -      -      -        -    -        0      0   
+!VLAN: 173  enet  100173     1500  -      -      -        -    -        0      0   
+!VLAN: 174  enet  100174     1500  -      -      -        -    -        0      0   
+!VLAN: 175  enet  100175     1500  -      -      -        -    -        0      0   
+!VLAN: 176  enet  100176     1500  -      -      -        -    -        0      0   
+!VLAN: 177  enet  100177     1500  -      -      -        -    -        0      0   
+!VLAN: 178  enet  100178     1500  -      -      -        -    -        0      0   
+!VLAN: 179  enet  100179     1500  -      -      -        -    -        0      0   
+!VLAN: 224  enet  100224     1500  -      -      -        -    -        0      0   
+!VLAN: 250  enet  100250     1500  -      -      -        -    -        0      0   
+!VLAN: 251  enet  100251     1500  -      -      -        -    -        0      0   
+!VLAN: 252  enet  100252     1500  -      -      -        -    -        0      0   
+!VLAN: 256  enet  100256     1500  -      -      -        -    -        0      0   
+!VLAN: 1002 fddi  101002     1500  -      -      -        -    -        0      0   
+!VLAN: 1003 tr    101003     1500  -      -      -        -    -        0      0   
+!VLAN: 1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+!VLAN: 1005 trnet 101005     1500  -      -      -        ibm  -        0      0   
+!VLAN: Remote SPAN VLANs
+!VLAN: ------------------------------------------------------------------------------
+!VLAN: Primary Secondary Type              Ports
+!VLAN: ------- --------- ----------------- ------------------------------------------
+!
+!
+config-register 0xF
+!
+version 12.2
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+!
+hostname SWSTAGE-C
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret REDACTED
+!
+username ak47 privilege 15 secret REDACTED
+username david privilege 15 secret REDACTED
+username emfnoc1 privilege 15 secret REDACTED
+username emfnoc2 privilege 15 secret REDACTED
+username emfnoc3 privilege 15 secret REDACTED
+username jasper privilege 15 secret REDACTED
+username kay privilege 15 secret REDACTED
+username leon privilege 15 secret REDACTED
+username mat privilege 15 secret REDACTED
+username nihilus privilege 15 secret REDACTED
+username prt privilege 15 secret REDACTED
+username rancid privilege 15 secret REDACTED
+username russ privilege 15 secret REDACTED
+username tom privilege 15 secret REDACTED
+username will privilege 15 secret REDACTED
+!
+no aaa new-model
+system mtu routing 1500
+vtp mode transparent
+no ip source-route
+no ip domain-lookup
+ip domain-name emf.camp
+!
+ip dhcp snooping vlan 10,178
+ip dhcp snooping information option format remote-id hostname
+ip dhcp snooping
+ip device tracking
+ip arp inspection vlan 10,178
+ip arp inspection validate src-mac dst-mac ip 
+!
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig (STP)
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause pppoe-ia-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause loopback
+errdisable recovery cause small-frame
+errdisable recovery interval 120
+file prompt quiet
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 56
+ name VMware-Mgmt
+!
+vlan 57
+ name Servers-NOC
+!
+vlan 58
+ name Temp-Staging
+!
+vlan 59
+ name Servers-Public
+!
+vlan 60
+ name Deadend
+!
+vlan 132
+ name DK-E1-Kids
+!
+vlan 134
+ name DK-E2
+!
+vlan 136
+ name DK-D1
+!
+vlan 138
+ name DK-D2
+!
+vlan 140
+ name DK-C1
+!
+vlan 142
+ name DK-C2
+!
+vlan 144
+ name DK-C3
+!
+vlan 146
+ name DK-B1
+!
+vlan 148
+ name DK-A1
+!
+vlan 150
+ name DK-A2
+!
+vlan 152
+ name DK-B2
+!
+vlan 154
+ name DK-H1-J1
+!
+vlan 156
+ name DK-H2-J2
+!
+vlan 158
+ name DK-G1
+!
+vlan 160
+ name DK-G2
+!
+vlan 162
+ name DK-U1-U2
+!
+vlan 164
+ name DK-S1
+!
+vlan 166
+ name DK-S2
+!
+vlan 168
+ name Workshop
+!
+vlan 170
+ name EMFM
+!
+vlan 171
+ name Static-IP-Wired
+!
+vlan 172
+ name DK-X1
+!
+vlan 173
+ name HQ
+!
+vlan 174
+ name Infodesk
+!
+vlan 175
+ name Lounge
+!
+vlan 176
+ name Bar
+!
+vlan 177
+ name Stage-A
+!
+vlan 178
+ name Stage-C
+!
+vlan 179
+ name Stage-B
+!
+vlan 224
+ name Wireless-Clients
+!
+vlan 250
+ name NOC
+!
+vlan 251
+ name NOC-Wifi
+!
+vlan 252
+ name Static-IP-Wifi
+!
+vlan 256
+ name Switch-Mgmt
+lldp run
+!
+ip ssh version 2
+!
+interface Port-channel1
+ description Uplink to SWDK-U1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,178,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ ip dhcp snooping trust
+!
+interface FastEthernet0/1
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/2
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/3
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/4
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/5
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/6
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/7
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/8
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/9
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/10
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/11
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/12
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/13
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/14
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/15
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/16
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/17
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/18
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/19
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/20
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/21
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/22
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/23
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/24
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/25
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/26
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/27
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/28
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/29
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/30
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/31
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/32
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/33
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/34
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/35
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/36
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/37
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/38
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/39
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/40
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/41
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/42
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/43
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/44
+ switchport access vlan 178
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group camper_v4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/45
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group artnetv4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/46
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group artnetv4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/47
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group artnetv4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface FastEthernet0/48
+ switchport access vlan 10
+ switchport mode access
+ switchport nonegotiate
+ switchport block unicast
+ switchport port-security
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ ip access-group artnetv4_in in
+ load-interval 30
+ small-frame violation-rate 1000
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+!
+interface GigabitEthernet0/1
+ description Uplink to SWDK-U1 port GigabitEthernet0/19
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,178,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ channel-group 1 mode active
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/2
+ description Uplink to SWDK-U1 port GigabitEthernet0/20
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,178,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ channel-group 1 mode active
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/3
+!
+interface GigabitEthernet0/4
+!
+interface Vlan1
+ ip address 10.0.0.9 255.255.255.0
+!
+interface Vlan256
+ ip address 94.45.255.165 255.255.255.128
+ no ip redirects
+ no ip proxy-arp
+ no ip route-cache
+ no ip mroute-cache
+!
+ip default-gateway 94.45.255.129
+ip classless
+no ip http server
+no ip http secure-server
+!
+ip access-list extended artnetv4_in
+ permit ip 192.168.0.0 0.0.3.255 any
+ permit udp any any eq 546
+ permit udp any any eq 547
+ deny   ip any any log-input
+ip access-list extended camper_v4_in
+ permit ip 151.216.78.0 0.0.0.255 any
+ permit udp any any eq bootps
+ permit udp any any eq bootpc
+ deny   ip any any log-input
+!
+logging source-interface Vlan256
+logging 78.158.87.14
+access-list 22 permit 77.73.148.52
+access-list 22 permit 78.158.87.0 0.0.0.63
+access-list 22 permit 78.158.92.196
+access-list 22 permit 91.209.244.43
+access-list 22 permit 94.45.250.0 0.0.1.255
+access-list 22 deny   any log
+access-list 23 permit 78.158.87.11
+access-list 23 permit 78.158.87.12
+access-list 23 deny   any log
+access-list 61 permit 78.158.87.0 0.0.0.63
+access-list 61 permit 94.45.250.0 0.0.1.255
+access-list 61 deny   any log
+access-list 99 deny   any log
+!
+snmp-server community REDACTED RO 61
+snmp-server location EMF
+snmp-server contact EMF NOC
+snmp ifmib ifindex persist
+!
+banner motd ^C
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^C
+!
+line con 0
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 15
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+!
+ntp source Vlan256
+ntp access-group query-only 99
+ntp access-group peer 23
+ntp access-group serve 99
+ntp access-group serve-only 99
+ntp server 78.158.87.11
+ntp server 78.158.87.12
+end

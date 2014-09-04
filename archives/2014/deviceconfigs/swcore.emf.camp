@@ -1,0 +1,2976 @@
+!RANCID-CONTENT-TYPE: cisco
+!
+!Chassis type: WS-C6506-E - a WS-C6506-E router
+!CPU: R7000, SR71000 CPU at 600Mhz, impl 0x504, Rev 1.2, 512KB L2 Cache
+!
+!Memory: main 458720K/65536K
+!Memory: nvram 1917K
+!Memory: bootflash 65536K
+!
+!Catalyst Chassis type: WS-C6506-E, Catalyst 6500 6-slot backplane
+!Catalyst Chassis S/N: SAL1034ZBWK
+!Catalyst Chassis assembly: 73-9370-04, rev A0, ver 1.1
+!Processor ID: REDACTED
+!
+!
+!Image: Software: s72033_rp-ADVIPSERVICESK9_WAN-M, 12.2(33)SXJ7, RELEASE SOFTWARE (fc5)
+!Image: Compiled: Sun 09-Feb-14 10:55 by prod_rel_team
+!Image: sup-bootdisk:s72033-advipservicesk9_wan-mz.122-33.SXJ7.bin
+!
+!ROM Bootstrap: Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)
+!
+!BootFlash: BOOT variable = sup-bootdisk:s72033-advipservicesk9_wan-mz.122-33.SXJ7.bin,1;
+!BootFlash: CONFIG_FILE variable = 
+!BootFlash: BOOTLDR variable = 
+!BootFlash: Configuration register is 0x2102
+!BootFlash: Standby not ready to show bootvar
+!
+!Flash: nvram: Directory of nvram:/
+!Flash: nvram:  1918  -rw-       61042                    <no date>  startup-config
+!Flash: nvram:  1919  ----        3581                    <no date>  private-config
+!Flash: nvram:  1920  -rw-       61042                    <no date>  underlying-config
+!Flash: nvram:     1  ----           0                    <no date>  rf_cold_starts
+!Flash: nvram:     2  ----         145                    <no date>  persistent-data
+!Flash: nvram:     3  -rw-        8994                    <no date>  ifIndex-table
+!Flash: nvram:     4  -rw-          13                    <no date>  snmpid-file
+!Flash: nvram: 1964024 bytes total (1886037 bytes free)
+!
+!Flash: bootflash: Directory of bootflash:/
+!Flash: bootflash: No files in directory
+!Flash: bootflash: 65536000 bytes total (65536000 bytes free)
+!
+!Flash: sup-bootdisk: Directory of sup-bootdisk:/
+!Flash: sup-bootdisk:     1  -rw-    82816036  May 25 2007 06:42:40 +00:00  s72033-entservicesk9_wan-mz.122-18.SXF9.bin
+!Flash: sup-bootdisk:     2  -rw-    33554432  Aug 21 2014 11:43:10 +00:00  sea_log.dat
+!Flash: sup-bootdisk:     3  -rw-    81727524   Dec 8 2006 18:00:46 +00:00  s72033-entservicesk9_wan-mz.122-18.SXF6.bin
+!Flash: sup-bootdisk:     4  -rw-       35997  Dec 13 2010 11:28:42 +00:00  router
+!Flash: sup-bootdisk:     5  -rw-       38140  Jun 29 2014 10:28:46 +00:00  original-startup
+!Flash: sup-bootdisk:     6  -rw-   143372644  Aug 21 2014 11:34:32 +00:00  s72033-advipservicesk9_wan-mz.122-33.SXJ7.bin
+!Flash: sup-bootdisk:     7  -rw-    33554432  Aug 21 2014 11:43:46 +00:00  sea_console.dat
+!Flash: sup-bootdisk: 512024576 bytes total (136904704 bytes free)
+!
+!Flash: sup-microcode: Directory of sup-microcode:/
+!Flash: sup-microcode:     0  dr--   <no size>                    <no date>  
+!Flash: sup-microcode:     1  -r--     6559322                    <no date>  CWPA2_version_10.10
+!Flash: sup-microcode:     2  -r--     8399222                    <no date>  SIP1_version_10.10
+!Flash: sup-microcode:     3  -r--     9012510                    <no date>  SIP2_version_10.10
+!Flash: sup-microcode:     4  -r--    10447606                    <no date>  SIP10G_version_10.10
+!Flash: sup-microcode:     5  -r--     6944230                    <no date>  SMSC_version_10.10
+!Flash: sup-microcode:     6  -r--    10837490                    <no date>  X40G_version_10.10
+!Flash: sup-microcode:     7  -r--    27508430                    <no date>  DRACO2_MP
+!Flash: sup-microcode:     8  -r--     9438638                    <no date>  CHEVYS-LC
+!Flash: sup-microcode:     9  -r--    11941026                    <no date>  C2LC
+!Flash: sup-microcode:    10  -r--    11443998                    <no date>  TRIFECTA
+!Flash: sup-microcode:    11  -r--    12239906                    <no date>  SPLC
+!Flash: sup-microcode:    12  -r--      333584                    <no date>  LCP_LX10100
+!Flash: sup-microcode:    13  -r--      303510                    <no date>  LCP_LX1000
+!Flash: sup-microcode:    14  -r--      325656                    <no date>  LCP_AX1000
+!Flash: sup-microcode:    15  -r--      376690                    <no date>  LCP_AX10100
+!Flash: sup-microcode:    16  -r--      366782                    <no date>  LCP_CPFAB
+!Flash: sup-microcode:    17  -r--      747598                    <no date>  LCP_CPGBIT
+!Flash: sup-microcode:    18  -r--      483582                    <no date>  LCP_CP10G
+!Flash: sup-microcode:    19  -r--      809134                    <no date>  LCP_CPMBIT2
+!Flash: sup-microcode:    20  -r--      896574                    <no date>  LCP_CPMBIT
+!Flash: sup-microcode:    21  -r--     1275182                    <no date>  LCP_CPXBIT
+!Flash: sup-microcode:    22  -r--       65318                    <no date>  LCP_ABOOT
+!Flash: sup-microcode:    23  -r--       60490                    <no date>  LCP_BOOT
+!Flash: sup-microcode:    24  -r--     1228834                    <no date>  CWPA2_FPD_version_10.10
+!Flash: sup-microcode: 132045312 bytes total (0 bytes free)
+!
+!
+!Slot 1: type CEF720 48 port 10/100/1000mb Ethernet, 48 ports
+!Slot 1: part WS-X6748-GE-TX, serial REDACTED
+!Slot 1: hvers 2.5, firmware 12.2(14r)S5, sw 12.2(33)SXJ7
+!
+!Slot 1/0: type  Distributed Forwarding Card
+!Slot 1/0: part WS-F6700-DFC3A, serial REDACTED
+!Slot 1/0: hvers 2.5
+!
+!Slot 2: type CEF720 48 port 10/100/1000mb Ethernet, 48 ports
+!Slot 2: part WS-X6748-GE-TX, serial REDACTED
+!Slot 2: hvers 2.5, firmware 12.2(14r)S5, sw 12.2(33)SXJ7
+!
+!Slot 2/0: type  Distributed Forwarding Card
+!Slot 2/0: part WS-F6700-DFC3A, serial REDACTED
+!Slot 2/0: hvers 2.2
+!
+!Slot 4: type CEF720 4 port 10-Gigabit Ethernet, 4 ports
+!Slot 4: part WS-X6704-10GE, serial REDACTED
+!Slot 4: hvers 2.2, firmware 12.2(14r)S5, sw 12.2(33)SXJ7
+!
+!Slot 4/0: type  Centralized Forwarding Card
+!Slot 4/0: part WS-F6700-CFC, serial REDACTED
+!Slot 4/0: hvers 2.1
+!
+!Slot 5: type Supervisor Engine 720 (Active), 2 ports
+!Slot 5: part WS-SUP720-3B, serial REDACTED
+!Slot 5: hvers 5.2, firmware 8.4(2), sw 12.2(33)SXJ7
+!
+!Slot 5/0: type  Policy Feature Card 3      
+!Slot 5/0: part WS-F6K-PFC3B, serial REDACTED
+!Slot 5/0: hvers 2.3
+!
+!Slot 5/1: type  MSFC3 Daughterboard        
+!Slot 5/1: part WS-SUP720, serial REDACTED
+!Slot 5/1: hvers 2.5
+!
+!NAME: "WS-C6506-E",            DESCR: "Cisco Systems Catalyst 6500 6-slot Chassis System"
+!PID: WS-C6506-E
+!VID: V02
+!SN: REDACTED
+!NAME: "Backplane",             DESCR: "Cisco Systems Catalyst 6500 6-slot backplane"
+!NAME: "Container of VTT 1",    DESCR: "Container of VTT"
+!NAME: "WS-C6K-VTT-E 1",        DESCR: "VTT-E FRU 1"
+!PID: WS-C6K-VTT-E
+!SN: REDACTED
+!NAME: "VTT 1 OK Sensor",       DESCR: "VTT-E FRU 1 OK Sensor"
+!NAME: "VTT 1 outlet temperature Sensor", DESCR: "VTT-E FRU 1 outlet temperature Sensor"
+!NAME: "Container of VTT 2",    DESCR: "Container of VTT"
+!NAME: "WS-C6K-VTT-E 2",        DESCR: "VTT-E FRU 2"
+!PID: WS-C6K-VTT-E
+!SN: REDACTED
+!NAME: "VTT 2 OK Sensor",       DESCR: "VTT-E FRU 2 OK Sensor"
+!NAME: "VTT 2 outlet temperature Sensor", DESCR: "VTT-E FRU 2 outlet temperature Sensor"
+!NAME: "Container of VTT 3",    DESCR: "Container of VTT"
+!NAME: "WS-C6K-VTT-E 3",        DESCR: "VTT-E FRU 3"
+!PID: WS-C6K-VTT-E
+!SN: REDACTED
+!NAME: "VTT 3 OK Sensor",       DESCR: "VTT-E FRU 3 OK Sensor"
+!NAME: "VTT 3 outlet temperature Sensor", DESCR: "VTT-E FRU 3 outlet temperature Sensor"
+!NAME: "Container of Clock 1",  DESCR: "Container of Clock"
+!NAME: "CLK-7600 1",            DESCR: "OSR-7600 Clock FRU 1"
+!PID: CLK-7600
+!SN: REDACTED
+!NAME: "Clock 1 OK Sensor",     DESCR: "OSR-7600 Clock FRU 1 OK Sensor"
+!NAME: "Clock 1 In Using Sensor", DESCR: "OSR-7600 Clock FRU 1 In Using Sensor"
+!NAME: "Container of Clock 2",  DESCR: "Container of Clock"
+!NAME: "CLK-7600 2",            DESCR: "OSR-7600 Clock FRU 2"
+!PID: CLK-7600
+!SN: REDACTED
+!NAME: "Clock 2 OK Sensor",     DESCR: "OSR-7600 Clock FRU 2 OK Sensor"
+!NAME: "Clock 2 In Using Sensor", DESCR: "OSR-7600 Clock FRU 2 In Using Sensor"
+!NAME: "Sensor for counting number of OK VTTs", DESCR: "Sensor for counting number of OK VTTs"
+!NAME: "Sensor for counting number of OK Fans", DESCR: "Sensor for counting number of OK Fans"
+!NAME: "Sensor for counting number of OK Clocks", DESCR: "Sensor for counting number of OK Clocks"
+!NAME: "fan-tray 1 fan-fail Sensor", DESCR: "fan-tray 1 fan-fail Sensor"
+!NAME: "Physical Slot 1",       DESCR: "Cisco Systems Catalyst 6500 6-slot Physical Slot"
+!NAME: "1",                     DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.5"
+!PID: WS-X6748-GE-TX
+!VID: V02
+!SN: REDACTED
+!NAME: "Switching Engine Container 1", DESCR: "Switching Engine Container 1"
+!NAME: "WS-F6700-DFC3A Distributed Forwarding Card 3 sub-module of 1", DESCR: "WS-F6700-DFC3A Distributed Forwarding Card 3 Rev. 2.5"
+!PID: WS-F6700-DFC3A
+!SN: REDACTED
+!NAME: "module 1 EARL outlet temperature Sensor", DESCR: "module 1 EARL outlet temperature Sensor"
+!NAME: "module 1 EARL inlet temperature Sensor", DESCR: "module 1 EARL inlet temperature Sensor"
+!NAME: "module 1 power-output-fail Sensor", DESCR: "module 1 power-output-fail Sensor"
+!NAME: "module 1 outlet temperature Sensor", DESCR: "module 1 outlet temperature Sensor"
+!NAME: "module 1 inlet temperature Sensor", DESCR: "module 1 inlet temperature Sensor"
+!NAME: "module 1 insufficient cooling Sensor", DESCR: "module 1 insufficient cooling Sensor"
+!NAME: "CPU of Module 1",       DESCR: "CPU of Module 1"
+!NAME: "Gi1/1",                 DESCR: "10/100/1000BaseT Gi1/1"
+!NAME: "Gi1/2",                 DESCR: "10/100/1000BaseT Gi1/2"
+!NAME: "Gi1/3",                 DESCR: "10/100/1000BaseT Gi1/3"
+!NAME: "Gi1/4",                 DESCR: "10/100/1000BaseT Gi1/4"
+!NAME: "Gi1/5",                 DESCR: "10/100/1000BaseT Gi1/5"
+!NAME: "Gi1/6",                 DESCR: "10/100/1000BaseT Gi1/6"
+!NAME: "Gi1/7",                 DESCR: "10/100/1000BaseT Gi1/7"
+!NAME: "Gi1/8",                 DESCR: "10/100/1000BaseT Gi1/8"
+!NAME: "Gi1/9",                 DESCR: "10/100/1000BaseT Gi1/9"
+!NAME: "Gi1/10",                DESCR: "10/100/1000BaseT Gi1/10"
+!NAME: "Gi1/11",                DESCR: "10/100/1000BaseT Gi1/11"
+!NAME: "Gi1/12",                DESCR: "10/100/1000BaseT Gi1/12"
+!NAME: "Gi1/13",                DESCR: "10/100/1000BaseT Gi1/13"
+!NAME: "Gi1/14",                DESCR: "10/100/1000BaseT Gi1/14"
+!NAME: "Gi1/15",                DESCR: "10/100/1000BaseT Gi1/15"
+!NAME: "Gi1/16",                DESCR: "10/100/1000BaseT Gi1/16"
+!NAME: "Gi1/17",                DESCR: "10/100/1000BaseT Gi1/17"
+!NAME: "Gi1/18",                DESCR: "10/100/1000BaseT Gi1/18"
+!NAME: "Gi1/19",                DESCR: "10/100/1000BaseT Gi1/19"
+!NAME: "Gi1/20",                DESCR: "10/100/1000BaseT Gi1/20"
+!NAME: "Gi1/21",                DESCR: "10/100/1000BaseT Gi1/21"
+!NAME: "Gi1/22",                DESCR: "10/100/1000BaseT Gi1/22"
+!NAME: "Gi1/23",                DESCR: "10/100/1000BaseT Gi1/23"
+!NAME: "Gi1/24",                DESCR: "10/100/1000BaseT Gi1/24"
+!NAME: "Gi1/25",                DESCR: "10/100/1000BaseT Gi1/25"
+!NAME: "Gi1/26",                DESCR: "10/100/1000BaseT Gi1/26"
+!NAME: "Gi1/27",                DESCR: "10/100/1000BaseT Gi1/27"
+!NAME: "Gi1/28",                DESCR: "10/100/1000BaseT Gi1/28"
+!NAME: "Gi1/29",                DESCR: "10/100/1000BaseT Gi1/29"
+!NAME: "Gi1/30",                DESCR: "10/100/1000BaseT Gi1/30"
+!NAME: "Gi1/31",                DESCR: "10/100/1000BaseT Gi1/31"
+!NAME: "Gi1/32",                DESCR: "10/100/1000BaseT Gi1/32"
+!NAME: "Gi1/33",                DESCR: "10/100/1000BaseT Gi1/33"
+!NAME: "Gi1/34",                DESCR: "10/100/1000BaseT Gi1/34"
+!NAME: "Gi1/35",                DESCR: "10/100/1000BaseT Gi1/35"
+!NAME: "Gi1/36",                DESCR: "10/100/1000BaseT Gi1/36"
+!NAME: "Gi1/37",                DESCR: "10/100/1000BaseT Gi1/37"
+!NAME: "Gi1/38",                DESCR: "10/100/1000BaseT Gi1/38"
+!NAME: "Gi1/39",                DESCR: "10/100/1000BaseT Gi1/39"
+!NAME: "Gi1/40",                DESCR: "10/100/1000BaseT Gi1/40"
+!NAME: "Gi1/41",                DESCR: "10/100/1000BaseT Gi1/41"
+!NAME: "Gi1/42",                DESCR: "10/100/1000BaseT Gi1/42"
+!NAME: "Gi1/43",                DESCR: "10/100/1000BaseT Gi1/43"
+!NAME: "Gi1/44",                DESCR: "10/100/1000BaseT Gi1/44"
+!NAME: "Gi1/45",                DESCR: "10/100/1000BaseT Gi1/45"
+!NAME: "Gi1/46",                DESCR: "10/100/1000BaseT Gi1/46"
+!NAME: "Gi1/47",                DESCR: "10/100/1000BaseT Gi1/47"
+!NAME: "Gi1/48",                DESCR: "10/100/1000BaseT Gi1/48"
+!NAME: "Physical Slot 2",       DESCR: "Cisco Systems Catalyst 6500 6-slot Physical Slot"
+!NAME: "2",                     DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.5"
+!PID: WS-X6748-GE-TX
+!VID: V02
+!SN: REDACTED
+!NAME: "Switching Engine Container 2", DESCR: "Switching Engine Container 2"
+!NAME: "WS-F6700-DFC3A Distributed Forwarding Card 3 sub-module of 2", DESCR: "WS-F6700-DFC3A Distributed Forwarding Card 3 Rev. 2.2"
+!PID: WS-F6700-DFC3A
+!SN: REDACTED
+!NAME: "module 2 EARL outlet temperature Sensor", DESCR: "module 2 EARL outlet temperature Sensor"
+!NAME: "module 2 EARL inlet temperature Sensor", DESCR: "module 2 EARL inlet temperature Sensor"
+!NAME: "module 2 power-output-fail Sensor", DESCR: "module 2 power-output-fail Sensor"
+!NAME: "module 2 outlet temperature Sensor", DESCR: "module 2 outlet temperature Sensor"
+!NAME: "module 2 inlet temperature Sensor", DESCR: "module 2 inlet temperature Sensor"
+!NAME: "module 2 insufficient cooling Sensor", DESCR: "module 2 insufficient cooling Sensor"
+!NAME: "CPU of Module 2",       DESCR: "CPU of Module 2"
+!NAME: "Gi2/1",                 DESCR: "10/100/1000BaseT Gi2/1"
+!NAME: "Gi2/2",                 DESCR: "10/100/1000BaseT Gi2/2"
+!NAME: "Gi2/3",                 DESCR: "10/100/1000BaseT Gi2/3"
+!NAME: "Gi2/4",                 DESCR: "10/100/1000BaseT Gi2/4"
+!NAME: "Gi2/5",                 DESCR: "10/100/1000BaseT Gi2/5"
+!NAME: "Gi2/6",                 DESCR: "10/100/1000BaseT Gi2/6"
+!NAME: "Gi2/7",                 DESCR: "10/100/1000BaseT Gi2/7"
+!NAME: "Gi2/8",                 DESCR: "10/100/1000BaseT Gi2/8"
+!NAME: "Gi2/9",                 DESCR: "10/100/1000BaseT Gi2/9"
+!NAME: "Gi2/10",                DESCR: "10/100/1000BaseT Gi2/10"
+!NAME: "Gi2/11",                DESCR: "10/100/1000BaseT Gi2/11"
+!NAME: "Gi2/12",                DESCR: "10/100/1000BaseT Gi2/12"
+!NAME: "Gi2/13",                DESCR: "10/100/1000BaseT Gi2/13"
+!NAME: "Gi2/14",                DESCR: "10/100/1000BaseT Gi2/14"
+!NAME: "Gi2/15",                DESCR: "10/100/1000BaseT Gi2/15"
+!NAME: "Gi2/16",                DESCR: "10/100/1000BaseT Gi2/16"
+!NAME: "Gi2/17",                DESCR: "10/100/1000BaseT Gi2/17"
+!NAME: "Gi2/18",                DESCR: "10/100/1000BaseT Gi2/18"
+!NAME: "Gi2/19",                DESCR: "10/100/1000BaseT Gi2/19"
+!NAME: "Gi2/20",                DESCR: "10/100/1000BaseT Gi2/20"
+!NAME: "Gi2/21",                DESCR: "10/100/1000BaseT Gi2/21"
+!NAME: "Gi2/22",                DESCR: "10/100/1000BaseT Gi2/22"
+!NAME: "Gi2/23",                DESCR: "10/100/1000BaseT Gi2/23"
+!NAME: "Gi2/24",                DESCR: "10/100/1000BaseT Gi2/24"
+!NAME: "Gi2/25",                DESCR: "10/100/1000BaseT Gi2/25"
+!NAME: "Gi2/26",                DESCR: "10/100/1000BaseT Gi2/26"
+!NAME: "Gi2/27",                DESCR: "10/100/1000BaseT Gi2/27"
+!NAME: "Gi2/28",                DESCR: "10/100/1000BaseT Gi2/28"
+!NAME: "Gi2/29",                DESCR: "10/100/1000BaseT Gi2/29"
+!NAME: "Gi2/30",                DESCR: "10/100/1000BaseT Gi2/30"
+!NAME: "Gi2/31",                DESCR: "10/100/1000BaseT Gi2/31"
+!NAME: "Gi2/32",                DESCR: "10/100/1000BaseT Gi2/32"
+!NAME: "Gi2/33",                DESCR: "10/100/1000BaseT Gi2/33"
+!NAME: "Gi2/34",                DESCR: "10/100/1000BaseT Gi2/34"
+!NAME: "Gi2/35",                DESCR: "10/100/1000BaseT Gi2/35"
+!NAME: "Gi2/36",                DESCR: "10/100/1000BaseT Gi2/36"
+!NAME: "Gi2/37",                DESCR: "10/100/1000BaseT Gi2/37"
+!NAME: "Gi2/38",                DESCR: "10/100/1000BaseT Gi2/38"
+!NAME: "Gi2/39",                DESCR: "10/100/1000BaseT Gi2/39"
+!NAME: "Gi2/40",                DESCR: "10/100/1000BaseT Gi2/40"
+!NAME: "Gi2/41",                DESCR: "10/100/1000BaseT Gi2/41"
+!NAME: "Gi2/42",                DESCR: "10/100/1000BaseT Gi2/42"
+!NAME: "Gi2/43",                DESCR: "10/100/1000BaseT Gi2/43"
+!NAME: "Gi2/44",                DESCR: "10/100/1000BaseT Gi2/44"
+!NAME: "Gi2/45",                DESCR: "10/100/1000BaseT Gi2/45"
+!NAME: "Gi2/46",                DESCR: "10/100/1000BaseT Gi2/46"
+!NAME: "Gi2/47",                DESCR: "10/100/1000BaseT Gi2/47"
+!NAME: "Gi2/48",                DESCR: "10/100/1000BaseT Gi2/48"
+!NAME: "Physical Slot 3",       DESCR: "Cisco Systems Catalyst 6500 6-slot Physical Slot"
+!NAME: "Physical Slot 4",       DESCR: "Cisco Systems Catalyst 6500 6-slot Physical Slot"
+!NAME: "4",                     DESCR: "WS-X6704-10GE CEF720 4 port 10-Gigabit Ethernet Rev. 2.2"
+!PID: WS-X6704-10GE
+!VID: V02
+!SN: REDACTED
+!NAME: "Switching Engine Container 4", DESCR: "Switching Engine Container 4"
+!NAME: "WS-F6700-CFC Centralized Forwarding Card sub-module of 4", DESCR: "WS-F6700-CFC Centralized Forwarding Card Rev. 2.1"
+!PID: WS-F6700-CFC
+!VID: V01
+!SN: REDACTED
+!NAME: "module 4 power-output-fail Sensor", DESCR: "module 4 power-output-fail Sensor"
+!NAME: "module 4 outlet temperature Sensor", DESCR: "module 4 outlet temperature Sensor"
+!NAME: "module 4 inlet temperature Sensor", DESCR: "module 4 inlet temperature Sensor"
+!NAME: "module 4 insufficient cooling Sensor", DESCR: "module 4 insufficient cooling Sensor"
+!NAME: "CPU of Module 4",       DESCR: "CPU of Module 4"
+!NAME: "Te4/1",                 DESCR: "Transceiver Port Te4/1"
+!NAME: "10-Gigabit Transceiver Port Container Te4/1", DESCR: "10-Gigabit Transceiver Port Container Te4/1"
+!NAME: "Transceiver Te4/1",     DESCR: "Xenpak Transceiver 10Gbase-SR Te4/1"
+!PID: Xenpak-SFP+
+!VID: V02
+!SN: REDACTED
+!NAME: "Te4/1 Module Temperature Sensor", DESCR: "TenGigabitEthernet4/1 Module Temperature Sensor"
+!NAME: "Te4/1 Supply Voltage Sensor", DESCR: "TenGigabitEthernet4/1 Supply Voltage Sensor"
+!NAME: "Te4/1 Bias Current Sensor", DESCR: "TenGigabitEthernet4/1 Bias Current Sensor"
+!NAME: "Te4/1 Transmit Power Sensor", DESCR: "TenGigabitEthernet4/1 Transmit Power Sensor"
+!NAME: "Te4/1 Receive Power Sensor", DESCR: "TenGigabitEthernet4/1 Receive Power Sensor"
+!NAME: "Te4/2",                 DESCR: "Transceiver Port Te4/2"
+!NAME: "10-Gigabit Transceiver Port Container Te4/2", DESCR: "10-Gigabit Transceiver Port Container Te4/2"
+!NAME: "Te4/3",                 DESCR: "Transceiver Port Te4/3"
+!NAME: "10-Gigabit Transceiver Port Container Te4/3", DESCR: "10-Gigabit Transceiver Port Container Te4/3"
+!NAME: "Transceiver Te4/3",     DESCR: "Xenpak Transceiver 10Gbase-SR Te4/3"
+!PID: Xenpak-SFP+
+!VID: V02
+!SN: REDACTED
+!NAME: "Te4/3 Module Temperature Sensor", DESCR: "TenGigabitEthernet4/3 Module Temperature Sensor"
+!NAME: "Te4/3 Supply Voltage Sensor", DESCR: "TenGigabitEthernet4/3 Supply Voltage Sensor"
+!NAME: "Te4/3 Bias Current Sensor", DESCR: "TenGigabitEthernet4/3 Bias Current Sensor"
+!NAME: "Te4/3 Transmit Power Sensor", DESCR: "TenGigabitEthernet4/3 Transmit Power Sensor"
+!NAME: "Te4/3 Receive Power Sensor", DESCR: "TenGigabitEthernet4/3 Receive Power Sensor"
+!NAME: "Te4/4",                 DESCR: "Transceiver Port Te4/4"
+!NAME: "10-Gigabit Transceiver Port Container Te4/4", DESCR: "10-Gigabit Transceiver Port Container Te4/4"
+!NAME: "Transceiver Te4/4",     DESCR: "Xenpak Transceiver 10Gbase-SR Te4/4"
+!PID: Xenpak-SFP+
+!VID: V02
+!SN: REDACTED
+!NAME: "Te4/4 Module Temperature Sensor", DESCR: "TenGigabitEthernet4/4 Module Temperature Sensor"
+!NAME: "Te4/4 Supply Voltage Sensor", DESCR: "TenGigabitEthernet4/4 Supply Voltage Sensor"
+!NAME: "Te4/4 Bias Current Sensor", DESCR: "TenGigabitEthernet4/4 Bias Current Sensor"
+!NAME: "Te4/4 Transmit Power Sensor", DESCR: "TenGigabitEthernet4/4 Transmit Power Sensor"
+!NAME: "Te4/4 Receive Power Sensor", DESCR: "TenGigabitEthernet4/4 Receive Power Sensor"
+!NAME: "Physical Slot 5",       DESCR: "Cisco Systems Catalyst 6500 6-slot Physical Slot"
+!NAME: "5",                     DESCR: "WS-SUP720-3B 2 ports Supervisor Engine 720 Rev. 5.2"
+!PID: WS-SUP720-3B
+!VID: V02
+!SN: REDACTED
+!NAME: "MSFC Container 5",      DESCR: "MSFC Container 5"
+!NAME: "msfc sub-module of 5",  DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 2.5"
+!PID: WS-SUP720
+!SN: REDACTED
+!NAME: "module 5 RP outlet temperature Sensor", DESCR: "module 5 RP outlet temperature Sensor"
+!NAME: "module 5 RP inlet temperature Sensor", DESCR: "module 5 RP inlet temperature Sensor"
+!NAME: "CPU of Routing Processor 5", DESCR: "CPU of Routing Processor 5"
+!NAME: "Switching Engine Container 5", DESCR: "Switching Engine Container 5"
+!NAME: "WS-F6K-PFC3B Policy Feature Card 3 sub-module of 5", DESCR: "WS-F6K-PFC3B Policy Feature Card 3 Rev. 2.3"
+!PID: WS-F6K-PFC3B
+!VID: V01
+!SN: REDACTED
+!NAME: "module 5 EARL outlet temperature Sensor", DESCR: "module 5 EARL outlet temperature Sensor"
+!NAME: "module 5 EARL inlet temperature Sensor", DESCR: "module 5 EARL inlet temperature Sensor"
+!NAME: "module 5 power-output-fail Sensor", DESCR: "module 5 power-output-fail Sensor"
+!NAME: "module 5 outlet temperature Sensor", DESCR: "module 5 outlet temperature Sensor"
+!NAME: "module 5 inlet temperature Sensor", DESCR: "module 5 inlet temperature Sensor"
+!NAME: "module 5 device-1 temperature Sensor", DESCR: "module 5 device-1 temperature Sensor"
+!NAME: "module 5 device-2 temperature Sensor", DESCR: "module 5 device-2 temperature Sensor"
+!NAME: "module 5 insufficient cooling Sensor", DESCR: "module 5 insufficient cooling Sensor"
+!NAME: "module 5 fan-upgrade required Sensor", DESCR: "module 5 fan-upgrade required Sensor"
+!NAME: "module 5 asic-1 temperature Sensor", DESCR: "module 5 asic-1 temperature Sensor"
+!NAME: "module 5 asic-2 temperature Sensor", DESCR: "module 5 asic-2 temperature Sensor"
+!NAME: "module 5 asic-3 temperature Sensor", DESCR: "module 5 asic-3 temperature Sensor"
+!NAME: "module 5 asic-4 temperature Sensor", DESCR: "module 5 asic-4 temperature Sensor"
+!NAME: "module 5 asic-5 temperature Sensor", DESCR: "module 5 asic-5 temperature Sensor"
+!NAME: "module 5 asic-6 temperature Sensor", DESCR: "module 5 asic-6 temperature Sensor"
+!NAME: "CPU of Switching Processor 5", DESCR: "CPU of Switching Processor 5"
+!NAME: "Gi5/1",                 DESCR: "Transceiver Port Gi5/1"
+!NAME: "Transceiver Port Container Gi5/1", DESCR: "Transceiver Port Container Gi5/1"
+!NAME: "Transceiver Gi5/1",     DESCR: "SFP Transceiver 1000BaseBX10D Gi5/1"
+!SN: REDACTED
+!NAME: "Gi5/1 Module Temperature Sensor", DESCR: "GigabitEthernet5/1 Module Temperature Sensor"
+!NAME: "Gi5/1 Supply Voltage Sensor", DESCR: "GigabitEthernet5/1 Supply Voltage Sensor"
+!NAME: "Gi5/1 Bias Current Sensor", DESCR: "GigabitEthernet5/1 Bias Current Sensor"
+!NAME: "Gi5/1 Transmit Power Sensor", DESCR: "GigabitEthernet5/1 Transmit Power Sensor"
+!NAME: "Gi5/1 Receive Power Sensor", DESCR: "GigabitEthernet5/1 Receive Power Sensor"
+!NAME: "Gi5/2",                 DESCR: "Transceiver Port Gi5/2"
+!NAME: "Gigabit Transceiver Container Gi5/2", DESCR: "Gigabit Transceiver Container Gi5/2"
+!NAME: "10/100/1000BaseT Gi5/2", DESCR: "10/100/1000BaseT Gi5/2"
+!NAME: "Physical Slot 6",       DESCR: "Cisco Systems Catalyst 6500 6-slot Physical Slot"
+!NAME: "Container of Fan FRU 1", DESCR: "Container of Fan FRU"
+!NAME: "WS-C6506-E-FAN 1",      DESCR: "Enhanced 6-slot Fan Tray 1"
+!PID: WS-C6506-E-FAN
+!VID: V03
+!SN: REDACTED
+!NAME: "Container of Container of Power Supply", DESCR: "Container of Container of Power Supply"
+!NAME: "Container of Power Supply 1", DESCR: "Container of Power Supply 1"
+!NAME: "PS 1 WS-CAC-2500W",     DESCR: "110/220v AC power supply, 2500 watt 1"
+!PID: WS-CAC-2500W
+!SN: REDACTED
+!NAME: "power-supply 1 fan-fail Sensor", DESCR: "power-supply 1 fan-fail Sensor"
+!NAME: "power-supply 1 power-output-fail Sensor", DESCR: "power-supply 1 power-output-fail Sensor"
+!NAME: "power-supply 1 power-output-mode Sensor", DESCR: "power-supply 1 power-output-mode Sensor"
+!NAME: "power-supply 1 incompatible with fan Sensor", DESCR: "power-supply 1 incompatible with fan Sensor"
+!NAME: "power-supply 1 power-input Sensor", DESCR: "power-supply 1 power-input Sensor"
+!NAME: "Container of Power Supply 2", DESCR: "Container of Power Supply 2"
+!NAME: "PS 2 WS-CAC-1300W",     DESCR: "110/220v AC power supply, 1300 watt 2"
+!PID: WS-CAC-1300W
+!SN: REDACTED
+!NAME: "power-supply 2 fan-fail Sensor", DESCR: "power-supply 2 fan-fail Sensor"
+!NAME: "power-supply 2 power-output-fail Sensor", DESCR: "power-supply 2 power-output-fail Sensor"
+!NAME: "power-supply 2 incompatible with fan Sensor", DESCR: "power-supply 2 incompatible with fan Sensor"
+!NAME: "power-supply 2 power-input Sensor", DESCR: "power-supply 2 power-input Sensor"
+!
+!VTP: VTP Version                     : 3 (capable)
+!VTP: Configuration Revision          : 0
+!VTP: Maximum VLANs supported locally : 1005
+!VTP: Number of existing VLANs        : 48
+!VTP: VTP Operating Mode              : Transparent
+!VTP: VTP Domain Name                 : emf.camp
+!VTP: VTP Pruning Mode                : Disabled (Operationally Disabled)
+!VTP: VTP V2 Mode                     : Disabled
+!VTP: VTP Traps Generation            : Disabled
+!VTP: MD5 digest                      : 0xB1 0x81 0x4A 0xB3 0x36 0xC6 0x3F 0xC1 
+!VTP: VTP version running             : 1
+!
+!VLAN: VLAN Name                             Status    Ports
+!VLAN: ---- -------------------------------- --------- -------------------------------
+!VLAN: 1    default                          active    Gi1/46, Gi2/46, Gi2/47
+!VLAN: 10   ArtNet                           active    
+!VLAN: 11   EAPS                             active    
+!VLAN: 20   Radio-Rapid                      active    
+!VLAN: 21   Radio-Ubnt                       active    
+!VLAN: 56   VMware-Mgmt                      active    
+!VLAN: 57   Servers-NOC                      active    
+!VLAN: 58   Temp-Staging                     active    
+!VLAN: 59   Servers-Public                   active    Gi1/45
+!VLAN: 60   Deadend                          active    
+!VLAN: 132  DK-E1-Kids                       active    
+!VLAN: 134  DK-E2                            active    
+!VLAN: 136  DK-D1                            active    
+!VLAN: 138  DK-D2                            active    
+!VLAN: 140  DK-C1                            active    
+!VLAN: 142  DK-C2                            active    
+!VLAN: 144  DK-C3                            active    
+!VLAN: 146  DK-B1                            active    
+!VLAN: 148  DK-A1                            active    
+!VLAN: 150  DK-A2                            active    
+!VLAN: 152  DK-B2                            active    
+!VLAN: 154  DK-H1-J1                         active    
+!VLAN: 156  DK-H2-J2                         active    
+!VLAN: 158  DK-G1                            active    
+!VLAN: 160  DK-G2                            active    
+!VLAN: 162  DK-U1-U2                         active    
+!VLAN: 164  DK-S1                            active    
+!VLAN: 166  DK-S2                            active    
+!VLAN: 168  Workshop                         active    
+!VLAN: 170  EMFM                             active    
+!VLAN: 171  Static-IP-Wired                  active    
+!VLAN: 172  DK-X1                            active    
+!VLAN: 173  HQ                               active    
+!VLAN: 174  Infodesk                         active    
+!VLAN: 175  Lounge                           active    
+!VLAN: 176  Bar                              active    
+!VLAN: 177  Stage-A                          active    
+!VLAN: 178  Stage-C                          active    
+!VLAN: 179  Stage-B                          active    
+!VLAN: 224  Wireless-Clients                 active    
+!VLAN: 250  NOC                              active    
+!VLAN: 251  NOC-Wifi                         active    
+!VLAN: 252  Static-IP-Wifi                   active    
+!VLAN: 256  Switch-Mgmt                      active    
+!VLAN: 1002 fddi-default                     act/unsup 
+!VLAN: 1003 token-ring-default               act/unsup 
+!VLAN: 1004 fddinet-default                  act/unsup 
+!VLAN: 1005 trnet-default                    act/unsup 
+!VLAN: VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+!VLAN: ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+!VLAN: 1    enet  100001     1500  -      -      -        -    -        0      0   
+!VLAN: 10   enet  100010     1500  -      -      -        -    -        0      0   
+!VLAN: 11   enet  100011     1500  -      -      -        -    -        0      0   
+!VLAN: 20   enet  100020     1500  -      -      -        -    -        0      0   
+!VLAN: 21   enet  100021     1500  -      -      -        -    -        0      0   
+!VLAN: 56   enet  100056     1500  -      -      -        -    -        0      0   
+!VLAN: 57   enet  100057     1500  -      -      -        -    -        0      0   
+!VLAN: 58   enet  100058     1500  -      -      -        -    -        0      0   
+!VLAN: 59   enet  100059     1500  -      -      -        -    -        0      0   
+!VLAN: 60   enet  100060     1500  -      -      -        -    -        0      0   
+!VLAN: 132  enet  100132     1500  -      -      -        -    -        0      0   
+!VLAN: 134  enet  100134     1500  -      -      -        -    -        0      0   
+!VLAN: 136  enet  100136     1500  -      -      -        -    -        0      0   
+!VLAN: 138  enet  100138     1500  -      -      -        -    -        0      0   
+!VLAN: 140  enet  100140     1500  -      -      -        -    -        0      0   
+!VLAN: 142  enet  100142     1500  -      -      -        -    -        0      0   
+!VLAN: 144  enet  100144     1500  -      -      -        -    -        0      0   
+!VLAN: 146  enet  100146     1500  -      -      -        -    -        0      0   
+!VLAN: 148  enet  100148     1500  -      -      -        -    -        0      0   
+!VLAN: 150  enet  100150     1500  -      -      -        -    -        0      0   
+!VLAN: 152  enet  100152     1500  -      -      -        -    -        0      0   
+!VLAN: 154  enet  100154     1500  -      -      -        -    -        0      0   
+!VLAN: 156  enet  100156     1500  -      -      -        -    -        0      0   
+!VLAN: 158  enet  100158     1500  -      -      -        -    -        0      0   
+!VLAN: 160  enet  100160     1500  -      -      -        -    -        0      0   
+!VLAN: 162  enet  100162     1500  -      -      -        -    -        0      0   
+!VLAN: 164  enet  100164     1500  -      -      -        -    -        0      0   
+!VLAN: 166  enet  100166     1500  -      -      -        -    -        0      0   
+!VLAN: 168  enet  100168     1500  -      -      -        -    -        0      0   
+!VLAN: 170  enet  100170     1500  -      -      -        -    -        0      0   
+!VLAN: 171  enet  100171     1500  -      -      -        -    -        0      0   
+!VLAN: 172  enet  100172     1500  -      -      -        -    -        0      0   
+!VLAN: 173  enet  100173     1500  -      -      -        -    -        0      0   
+!VLAN: 174  enet  100174     1500  -      -      -        -    -        0      0   
+!VLAN: 175  enet  100175     1500  -      -      -        -    -        0      0   
+!VLAN: 176  enet  100176     1500  -      -      -        -    -        0      0   
+!VLAN: 177  enet  100177     1500  -      -      -        -    -        0      0   
+!VLAN: 178  enet  100178     1500  -      -      -        -    -        0      0   
+!VLAN: 179  enet  100179     1500  -      -      -        -    -        0      0   
+!VLAN: 224  enet  100224     1500  -      -      -        -    -        0      0   
+!VLAN: 250  enet  100250     1500  -      -      -        -    -        0      0   
+!VLAN: 251  enet  100251     1500  -      -      -        -    -        0      0   
+!VLAN: 252  enet  100252     1500  -      -      -        -    -        0      0   
+!VLAN: 256  enet  100256     1500  -      -      -        -    -        0      0   
+!VLAN: 1002 fddi  101002     1500  -      -      -        -    -        0      0   
+!VLAN: 1003 tr    101003     1500  -      -      -        -    -        0      0   
+!VLAN: 1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+!VLAN: 1005 trnet 101005     1500  -      -      -        ibm  -        0      0   
+!VLAN: Remote SPAN VLANs
+!VLAN: ------------------------------------------------------------------------------
+!VLAN: Primary Secondary Type              Ports
+!VLAN: ------- --------- ----------------- ------------------------------------------
+!
+!
+config-register 0x2102
+!
+version 12.2
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+service counters max age 5
+service unsupported-transceiver
+!
+hostname SWCORE
+!
+boot-start-marker
+boot system flash sup-bootdisk:s72033-advipservicesk9_wan-mz.122-33.SXJ7.bin
+boot-end-marker
+!
+security passwords min-length 1
+enable secret REDACTED
+!
+username ak47 privilege 15 secret REDACTED
+username attilla privilege 15 secret REDACTED
+username david privilege 15 secret REDACTED
+username emfnoc1 privilege 15 secret REDACTED
+username emfnoc2 privilege 15 secret REDACTED
+username emfnoc3 privilege 15 secret REDACTED
+username jasper privilege 15 secret REDACTED
+username kay privilege 15 secret REDACTED
+username leon privilege 15 secret REDACTED
+username mat privilege 15 secret REDACTED
+username nihilus privilege 15 secret REDACTED
+username prt privilege 15 secret REDACTED
+username rancid privilege 15 secret REDACTED
+username russ privilege 15 secret REDACTED
+username tom privilege 15 secret REDACTED
+username will privilege 15 secret REDACTED
+no aaa new-model
+no ip source-route
+!
+ip dhcp relay information trust-all
+!
+ip multicast-routing 
+ip ssh version 2
+no ip domain-lookup
+ip domain-name emf.camp
+ipv6 unicast-routing
+vtp domain emf.camp
+vtp mode transparent
+no mls acl tcam share-global
+mls netflow interface
+mls cef error action freeze
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+no spanning-tree vlan 1-1023
+diagnostic bootup level complete
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause unicast-flood
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause arp-inspection
+errdisable recovery cause link-monitor-failure
+errdisable recovery cause oam-remote-failure critical-event
+errdisable recovery cause oam-remote-failure dying-gasp
+errdisable recovery cause oam-remote-failure link-fault
+errdisable recovery cause loopback
+errdisable recovery cause mlacp-minlink
+errdisable recovery interval 120
+access-list 22 permit 77.73.148.52
+access-list 22 permit 78.158.87.0 0.0.0.63
+access-list 22 permit 78.158.92.196
+access-list 22 permit 91.209.244.43
+access-list 22 permit 94.45.250.0 0.0.1.255
+access-list 22 deny   any log
+access-list 23 permit 78.158.87.11
+access-list 23 permit 78.158.87.12
+access-list 23 deny   any log
+access-list 61 permit 78.158.87.0 0.0.0.63
+access-list 61 permit 94.45.250.0 0.0.1.255
+access-list 61 deny   any log
+access-list 99 deny   any log
+!
+redundancy
+ main-cpu
+  auto-sync running-config
+ mode sso
+!
+ip access-list extended artnetv4_in
+ permit ip 192.168.0.0 0.0.3.255 any
+ deny   ip any any log-input
+ip access-list extended vlan132_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.32.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan132_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.32.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan134_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.34.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan134_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.34.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan136_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.36.0 0.0.1.255 any
+ deny   ip any any log
+ip access-list extended vlan136_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.36.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan138_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.38.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan138_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.38.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan140_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.40.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan140_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.40.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan142_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.42.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan142_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.42.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan144_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.44.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan144_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.44.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan146_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.46.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan146_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.46.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan148_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.48.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan148_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.48.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan150_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.50.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan150_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.50.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan152_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.52.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan152_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.52.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan154_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.54.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan154_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.54.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan156_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.56.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan156_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.56.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan158_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.58.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan158_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.58.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan160_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.60.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan160_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.60.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan162_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.62.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan162_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.62.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan164_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.64.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan164_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.64.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan166_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.66.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan166_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.66.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan168_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.68.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan168_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.68.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan170_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.70.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan170_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.70.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan171_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.71.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan171_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.71.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan172_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.72.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan172_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.72.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan173_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.73.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan173_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.73.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan174_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.74.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan174_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.74.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan175_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.75.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan175_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.75.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan176_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.76.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan176_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.76.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan177_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.77.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan177_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.77.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan178_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.78.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan178_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.78.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan179_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 151.216.79.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan179_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 151.216.79.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan224_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 94.45.224.0 0.0.15.255 any
+ deny   ip any any
+ip access-list extended vlan224_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 94.45.224.0 0.0.15.255
+ deny   ip any any
+ip access-list extended vlan250_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 94.45.250.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan250_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 94.45.250.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan251_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 94.45.251.0 0.0.0.255 any
+ deny   ip any any
+ip access-list extended vlan251_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 94.45.251.0 0.0.0.255
+ deny   ip any any
+ip access-list extended vlan252_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 94.45.252.0 0.0.1.255 any
+ deny   ip any any
+ip access-list extended vlan252_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 94.45.252.0 0.0.1.255
+ deny   ip any any
+ip access-list extended vlan256_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 94.45.255.128 0.0.0.127 any
+ deny   ip any any
+ip access-list extended vlan256_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 94.45.255.128 0.0.0.127
+ deny   ip any any
+ip access-list extended vlan56_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 78.158.87.224 0.0.0.31 any
+ deny   ip any any
+ip access-list extended vlan56_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 78.158.87.224 0.0.0.31
+ deny   ip any any
+ip access-list extended vlan57_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 78.158.87.0 0.0.0.63 any
+ deny   ip any any
+ip access-list extended vlan57_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 78.158.87.0 0.0.0.63
+ deny   ip any any
+ip access-list extended vlan58_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 78.158.87.128 0.0.0.63 any
+ deny   ip any any
+ip access-list extended vlan58_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 78.158.87.128 0.0.0.63
+ deny   ip any any
+ip access-list extended vlan59_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 78.158.87.192 0.0.0.31 any
+ deny   ip any any
+ip access-list extended vlan59_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 78.158.87.192 0.0.0.31
+ deny   ip any any
+ip access-list extended vlan60_v4_in
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip 78.158.87.120 0.0.0.3 any
+ deny   ip any any
+ip access-list extended vlan60_v4_out
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit ip any 78.158.87.120 0.0.0.3
+ deny   ip any any
+!
+transceiver type all
+ monitoring
+vlan internal allocation policy ascending
+vlan access-log ratelimit 2000
+!
+vlan 10
+ name ArtNet
+!
+vlan 11
+ name EAPS
+!
+vlan 20
+ name Radio-Rapid
+!
+vlan 21
+ name Radio-Ubnt
+!
+vlan 56
+ name VMware-Mgmt
+!
+vlan 57
+ name Servers-NOC
+!
+vlan 58
+ name Temp-Staging
+!
+vlan 59
+ name Servers-Public
+!
+vlan 60
+ name Deadend
+!
+vlan 132
+ name DK-E1-Kids
+!
+vlan 134
+ name DK-E2
+!
+vlan 136
+ name DK-D1
+!
+vlan 138
+ name DK-D2
+!
+vlan 140
+ name DK-C1
+!
+vlan 142
+ name DK-C2
+!
+vlan 144
+ name DK-C3
+!
+vlan 146
+ name DK-B1
+!
+vlan 148
+ name DK-A1
+!
+vlan 150
+ name DK-A2
+!
+vlan 152
+ name DK-B2
+!
+vlan 154
+ name DK-H1-J1
+!
+vlan 156
+ name DK-H2-J2
+!
+vlan 158
+ name DK-G1
+!
+vlan 160
+ name DK-G2
+!
+vlan 162
+ name DK-U1-U2
+!
+vlan 164
+ name DK-S1
+!
+vlan 166
+ name DK-S2
+!
+vlan 168
+ name Workshop
+!
+vlan 170
+ name EMFM
+!
+vlan 171
+ name Static-IP-Wired
+!
+vlan 172
+ name DK-X1
+!
+vlan 173
+ name HQ
+!
+vlan 174
+ name Infodesk
+!
+vlan 175
+ name Lounge
+!
+vlan 176
+ name Bar
+!
+vlan 177
+ name Stage-A
+!
+vlan 178
+ name Stage-C
+!
+vlan 179
+ name Stage-B
+!
+vlan 224
+ name Wireless-Clients
+!
+vlan 250
+ name NOC
+!
+vlan 251
+ name NOC-Wifi
+!
+vlan 252
+ name Static-IP-Wifi
+!
+vlan 256
+ name Switch-Mgmt
+lldp run
+!
+interface Loopback0
+ ip address 78.158.87.115 255.255.255.255
+ ipv6 address 2001:7F8:8C:FFFF::3/128
+ ipv6 enable
+!
+interface Port-channel2
+ description Downlink to SWHQ
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,173,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface Port-channel3
+ description Downlink to SWNOC
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,250,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet1/1
+ description Downlink to SWHQ port GigabitEthernet0/1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,173,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ speed 1000
+ duplex full
+ channel-group 2 mode active
+!
+interface GigabitEthernet1/2
+ description Downlink to SWNOC port GigabitEthernet0/1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,250,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ speed 1000
+ duplex full
+ channel-group 3 mode active
+!
+interface GigabitEthernet1/3
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/4
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/5
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/6
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/7
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/8
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/9
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/10
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/11
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/12
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/13
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/14
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/15
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/16
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/17
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/18
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/19
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/20
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/21
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/22
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/23
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/24
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/25
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/26
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/27
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/28
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/29
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/30
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/31
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/32
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/33
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/34
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/35
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/36
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/37
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/38
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/39
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/40
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/41
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/42
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/43
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/44
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/45
+ description to tom's microserver
+ switchport
+ switchport access vlan 59
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface GigabitEthernet1/46
+ description downlink-vmhost3
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 56,57,59
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet1/47
+ description to vmhost-ak
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 56,57
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet1/48
+ description downlink to vmhost1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,56,57,59
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet2/1
+ description Downlink to SWHQ port GigabitEthernet0/2
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,173,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ speed 1000
+ duplex full
+ channel-group 2 mode active
+!
+interface GigabitEthernet2/2
+ description Downlink to SWNOC port GigabitEthernet0/2
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,171,250,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+ speed 1000
+ duplex full
+ channel-group 3 mode active
+!
+interface GigabitEthernet2/3
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/4
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/5
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/6
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/7
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/8
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/9
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/10
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/11
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/12
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/13
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/14
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/15
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/16
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/17
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/18
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/19
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/20
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/21
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/22
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/23
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/24
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/25
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/26
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/27
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/28
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/29
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/30
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/31
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/32
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/33
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/34
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/35
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/36
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/37
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/38
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/39
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/40
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/41
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/42
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/43
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/44
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/45
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/46
+ description downlink-vmhost4
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 56,57,59
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet2/47
+ description downlink-vmhost5
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,56,57,59
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet2/48
+ description downlink to vmhost2
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,56,57,59
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface TenGigabitEthernet4/1
+ description Downlink to SWDIST-DC port 1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk pruning vlan none
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface TenGigabitEthernet4/2
+ description THIS PORT IS FUCKED
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet4/3
+ description to aruba controller
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,57,224,251,252
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface TenGigabitEthernet4/4
+ description Downlink to SWDIST-G1 port 1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk pruning vlan none
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet5/1
+ description Downlink to SWDK-X1 port GigabitEthernet0/1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,21,171,172,256
+ switchport mode trunk
+ ip arp inspection trust
+ load-interval 30
+!
+interface GigabitEthernet5/2
+ description temp uplink to sargasso AS42579
+ ip address 77.73.144.222 255.255.255.252
+ load-interval 30
+ media-type rj45
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan20
+ description point to point via rapid
+ bandwidth 436000
+ ip address 78.158.87.110 255.255.255.252
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf hello-interval 1
+ load-interval 30
+ ipv6 address 2001:7F8:8C:FFFD::2/64
+ ipv6 enable
+ ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 ospf network point-to-point
+ ipv6 ospf hello-interval 1
+ ipv6 ospf 1 area 0
+!
+interface Vlan21
+ description point to point via ubnt
+ bandwidth 100000
+ ip address 78.158.87.102 255.255.255.248
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ ip pim sparse-mode
+ ip ospf network point-to-point
+ ip ospf hello-interval 1
+ load-interval 30
+ ipv6 address 2001:7F8:8C:FFFC::2/64
+ ipv6 enable
+ ipv6 nd ra suppress
+ no ipv6 redirects
+ ipv6 ospf network point-to-point
+ ipv6 ospf hello-interval 1
+ ipv6 ospf 1 area 0
+!
+interface Vlan56
+ description VMware-Mgmt
+ ip address 78.158.87.225 255.255.255.224
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+!
+interface Vlan57
+ description Servers-NOC
+ ip address 78.158.87.1 255.255.255.192
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:57::1/64
+ ipv6 enable
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+!
+interface Vlan58
+ description Temp-Staging
+ ip address 78.158.87.129 255.255.255.192
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+!
+interface Vlan59
+ description Servers-Public
+ ip address 78.158.87.193 255.255.255.224
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:59::1/64
+ ipv6 enable
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+!
+interface Vlan60
+ description Deadend
+ ip address 78.158.87.121 255.255.255.252
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+!
+interface Vlan132
+ description DK-E1-Kids
+ ip address 151.216.32.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:132::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan134
+ description DK-E2
+ ip address 151.216.34.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:134::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan136
+ description DK-D1
+ ip address 151.216.36.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:136::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan138
+ description DK-D2
+ ip address 151.216.38.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:138::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan140
+ description DK-C1
+ ip address 151.216.40.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:140::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan142
+ description DK-C2
+ ip address 151.216.42.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:142::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan144
+ description DK-C3
+ ip address 151.216.44.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:144::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan146
+ description DK-B1
+ ip address 151.216.46.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:146::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan148
+ description DK-A1
+ ip address 151.216.48.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:148::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan150
+ description DK-A2
+ ip address 151.216.50.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:150::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan152
+ description DK-B2
+ ip address 151.216.52.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:152::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan154
+ description DK-H1-J1
+ ip address 151.216.54.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:154::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan156
+ description DK-H2-J2
+ ip address 151.216.56.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:156::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan158
+ description DK-G1
+ ip address 151.216.58.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:158::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan160
+ description DK-G2
+ ip address 151.216.60.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:160::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan162
+ description DK-U1-U2
+ ip address 151.216.62.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:162::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan164
+ description DK-S1
+ ip address 151.216.64.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:164::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan166
+ description DK-S2
+ ip address 151.216.66.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:166::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan168
+ description Workshop
+ ip address 151.216.68.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:168::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan170
+ description EMFM
+ ip address 151.216.70.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:170::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan171
+ description Static-IP-Wired
+ ip address 151.216.71.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:171::1/64
+ ipv6 enable
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+!
+interface Vlan172
+ description DK-X1
+ ip address 151.216.72.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:172::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan173
+ description HQ
+ ip address 151.216.73.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:173::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan174
+ description Infodesk
+ ip address 151.216.74.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:174::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan175
+ description Lounge
+ ip address 151.216.75.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:175::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan176
+ description Bar
+ ip address 151.216.76.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:176::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan177
+ description Stage-A
+ ip address 151.216.77.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:177::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan178
+ description Stage-C
+ ip address 151.216.78.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:178::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan179
+ description Stage-B
+ ip address 151.216.79.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:179::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan224
+ description Wireless-Clients
+ ip address 94.45.224.1 255.255.240.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:224::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan250
+ description NOC
+ ip address 94.45.250.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:250::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan251
+ description NOC-Wifi
+ ip address 94.45.251.1 255.255.255.0
+ ip verify unicast source reachable-via rx allow-default
+ ip helper-address 78.158.87.11
+ ip helper-address 78.158.87.12
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:251::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+ ipv6 dhcp relay destination 2001:7F8:8C:57::11
+ ipv6 dhcp relay destination 2001:7F8:8C:57::12
+!
+interface Vlan252
+ description Static-IP-Wifi
+ ip address 94.45.252.1 255.255.254.0
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:252::1/64
+ ipv6 enable
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+!
+interface Vlan256
+ description Switch-Mgmt
+ ip address 94.45.255.129 255.255.255.128
+ ip verify unicast source reachable-via rx allow-default
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-mode
+ no ip route-cache
+ load-interval 30
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:7F8:8C:256::1/64
+ ipv6 enable
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+ no ipv6 redirects
+ ipv6 verify unicast reverse-path
+!
+router ospf 1
+ log-adjacency-changes
+ auto-cost reference-bandwidth 1000000
+ redistribute connected subnets
+ passive-interface default
+ no passive-interface Vlan20
+ no passive-interface Vlan21
+ network 78.158.87.0 0.0.0.255 area 0
+ network 94.45.224.0 0.0.31.255 area 0
+ network 151.216.32.0 0.0.31.255 area 0
+ network 151.216.64.0 0.0.15.255 area 0
+!
+ip classless
+ip forward-protocol nd
+no ip forward-protocol udp tftp
+no ip forward-protocol udp nameserver
+no ip forward-protocol udp domain
+no ip forward-protocol udp time
+no ip forward-protocol udp netbios-ns
+no ip forward-protocol udp netbios-dgm
+no ip forward-protocol udp tacacs
+ip route 77.73.148.0 255.255.254.0 78.158.87.113
+ip route 78.158.65.0 255.255.255.0 78.158.87.113
+ip route 89.200.143.200 255.255.255.255 78.158.87.113
+ip route 199.16.156.104 255.255.255.255 78.158.87.113
+!
+ip bgp-community REDACTED
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 78.158.87.113
+ip pim autorp listener
+!
+logging source-interface Vlan256
+logging 78.158.87.14
+ipv6 router ospf 1
+ log-adjacency-changes
+ auto-cost reference-bandwidth 1000000
+ passive-interface default
+ no passive-interface Vlan20
+ no passive-interface Vlan21
+ no passive-interface Vlan56
+ no passive-interface Vlan58
+ no passive-interface Vlan60
+ redistribute connected
+!
+snmp-server community REDACTED RO 61
+snmp-server ifindex persist
+snmp-server location EMF
+snmp-server contact EMF NOC
+snmp ifmib ifindex persist
+!
+ipv6 access-list vlan57_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:57::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan57_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:57::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan59_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:59::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan59_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:59::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan132_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:132::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan132_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:132::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan134_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:134::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan134_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:134::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan136_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:136::/64 any
+ sequence 1020 deny ipv6 any any log
+!
+ipv6 access-list vlan136_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:136::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan138_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:138::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan138_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:138::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan140_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:140::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan140_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:140::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan142_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:142::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan142_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:142::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan144_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:144::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan144_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:144::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan146_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:146::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan146_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:146::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan148_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:148::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan148_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:148::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan150_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:150::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan150_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:150::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan152_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:152::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan152_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:152::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan154_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:154::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan154_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:154::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan156_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:156::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan156_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:156::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan158_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:158::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan158_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:158::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan160_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:160::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan160_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:160::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan162_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:162::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan162_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:162::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan164_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:164::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan164_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:164::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan166_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:166::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan166_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:166::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan168_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:168::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan168_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:168::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan170_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:170::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan170_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:170::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan171_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:171::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan171_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:171::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan172_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:172::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan172_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:172::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan173_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:173::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan173_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:173::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan174_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:174::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan174_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:174::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan175_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:175::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan175_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:175::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan176_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:176::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan176_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:176::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan177_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:177::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan177_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:177::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan178_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:178::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan178_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:178::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan179_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:179::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan179_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:179::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan224_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:224::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan224_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:224::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan250_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:250::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan250_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:250::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan251_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:251::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan251_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:251::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan252_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:252::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan252_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:252::/64
+ deny ipv6 any any
+!
+ipv6 access-list vlan256_v6_in
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 2001:7F8:8C:256::/64 any
+ deny ipv6 any any
+!
+ipv6 access-list vlan256_v6_out
+ sequence 980 permit udp any any eq 546
+ permit udp any any eq 547
+ permit ipv6 any 2001:7F8:8C:256::/64
+ deny ipv6 any any
+!
+control-plane
+!
+dial-peer cor custom
+!
+banner motd ^C
+ 29th Aug 2014
+      to             __,--'\
+ 31st Aug 2014 __,--'    :. \.
+          _,--'              \'.
+         /|\       '          \ '.
+        / | \        ':        \  '/
+       / '|  \        ':.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              ':. \
+    /| '  |     \ :.           _,-''.
+  \' |,  / \   ' \ ':.     _,-'_|    '/
+     '._;   \ .   \   '_,-'_,-'
+   \'    '- .\_   |\,-'_,-'
+               '--|_,''     $(hostname) ^C
+alias exec bgp4 show bgp ipv4 unicast summary
+alias exec bgp6 show bgp ipv6 unicast summary
+!
+line con 0
+ exec-timeout 30 0
+ login local
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+line vty 5 15
+ access-class 22 in
+ exec-timeout 120 0
+ login local
+ transport preferred none
+ transport input ssh
+!
+ntp source Vlan256
+ntp access-group peer 23
+ntp access-group serve 99
+ntp access-group serve-only 99
+ntp access-group query-only 99
+ntp update-calendar
+ntp server 78.158.87.11
+ntp server 78.158.87.12
+mac-address-table aging-time 60
+!
+end
