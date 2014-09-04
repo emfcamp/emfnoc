@@ -1,0 +1,67 @@
+
+; zone file built by gen-zones.py from EMF2014 Google Spreadsheet
+; 87.158.78.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 87.158.78.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (
+            2014081719 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  auth1.ns.sargasso.net.
+      IN      NS  auth2.ns.sargasso.net.
+      IN      NS  auth3.ns.sargasso.net.
+
+1	IN	PTR	vlan57.SWCORE.emf.camp.
+4	IN	PTR	puppet.emf.camp.
+11	IN	PTR	services1.emf.camp.
+12	IN	PTR	services2.emf.camp.
+13	IN	PTR	monitor1.emf.camp.
+14	IN	PTR	monitor2.emf.camp.
+15	IN	PTR	icinga.emfcamp.org.
+20	IN	PTR	pbx.emf.camp.
+21	IN	PTR	jmp.emf.camp.
+22	IN	PTR	deadend.emf.camp.
+23	IN	PTR	roundup.emf.camp.
+30	IN	PTR	aruba-master.emf.camp.
+31	IN	PTR	radius.emf.camp.
+32	IN	PTR	airwave.emf.camp.
+89	IN	PTR	gi0-2-50.BLETCHLEY.emf.camp.
+90	IN	PTR	BLETCHLEY-MAST.emf.camp.
+91	IN	PTR	host-78-158-87-91.mast.emf.camp.
+92	IN	PTR	host-78-158-87-92.mast.emf.camp.
+93	IN	PTR	host-78-158-87-93.mast.emf.camp.
+94	IN	PTR	host-78-158-87-94.mast.emf.camp.
+97	IN	PTR	gi0-2-21.BLETCHLEY.emf.camp.
+98	IN	PTR	NANOBRIDGE-BLETCHLEY.emf.camp.
+99	IN	PTR	NANOBRIDGE-SITE.emf.camp.
+102	IN	PTR	vlan21.SWCORE.emf.camp.
+109	IN	PTR	gi0-2-20.BLETCHLEY.emf.camp.
+110	IN	PTR	vlan20.SWCORE.emf.camp.
+113	IN	PTR	DOCKLANDS.emf.camp.
+114	IN	PTR	BLETCHLEY.emf.camp.
+115	IN	PTR	SWCORE.emf.camp.
+129	IN	PTR	vlan58.SWCORE.emf.camp.
+193	IN	PTR	vlan59.SWCORE.emf.camp.
+196	IN	PTR	phone.emf.camp.
+197	IN	PTR	content.emf.camp.
+198	IN	PTR	schedule.emf.camp.
+199	IN	PTR	lights.emf.camp.
+200	IN	PTR	radio.emf.camp.
+201	IN	PTR	webcast.emf.camp.
+225	IN	PTR	vlan56.SWCORE.emf.camp.
+228	IN	PTR	vmhost1.emf.camp.
+229	IN	PTR	vmhost1-ilo.emf.camp.
+230	IN	PTR	vcenter.emf.camp.
+231	IN	PTR	vmhost2.emf.camp.
+232	IN	PTR	ilo-vmhost2.emf.camp.
+233	IN	PTR	rsa2-vmhost2.emf.camp.
+234	IN	PTR	vmhost-ak.emf.camp.
+235	IN	PTR	vmhost3.emf.camp.
+236	IN	PTR	vmhost4.emf.camp.
+237	IN	PTR	vmhost5.emf.camp.

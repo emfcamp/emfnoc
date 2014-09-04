@@ -1,0 +1,59 @@
+
+; zone file built by gen-zones.py from EMF2014 Google Spreadsheet
+; 255.45.94.in-addr.arpa.
+
+$TTL    1h
+$ORIGIN 255.45.94.in-addr.arpa.
+@   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (
+            2014081719 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  auth1.ns.sargasso.net.
+      IN      NS  auth2.ns.sargasso.net.
+      IN      NS  auth3.ns.sargasso.net.
+
+129	IN	PTR	vlan256.SWCORE.emf.camp.
+130	IN	PTR	SWDIST-DC.emf.camp.
+131	IN	PTR	SWDIST-G1.emf.camp.
+132	IN	PTR	SWDIST-C2.emf.camp.
+133	IN	PTR	SWDK-E2.emf.camp.
+134	IN	PTR	SWDK-E1.emf.camp.
+135	IN	PTR	SWKIDS.emf.camp.
+136	IN	PTR	SWDK-D2.emf.camp.
+137	IN	PTR	SWDK-D1.emf.camp.
+138	IN	PTR	SWDK-C1.emf.camp.
+139	IN	PTR	SWDK-C2.emf.camp.
+140	IN	PTR	SWDK-C3.emf.camp.
+141	IN	PTR	SWDK-B1.emf.camp.
+142	IN	PTR	SWDK-A1.emf.camp.
+143	IN	PTR	SWDK-A2.emf.camp.
+144	IN	PTR	SWDK-B2.emf.camp.
+145	IN	PTR	SWDK-H1.emf.camp.
+146	IN	PTR	SWDK-J1.emf.camp.
+147	IN	PTR	SWDK-H2.emf.camp.
+148	IN	PTR	SWDK-J2.emf.camp.
+149	IN	PTR	SWDK-G1.emf.camp.
+150	IN	PTR	SWDK-G2.emf.camp.
+151	IN	PTR	SWWORKSHOP-1.emf.camp.
+152	IN	PTR	SWWORKSHOP-2.emf.camp.
+153	IN	PTR	SWWORKSHOP-3.emf.camp.
+154	IN	PTR	SWWORKSHOP-4.emf.camp.
+155	IN	PTR	SWSTAGE-B.emf.camp.
+156	IN	PTR	SWHQ.emf.camp.
+157	IN	PTR	SWNOC.emf.camp.
+158	IN	PTR	SWDK-X1.emf.camp.
+159	IN	PTR	SWDK-S1.emf.camp.
+160	IN	PTR	SWDK-S2.emf.camp.
+161	IN	PTR	SWDK-U1.emf.camp.
+162	IN	PTR	SWSTAGE-A.emf.camp.
+163	IN	PTR	SWDK-U2.emf.camp.
+164	IN	PTR	SWBAR.emf.camp.
+165	IN	PTR	SWSTAGE-C.emf.camp.
+166	IN	PTR	SWLOUNGE.emf.camp.
+167	IN	PTR	SWINFODESK.emf.camp.
+168	IN	PTR	SWEMFM.emf.camp.

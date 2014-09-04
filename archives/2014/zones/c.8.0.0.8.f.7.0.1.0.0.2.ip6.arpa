@@ -1,0 +1,74 @@
+
+; zone file built by gen-zones.py from EMF2014 Google Spreadsheet
+; c.8.0.0.8.f.7.0.1.0.0.2.ip6.arpa.
+
+$TTL    1h
+$ORIGIN c.8.0.0.8.f.7.0.1.0.0.2.ip6.arpa.
+@   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (
+            2014081719 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; minimum
+        )
+
+      IN      NS  ns1.emfcamp.org.
+      IN      NS  auth1.ns.sargasso.net.
+      IN      NS  auth2.ns.sargasso.net.
+      IN      NS  auth3.ns.sargasso.net.
+
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.2.2.0	IN	PTR	vlan224.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.5.2.0	IN	PTR	vlan250.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.5.2.0	IN	PTR	vlan251.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.5.2.0	IN	PTR	vlan252.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.3.1.0	IN	PTR	vlan132.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.3.1.0	IN	PTR	vlan134.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.3.1.0	IN	PTR	vlan136.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.3.1.0	IN	PTR	vlan138.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.1.0	IN	PTR	vlan140.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.4.1.0	IN	PTR	vlan142.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.4.1.0	IN	PTR	vlan144.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.4.1.0	IN	PTR	vlan146.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.4.1.0	IN	PTR	vlan148.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.5.1.0	IN	PTR	vlan150.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.5.1.0	IN	PTR	vlan152.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.5.1.0	IN	PTR	vlan154.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.5.1.0	IN	PTR	vlan156.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.5.1.0	IN	PTR	vlan158.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.1.0	IN	PTR	vlan160.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.6.1.0	IN	PTR	vlan162.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.6.1.0	IN	PTR	vlan164.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.6.1.0	IN	PTR	vlan166.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.6.1.0	IN	PTR	vlan168.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.1.0	IN	PTR	vlan170.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.7.1.0	IN	PTR	vlan171.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.7.1.0	IN	PTR	vlan172.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.7.1.0	IN	PTR	vlan173.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.7.1.0	IN	PTR	vlan174.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.5.7.1.0	IN	PTR	vlan175.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.7.1.0	IN	PTR	vlan176.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.7.1.0	IN	PTR	vlan177.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.7.1.0	IN	PTR	vlan178.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.9.7.1.0	IN	PTR	vlan179.SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	vlan57.SWCORE.emf.camp.
+4.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	puppet.emf.camp.
+1.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	services1.emf.camp.
+2.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	services2.emf.camp.
+3.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	monitor1.emf.camp.
+4.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	monitor2.emf.camp.
+5.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	icinga.emfcamp.org.
+0.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	pbx.emf.camp.
+1.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	jmp.emf.camp.
+2.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	deadend.emf.camp.
+3.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	roundup.emf.camp.
+1.3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.7.5.0.0	IN	PTR	radius.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.f.f	IN	PTR	DOCKLANDS.emf.camp.
+2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.f.f	IN	PTR	BLETCHLEY.emf.camp.
+3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.f.f	IN	PTR	SWCORE.emf.camp.
+1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	vlan59.SWCORE.emf.camp.
+6.9.1.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	phone.emf.camp.
+7.9.1.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	content.emf.camp.
+8.9.1.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	schedule.emf.camp.
+9.9.1.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	lights.emf.camp.
+0.0.2.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	radio.emf.camp.
+1.0.2.0.0.0.0.0.0.0.0.0.0.0.0.0.9.5.0.0	IN	PTR	webcast.emf.camp.
