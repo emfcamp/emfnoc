@@ -9,14 +9,15 @@ Overview
 --------
 
 These script generate various bits of EMF config from our master Google Docs spreadsheet.
-A sanitised version of the spreadsheet will be uploaded here in due course.
+A sanitised version of the spreadsheet with only the necessary data can be found in
+../archives/2014/documents/NOC Team Combined - REDACTED.xlsx
 
 gen-dhcp.py - Generates the DHCP server scopes
 
 gen-icinga.py - generates switch and link monitoring
 
 gen-icinga.php - 2012 icinga generation, not used this time around, has additional monitoring
-for servers but not links
+for servers but not links, because davidc couldn't be bothered to learn python last time round
 
 gen-labels.py - generates labels for the switches (after gen-switch.py --template=label)
 
