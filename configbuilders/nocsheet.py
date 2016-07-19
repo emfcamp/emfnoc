@@ -1,44 +1,56 @@
 #!/usr/bin/env python
 
-import gdata.spreadsheet.service
-import gdata.spreadsheet.text_db
+import gdata.spreadsheets.client
+#import gdata.spreadsheet.text_db
 import getpass, os, sys
+import pprint
 
 def login(source, config):
   print "Connecting to spreadsheet"
-#  spr_client.email = email
-#  spr_client.password = password
 
-  try:
-    email = config.get('gdata', 'email')
-  except:
-    email = ""
+  oauth_token = config.get('gdata', 'oauth_token')
 
-  try:
-    password = config.get('gdata', 'password')
-  except:
-    password = ""
+  if oauth_token:
+    token = gdata.gauth.token_from_blob(oauth_token)
+  else:
+    SCOPES = ['https://spreadsheets.google.com/feeds/']
 
-  if email == "":
-    email = raw_input("Please enter email for Google account: ")
+    token = gdata.gauth.OAuth2Token(
+      client_id=config.get('gdata', 'oauth_client_id'),
+      client_secret=config.get('gdata', 'oauth_client_secret'),
+      scope=' '.join(SCOPES),
+      user_agent=source)
 
-  if password == "":
-    password = getpass.getpass("Please enter the password for " + email + ": ")
+    print "Visit this URL and get the token:"
+    print
+    print token.generate_authorize_url()
+    print
+    auth_code = raw_input("Enter the code: ")
 
-  spr_client = gdata.spreadsheet.service.SpreadsheetsService(email = email,
-    password = password, source = source)
+    token.get_access_token(auth_code)
+
+    print
+    print "Add this to /etc/emf-gdata.conf:"
+    print
+    print "oauth_token=" + gdata.gauth.token_to_blob(token)
+    print
+
+    exit(1)
+
+  spr_client = gdata.spreadsheets.client.SpreadsheetsClient(source = source)
 
   spr_client.ssl = True
 
-  spr_client.ProgrammaticLogin()
-        
+  spr_client = token.authorize(spr_client)
+
   return spr_client
 
 def get_worksheets(spr_client, spreadsheet):
-  worksheets = spr_client.GetWorksheetsFeed(key=spreadsheet)
+  worksheets = spr_client.get_worksheets(spreadsheet, None)
   out = {}
   for e in worksheets.entry:
     out[e.title.text] = e.id.text.rsplit('/', 1)[1]
+  pprint.pprint(out)
   return out
 
 def get_worksheet_data(spr_client, spreadsheet, wks):
@@ -49,13 +61,14 @@ def get_worksheet_data(spr_client, spreadsheet, wks):
     exit()
 
   wks_key = sheets[wks]
-  feed = spr_client.GetCellsFeed(spreadsheet, wks_key)
+  feed = spr_client.get_cells(spreadsheet, wks_key)
 
   col_keys = {}
   out = []
   r = {}
   cur_row = 1
   for i, entry in enumerate(feed.entry):
+    pprint.pprint(entry)
     row = int(entry.cell.row)
     col = int(entry.cell.col)
 
