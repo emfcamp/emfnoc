@@ -1,0 +1,268 @@
+boot console speed 9600
+
+environment fan-speed auto
+
+hostname {{ switch["Hostname"] }}
+ip domain-name emf.camp
+
+snmp-server community {{ config.get("switchconfig", "community") }} RO 61
+snmp-server location EMF
+snmp-server contact EMF NOC
+
+spanning-tree mode rstp
+
+enable secret 0 {{ config.get("switchconfig", "enable") }}
+
+{% for user in users %}
+username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
+{%- endfor %}
+
+no ip routing
+lldp run
+
+spanning-tree mode rstp
+
+{% for vlan in vlans|sort %}
+vlan {{ vlans[vlan]['vlan'] }}
+ name {{ vlans[vlan]["name"] }}
+{%- endfor %}
+exit
+
+ip default-gateway 94.45.255.129 ! TODO
+interface Vlan256
+ ip address {{ switch["Mgmt-IP"] }} 255.255.255.128 ! TODO
+ no ip redirects
+ no ip proxy-arp
+ no ip route-cache
+
+{% if switch["Port-Prefix"]%}
+{% for port in switch["camper"] %}
+interface {{ switch["Port-Prefix"] }}{{ port }}
+ switchport mode access
+ switchport access vlan {{ switch["Camper-VLAN"] }}
+ ip access-group camper_v4_in in
+{% if "C3560" not in switch["Model"] %} ipv6 traffic-filter camper_v6_in in{% endif %}
+{% if "C3560" in switch["Model"] %} 
+ small-frame violation-rate 1000
+{% else %}
+! yes this is twice; some switches have different syntax
+ small-frame violation rate 1000
+{% endif %}
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+{% if "C3560" not in switch["Model"] %}
+ lldp transmit
+ lldp receive
+{% endif %}
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ load-interval 30
+ no shutdown
+{% endfor %}
+{% endif %}
+
+{% if switch["artnet"] %}
+{% for anetp in switch["artnet"] %}
+interface {{ switch["Port-Prefix"] }}{{anetp}}
+ switchport mode access
+ switchport access vlan 10
+ switchport nonegotiate
+ switchport block unicast
+ ip access-group artnetv4_in in
+{% if "C3560" in switch["Model"] %} 
+ small-frame violation-rate 1000
+{% else %}
+! yes this is twice; some switches have different syntax
+ small-frame violation rate 1000
+{% endif %}
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+{% if "C3560" not in switch["Model"] %}
+ lldp transmit
+ lldp receive
+{% endif %}
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ load-interval 30
+ no shutdown
+
+{% endfor %}
+{% endif %}
+
+
+{% set downPortChannel = 2 %}
+
+{% for link in switch["Links"] %}
+
+{% if link["Dir"] == "up" %}
+! {{ link["Dir"] }}link to {{ link["To"] }}
+
+{% for port in link["Ports"] %}
+
+interface {{ port[0] }}
+ description Uplink to {{ link["To"] }} port {{ port[1] }}
+ speed 1000
+ duplex full
+ full-duplex ! different syntax for some switches
+ channel-group 1 mode active
+ load-interval 30
+ cdp enable
+{% if "C3560" not in switch["Model"] %}
+ lldp receive
+ lldp transmit
+{% endif %}
+ no shutdown
+
+{% endfor %}
+
+interface Port-channel1
+ description Uplink to {{ link["To"] }}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,171,256{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
+ ip arp inspection trust
+ ip dhcp snooping trust
+ load-interval 30
+ no shutdown
+
+{% endif %}{# Dir == up #}
+
+{% if link["Dir"] == "down" %}
+! {{ link["Dir"] }}link to {{ link["To"] }}
+
+{% for port in link["Ports"] %}
+
+interface {{ port[0] }}
+ description Downlink to {{ link["To"] }} port {{ port[1] }}
+ speed 1000
+ duplex full
+ full-duplex ! different syntax for some switches
+ channel-group {{ downPortChannel }} mode active
+ load-interval 30
+ cdp enable
+{% if "C3560" not in switch["Model"] %}
+ lldp receive
+ lldp transmit
+{% endif %}
+ no shutdown
+
+{% endfor %}
+
+interface Port-channel{{ downPortChannel }}
+ description Downlink to {{ link["To"] }}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,171,256{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
+ ip arp inspection trust
+ ip dhcp snooping trust
+ load-interval 30
+ no shutdown
+
+{% set downPortChannel = downPortChannel + 1 %}
+
+{% endif %}
+{% endfor %}
+
+
+! ssh ! TODO
+no ip access-list standard 22
+ip access-list standard 22
+ permit 78.158.92.196 ! david
+ permit 77.73.148.52 ! david
+ permit 91.209.244.43 ! jasper
+ permit 94.45.250.0 0.0.1.255    ! noc wired + wireless
+ permit 78.158.87.0 0.0.0.63 ! noc servers
+ deny any log
+
+! ntp ! TODO
+no ip access-list standard 23
+ip access-list standard 23
+ permit host 78.158.87.11
+ permit host 78.158.87.12
+ deny any log
+
+! snmp
+no ip access-list standard 61
+ip access-list standard 61
+ permit 94.45.250.0  0.0.1.255    ! noc wired + wireless
+ permit 78.158.87.0 0.0.0.63 ! noc servers
+ deny any log
+
+! deny all
+no ip access-list standard 99
+ip access-list standard 99
+ deny any log
+
+no ip access-list extended artnetv4_in
+ip access-list extended artnetv4_in
+  permit ip 192.168.0.0 0.0.3.255 any
+{% if "C2950" not in switch["Model"] -%}
+  deny ip any any log-input
+{% else %}
+{# fix the access list here #}
+! hello 2950 fixes here
+  deny ip any any
+{%- endif %}
+
+{% if mycampervlan %}
+no ip access-list extended camper_v4_in
+ip access-list extended camper_v4_in
+ permit ip {{ mycampervlan["ipv4-subnet"].network }} {{ mycampervlan["ipv4-subnet"].hostmask }} any
+{% if "C2950" not in switch["Model"] -%}
+ deny   ip any any log-input
+{% else %}
+{# fix the access list here #}
+! hello 2950 fixes here
+ deny ???
+{% endif %}
+
+{% if "C3560" not in switch["Model"] -%}
+no ipv6 access-list camper_v6_in
+ipv6 access-list camper_v6_in
+ permit ipv6 {{ mycampervlan["ipv6-subnet"] }} any
+ deny ipv6 any any log-input
+{%- endif %}
+{% endif %}
+
+
+banner motd
+ 5th Aug 2016
+      to             __,--'\
+ 7th Aug 2016  __,--'    :. \.
+          _,--'              \`.
+         /|\       `          \ `.
+        / | \        `:        \  `/
+       / '|  \        `:.       \
+      / , |   \ www.emfcamp.org  \
+     /    |:   \              `:. \
+    /| '  |     \ :.           _,-'`.
+  \' |,  / \   ` \ `:.     _,-'_|    `/
+     '._;   \ .   \   `_,-'_,-'
+   \'    `- .\_   |\,-'_,-'
+               `--|_,`'     $(hostname)
+EOF
+
+ntp source Vlan256 ! TODO
+ntp server 78.158.87.11 ! TODO
+ntp server 78.158.87.12 ! TODO
+! Since each DK is L2, do we want to serve NTP from each switch?
+
+logging source-interface Vlan256 ! TODO
+logging 78.158.87.14 ! TODO
