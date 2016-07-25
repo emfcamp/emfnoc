@@ -8,10 +8,8 @@ import pprint
 def login(source, config):
   print "Connecting to spreadsheet"
 
-  oauth_token = config.get('gdata', 'oauth_token')
-
-  if oauth_token:
-    token = gdata.gauth.token_from_blob(oauth_token)
+  if config.has_option('gdata', 'oauth_token'):
+    token = gdata.gauth.token_from_blob(config.get('gdata', 'oauth_token'))
   else:
     SCOPES = ['https://spreadsheets.google.com/feeds/']
 
@@ -27,7 +25,11 @@ def login(source, config):
     print
     auth_code = raw_input("Enter the code: ")
 
-    token.get_access_token(auth_code)
+    try:
+      token.get_access_token(auth_code)
+    except gdata.gauth.OAuth2AccessTokenError as err:
+      print "Token failure: " + err.error_message
+      raise
 
     print
     print "Add this to /etc/emf-gdata.conf:"
@@ -50,7 +52,7 @@ def get_worksheets(spr_client, spreadsheet):
   out = {}
   for e in worksheets.entry:
     out[e.title.text] = e.id.text.rsplit('/', 1)[1]
-  pprint.pprint(out)
+#  pprint.pprint(out)
   return out
 
 def get_worksheet_data(spr_client, spreadsheet, wks):
@@ -68,7 +70,6 @@ def get_worksheet_data(spr_client, spreadsheet, wks):
   r = {}
   cur_row = 1
   for i, entry in enumerate(feed.entry):
-    pprint.pprint(entry)
     row = int(entry.cell.row)
     col = int(entry.cell.col)
 
