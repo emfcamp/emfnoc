@@ -292,10 +292,10 @@ for row in addressing:
     # router entry
     if "VLAN" in row:
       vlan = row["VLAN"]
-      add_ipv4_host("vlan" + vlan + ".SWCORE", "emf.camp", subnet.network + 1, False, False)
+      add_ipv4_host("vlan" + vlan + ".LOSELEY", "emf.camp", subnet.network + 1, False, False)
 #      if "IPv6" in row:
       ipv6 = ipaddr.IPv6Network(row["IPv6"])
-      add_ipv6_host("vlan" + vlan + ".SWCORE", "emf.camp", ipv6.network + 1, False, False)
+      add_ipv6_host("vlan" + vlan + ".LOSELEY", "emf.camp", ipv6.network + 1, False, False)
 
     # host entries
     for ipv4 in subnet.iterhosts():
