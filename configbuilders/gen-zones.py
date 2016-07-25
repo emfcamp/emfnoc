@@ -259,7 +259,6 @@ addressing = get_worksheet_data(spr_client, spreadsheet, "Addressing")
 
 print "downloading codenames"
 codenames = get_worksheet_data(spr_client, spreadsheet, "Codenames")
-pprint.pprint(codenames)
 
 #for x in range(0, 2560000):
 #  print pretty_host("gchq.org.uk", None)
