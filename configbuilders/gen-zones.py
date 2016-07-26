@@ -18,24 +18,6 @@ from nocsheet import login, get_worksheets, get_worksheet_data
 
 codenamepos = 0
 
-
-def hostin4net(network,hostoctet):
-  ssubnet = network.split('/')
-  asubnet = ssubnet[0].split('.')
-  asubnet[3] = hostoctet
-  return string.join(asubnet,'.')
-
-def hostin6net(network,hostaddr):
-  ssubnet = network.split('/')
-
-  return "%s%s" % (ssubnet[0],hostaddr)
-
-def subnet4tozone(network):
-  ssubnet = network.split('/')
-  asubnet = ssubnet[0].split('.')
-  zonename = "%s.%s.%s.in-addr.arpa" % (asubnet[2],asubnet[1],asubnet[0])
-  return zonename
-
 def ip6_arpa(octets, therange):
   out = ""
   for i in therange:
@@ -49,9 +31,8 @@ def reverse_zone(address):
   if isinstance(address, ipaddr._BaseV4):
     return "%s.%s.%s.in-addr.arpa" % (ord(octets[2]), ord(octets[1]), ord(octets[0]))
   elif isinstance(address, ipaddr._BaseV6):
-    # it's a /48, so we want bytes 0-5 (nibbles 0-11)
-    return ip6_arpa(octets, range(0, 6)) + ".ip6.arpa"
-    return zone
+    # it's a /32, so we want bytes 0-3 (nibbles 0-7)
+    return ip6_arpa(octets, range(0, 4)) + ".ip6.arpa"
 
 #x"c.8.0.0.8.f.7.0.1.0.0.2.ip6.arpa"
 #x = ipaddr.IPAddress("2001:7f8:8c:57::11")
@@ -101,7 +82,7 @@ def add_ipv6_host(hostname, fwd_zonename, ipv6, forward_only, reverse_only):
 
   #v6 reverse
   rev6_zonename = reverse_zone(ipv6)
-  rev6_hostname = ip6_arpa(ipv6.packed, range(6,16)) # it's a /48 so we want bytes 6-15
+  rev6_hostname = ip6_arpa(ipv6.packed, range(4,16)) # it's a /32 so we want bytes 4-15
 
   record = "%s\tIN\tPTR\t%s.%s." % (rev6_hostname, hostname, fwd_zonename)
   add_record(rev6_zonename, record)
@@ -306,12 +287,21 @@ for row in addressing:
         hostname += "." + row["Subdomain"]
       add_ipv4_host(hostname, fwd_zonename, ipv4, False, False)
 
-  # is it a cname?
+  # is it a cname or other fixed record?
   elif "dns" in row and row["dns"] == "record":
     hostname = row["Hostname"]
     if "Subdomain" in row:
       hostname += "." + row["Subdomain"]
     add_record(fwd_zonename, hostname + "\t" + row["Description"])
+
+  # if it's a Network with dns='y', we need to 'touch' all the reverse dns to make sure
+  # every individual zone exists
+  elif "Network" in row and "dns" in row and row["dns"] == "y":
+    net = ipaddr.IPv4Network(row["Network"])
+    for subnet in net.iter_subnets(new_prefix = 24):
+      zonename = reverse_zone(subnet)
+      if zonename not in zones.keys():
+        zones[zonename] = []
 
 #print "ZONES:"
 #pprint.pprint(zones)
