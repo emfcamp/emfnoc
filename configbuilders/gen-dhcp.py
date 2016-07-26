@@ -68,13 +68,21 @@ for row in ipv4:
     group {
         host emftill1 {
             hardware ethernet 00:30:18:A3:0A:4F;
-            fixed-address 151.216.76.2;
+            fixed-address 151.216.255.2;
        }
        host emftill2 {
             hardware ethernet 00:30:18:A6:F1:8B;
-            fixed-address 151.216.76.3;
-            next-server 151.216.76.2;
+            fixed-address 151.216.255.3;
+            option root-path "/var/lib/tftpboot";
             filename "pxelinux.0";
+            next-server 151.216.255.2;
+        }
+       host emftill3 {
+            hardware ethernet 70:71:BC:AD:48:5D;
+            fixed-address 151.216.255.4;
+            option root-path "/var/lib/tftpboot";
+            filename "pxelinux.0";
+            next-server 151.216.255.2;
         }
     }
 	""")
