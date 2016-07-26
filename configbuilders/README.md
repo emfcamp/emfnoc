@@ -45,17 +45,28 @@ You'll need to:
 
 aptitude install python-gdata python-gdata-doc python-ipaddr python-jinja2 graphviz
 
+Go to https://console.developers.google.com/iam-admin/projects?pli=1
+
+Click on create project, fill in a name and tick the boxes, then select your
+new project, click on credentials, (you may need to create a credential first?) 
+and thats where the oauth_client_id and secret are.
+
 Create configuration file /etc/emf-gdata.conf containing:
 
 ```
 [gdata]
-email=<google login>
-password=<google password>
 noc_combined=<spreadsheet id of the spreadsheet, get it from the url>
+oauth_client_id=
+oauth_client_secret=
+
 [switchconfig]
 enable=<unencrypted enable password>
 community=<unencrypted snmp community>
 ```
+
+The first time you run a configbuilder command it will give you a url to go to.
+
+Go there, and it will give you an oauth token to add to emf-gdata.conf as well.
 
 Then run
 ./gen-switch.py --download
