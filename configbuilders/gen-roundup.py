@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# EMF 2014 roundup user generator
+# EMF roundup user generator
 
 import ipaddr, time, os, sys, ConfigParser
 

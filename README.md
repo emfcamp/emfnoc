@@ -1,7 +1,7 @@
-EMFCamp 2014 - Network configuration
+EMFCamp 2016 - Network configuration
 ====================================
 
-All the scripts and configuration that power the EMFCamp 2014 network.
+All the scripts and configuration that power the EMFCamp 2016 network.
 
 Subnet plans and service configuration (DNS, DHCP, Icinga, etc) are all stored in a private Google Spreadsheet, the scripts in the configbuilders folder takes this data and produces local configs on the virtual machines.
 

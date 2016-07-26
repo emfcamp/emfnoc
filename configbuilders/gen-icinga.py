@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# EMF 2014 dhcpd config generator
+# EMF icinga config generator
 
 import ipaddr, time, os, sys, ConfigParser
 

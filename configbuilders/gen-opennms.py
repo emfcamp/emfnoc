@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# EMF 2014 opennms config generator
+# EMF opennms config generator
 
 import ipaddr, time, os, sys, ConfigParser, shelve
 
