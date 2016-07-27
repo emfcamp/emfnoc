@@ -3,7 +3,7 @@ EMF NOC Config Builders
 
 You'll need to:
 
-aptitude install python-gdata python-gdata-doc python-ipaddr
+aptitude install python-gdata python-gdata-doc python-ipaddr bind9utils
 
 Overview
 --------
