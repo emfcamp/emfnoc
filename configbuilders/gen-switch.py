@@ -66,7 +66,8 @@ def get_vlans(addressing):
                               'ipv4_subnet': ipaddr.IPv4Network(line['IPv4-Subnet']),
                               'name': desc,
                               'vlan': int(line['VLAN']),
-                              'dhcp': ('dhcp' in line and line['dhcp'] == 'y')
+                              'dhcp': ('dhcp' in line and line['dhcp'] == 'y'),
+                              'sitewide': ('Sitewide' in line and line['Sitewide'] == 'y')
                               }
 
       if 'IPv6' in line:
@@ -142,6 +143,14 @@ def generate(override_template):
           if sw["Hostname"] not in sw_children:
             sw_children[sw["Hostname"]] = []
           sw_children[sw["Hostname"]].append(l["To"])
+
+  # all sitewide vlans
+  sitewide_vlans = ""
+  for id, vlan in vlans.items():
+    if vlan['sitewide']:
+      if sitewide_vlans:
+        sitewide_vlans += ","
+      sitewide_vlans += str(vlan['vlan'])
 
 #  for k in sw_children:
 #    print k, sw_children[k]
@@ -244,7 +253,7 @@ def generate(override_template):
 
 
     if found:
-      out = template.render(users=users, switch=sw, vlans=vlans, mycampervlan=mycampervlan, config=config, uplink_vlans=sw_uplink_vlans).encode("utf-8", "replace")
+      out = template.render(users=users, switch=sw, vlans=vlans, mycampervlan=mycampervlan, config=config, uplink_vlans=sw_uplink_vlans, sitewide_vlans=sitewide_vlans).encode("utf-8", "replace")
 
       # remove excess empty lines
       while "\n\n\n" in out:

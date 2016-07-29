@@ -165,7 +165,7 @@ interface Port-channel1
  description Uplink to {{ link["To"] }}
  switchport trunk encapsulation dot1q
  switchport mode trunk
- switchport trunk allowed vlan 10,171,256{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
+ switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
  ip arp inspection trust
  ip dhcp snooping trust
  load-interval 30
@@ -198,7 +198,7 @@ interface Port-channel{{ downPortChannel }}
  description Downlink to {{ link["To"] }}
  switchport trunk encapsulation dot1q
  switchport mode trunk
- switchport trunk allowed vlan 10,171,256{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
+ switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
  ip arp inspection trust
  ip dhcp snooping trust
  load-interval 30
