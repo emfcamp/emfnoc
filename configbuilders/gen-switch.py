@@ -83,6 +83,12 @@ def get_vlans(addressing):
 def dump_worksheet(spr_client, spreadsheet, wks):
   print get_worksheet_data(spr_client, spreadsheet, wks)
 
+def switch_hostname_exists(switches, name):
+  for sw in switches:
+    if sw['Hostname'] == name:
+      return True
+  return False
+
 def generate(override_template):
   switches = shelve.open("data/switches")["list"]
   users = shelve.open("data/users")["list"]
@@ -99,6 +105,13 @@ def generate(override_template):
     o = {"Dir" : "down"}
     o2 = {"Dir" : "up"}
 #    print link
+
+    if not switch_hostname_exists(switches, link["Switch1"]):
+      print "WARNING: switch in links but not on the Switches sheet >" + link["Switch1"] + "<"
+
+    if not switch_hostname_exists(switches, link["Switch2"]):
+      print "WARNING: switch in links but not on the Switches sheet >" + link["Switch2"] + "<"
+
     if link["Switch1"] not in sw_links:
       sw_links[link["Switch1"]] = []
 
