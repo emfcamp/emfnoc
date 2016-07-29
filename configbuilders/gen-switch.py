@@ -51,7 +51,9 @@ def get_vlans(addressing):
 
   for line in addressing:
     if 'VLAN' in line:
-#      print line['VLAN']
+      if 'Description' not in line:
+        print "No description for VLAN " + line['VLAN']
+        sys.exit(1)
       desc = ''
       for c in line['Description']:
         if c.isalnum():
