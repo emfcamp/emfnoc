@@ -263,15 +263,21 @@ def generate(override_template):
     os.symlink(sw["Hostname"] + ".emf.camp", "out" + os.path.sep + "switches" + os.path.sep + sw["Serial"])
 
   # rancid
-  rfh = open("out" + os.path.sep + "routers.db", "w")
+  rfh = open("out" + os.path.sep + "router.db", "w")
   for sw in switches:
     o = sw["Hostname"].lower() + ".emf.camp"
     if sw["Type"] == "ios":
-      o += ":cisco:up"
+      o += ";cisco;up"
     elif sw["Type"] == "ios-core":
-      o += ":cisco:up"
+      o += ";cisco;up"
     elif sw["Type"] == "xos":
-      o += ":Extreme:up"
+      o += ";Extreme;up"
+    elif sw["Type"] == "eos":
+      o += ";arista;up"
+    elif sw["Type"] == "junos":
+      o += ";juniper;up"
+    elif sw["Type"] == "procurve":
+      o += ";hp;up"
     else:
       print "**** unknown type:", sw["Type"]
       exit()
