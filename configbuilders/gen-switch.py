@@ -58,6 +58,8 @@ def get_vlans(addressing):
       for c in line['Description']:
         if c.isalnum():
           desc += c
+        elif c == '(':
+          break
         else:
           if len(desc) > 0 and desc[len(desc)-1] != '-':
             desc += '-'
