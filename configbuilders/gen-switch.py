@@ -101,6 +101,30 @@ def generate(override_template):
 
   sw_links = {}
   
+  sw_cvlan = {}
+  cvlan_to_sw = {}
+
+  # check camper vlans for issues
+  for sw in switches:
+    if "Camper-VLAN" in sw:
+      if sw["Hostname"] in sw_cvlan:
+        print "PANIC: Duplicate Hostname: >" + sw["Hostname"] + "<"
+        sys.exit(1)
+      sw_cvlan[sw["Hostname"]] = sw["Camper-VLAN"]
+
+      if sw["Camper-VLAN"] in cvlan_to_sw:
+        print "PANIC: Duplicate camper vlan id: >" + sw["Camper-VLAN"] + "<"
+        print "for " + sw["Hostname"] + " and " + cvlan_to_sw[sw["Camper-VLAN"]]
+        sys.exit(1)
+      cvlan_to_sw[sw["Camper-VLAN"]] = sw["Hostname"]
+
+  for a in addressing:
+    if "VLAN" in a:
+      if a["VLAN"] in cvlan_to_sw:
+        if cvlan_to_sw[a["VLAN"]] != a["Description"]:
+          print "WARNING - Camper VLAN missmatch?!?!"
+          print a["VLAN"], a["Description"], cvlan_to_sw[a["VLAN"]]
+
   for link in links:
     o = {"Dir" : "down"}
     o2 = {"Dir" : "up"}
