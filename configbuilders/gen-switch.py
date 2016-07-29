@@ -83,6 +83,12 @@ def get_vlans(addressing):
 def dump_worksheet(spr_client, spreadsheet, wks):
   print get_worksheet_data(spr_client, spreadsheet, wks)
 
+def switch_hostname_exists(switches, name):
+  for sw in switches:
+    if sw['Hostname'] == name:
+      return True
+  return False
+
 def generate(override_template):
   switches = shelve.open("data/switches")["list"]
   users = shelve.open("data/users")["list"]
@@ -95,10 +101,41 @@ def generate(override_template):
 
   sw_links = {}
   
+  sw_cvlan = {}
+  cvlan_to_sw = {}
+
+  # check camper vlans for issues
+  for sw in switches:
+    if "Camper-VLAN" in sw:
+      if sw["Hostname"] in sw_cvlan:
+        print "PANIC: Duplicate Hostname: >" + sw["Hostname"] + "<"
+        sys.exit(1)
+      sw_cvlan[sw["Hostname"]] = sw["Camper-VLAN"]
+
+      if sw["Camper-VLAN"] in cvlan_to_sw:
+        print "PANIC: Duplicate camper vlan id: >" + sw["Camper-VLAN"] + "<"
+        print "for " + sw["Hostname"] + " and " + cvlan_to_sw[sw["Camper-VLAN"]]
+        sys.exit(1)
+      cvlan_to_sw[sw["Camper-VLAN"]] = sw["Hostname"]
+
+  for a in addressing:
+    if "VLAN" in a:
+      if a["VLAN"] in cvlan_to_sw:
+        if cvlan_to_sw[a["VLAN"]] != a["Description"]:
+          print "WARNING - Camper VLAN missmatch?!?!"
+          print a["VLAN"], a["Description"], cvlan_to_sw[a["VLAN"]]
+
   for link in links:
     o = {"Dir" : "down"}
     o2 = {"Dir" : "up"}
 #    print link
+
+    if not switch_hostname_exists(switches, link["Switch1"]):
+      print "WARNING: switch in links but not on the Switches sheet >" + link["Switch1"] + "<"
+
+    if not switch_hostname_exists(switches, link["Switch2"]):
+      print "WARNING: switch in links but not on the Switches sheet >" + link["Switch2"] + "<"
+
     if link["Switch1"] not in sw_links:
       sw_links[link["Switch1"]] = []
 
