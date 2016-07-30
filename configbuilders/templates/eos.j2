@@ -29,7 +29,7 @@ vlan {{ vlans[vlan]['vlan'] }}
 exit
 
 ip default-gateway 94.45.255.129 ! TODO
-interface Vlan256
+interface Vlan132
  ip address {{ switch["Mgmt-IP"] }} 255.255.255.128 ! TODO
  no ip redirects
  no ip proxy-arp
@@ -294,10 +294,10 @@ banner motd
                `--|_,`'     $(hostname)
 EOF
 
-ntp source Vlan256 ! TODO
+ntp source Vlan132 ! TODO
 ntp server 78.158.87.11 ! TODO
 ntp server 78.158.87.12 ! TODO
 ! Since each DK is L2, do we want to serve NTP from each switch?
 
-logging source-interface Vlan256 ! TODO
+logging source-interface Vlan132 ! TODO
 logging 78.158.87.14 ! TODO

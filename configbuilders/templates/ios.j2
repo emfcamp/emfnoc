@@ -55,7 +55,7 @@ vlan {{ vlans[vlan]['vlan'] }}
 exit
 
 ip default-gateway 94.45.255.129
-interface Vlan256
+interface Vlan132
  ip address {{ switch["Mgmt-IP"] }} 255.255.255.128
  no ip redirects
  no ip proxy-arp
@@ -343,7 +343,7 @@ line vty 0 15
  transport input ssh
 
 ntp update-calendar
-ntp source Vlan256
+ntp source Vlan132
 ntp server 78.158.87.11
 ntp server 78.158.87.12
 ntp access-group query-only 99
@@ -351,7 +351,7 @@ ntp access-group serve 99
 ntp access-group peer 23
 ntp access-group serve-only 99
 
-logging source-interface Vlan256
+logging source-interface Vlan132
 logging 78.158.87.14
 
 ! Don't forget to crypto key generate rsa general-keys modulus 2048

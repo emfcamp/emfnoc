@@ -257,7 +257,7 @@ line vty 0 15
  transport input ssh
 
 ntp update-calendar
-ntp source Vlan256
+ntp source Vlan132
 ntp server 78.158.87.11
 ntp server 78.158.87.12
 ntp access-group query-only 99
@@ -265,7 +265,7 @@ ntp access-group serve 99
 ntp access-group peer 23
 ntp access-group serve-only 99
 
-logging source-interface Vlan256
+logging source-interface Vlan132
 logging 78.158.87.14
 
 ! Don't forget to crypto key generate rsa general-keys modulus 2048
