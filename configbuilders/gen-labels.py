@@ -4,6 +4,8 @@
 
 # First generate all the switch "configs" but force the "labels.j2" template:
 # ./gen-switch.py  --generate --template labels
+# Then generate the labels:
+# ./gen-labels.py
 
 
 import os
@@ -33,6 +35,8 @@ files = os.listdir("out/switches/")
 files.sort()
 
 for file in files:
+  if os.path.islink("out/switches/" + file) or file.endswith("~"):
+    continue
   with open("out/switches/" + file, "r") as f:
     label = f.read().strip()
 
