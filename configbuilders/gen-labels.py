@@ -24,6 +24,8 @@ rows=5
 cols=2
 cellwidth=99
 cellheight=57
+cellgapx=0
+cellgapy=0
  
 col = -1
 row = 0
@@ -54,8 +56,8 @@ for file in files:
       pdf.add_page()
       row = 0
 
-  cellx = leftmargin + (col * cellwidth)
-  celly = topmargin + (row * cellheight)
+  cellx = leftmargin + (col * (cellwidth + cellgapx))
+  celly = topmargin + (row * (cellheight + cellgapy))
 
   pdf.set_font('Helvetica', '', 8.5)
 
