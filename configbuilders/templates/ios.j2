@@ -64,6 +64,7 @@ interface Vlan132
 {% if switch["Port-Prefix"]%}
 {% for port in switch["camper"] %}
 interface {{ switch["Port-Prefix"] }}{{ port }}
+ description camper port
  switchport mode access
  switchport access vlan {{ switch["Camper-VLAN"] }}
  switchport nonegotiate
@@ -101,6 +102,7 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
 {% if switch["artnet"] %}
 {% for anetp in switch["artnet"] %}
 interface {{ switch["Port-Prefix"] }}{{anetp}}
+ description artnet port
  switchport mode access
  switchport access vlan 2001
  switchport nonegotiate
@@ -138,6 +140,7 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
 {% if switch["voip"] %}
 {% for voipp in switch["voip"] %}
 interface {{ switch["Port-Prefix"] }}{{voipp}}
+ description voip port
  switchport mode access
  switchport access vlan 2000
  switchport nonegotiate
