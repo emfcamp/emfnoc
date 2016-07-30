@@ -28,7 +28,7 @@ ip domain-name emf.camp
 {% if switch["Camper-VLAN"] %}
 ! Only perform DHCP snooping if this switch supports campers
 {% if "C2950" not in switch["Model"] -%}
-ip dhcp snooping vlan 10,{{ switch["Camper-VLAN"] }}
+ip dhcp snooping vlan {{ switch["Camper-VLAN"] }}
 ip dhcp snooping information option format remote-id hostname
 {% else %}
 {# C2950 changed go here #}
@@ -36,7 +36,7 @@ ip dhcp snooping information option format remote-id hostname
 {% endif %}
 ip dhcp snooping
 ip device tracking
-ip arp inspection vlan 10,{{ switch["Camper-VLAN"] }}
+ip arp inspection vlan {{ switch["Camper-VLAN"] }}
 ip arp inspection validate src-mac dst-mac ip
 {% endif %}
 
