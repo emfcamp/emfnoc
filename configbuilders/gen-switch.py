@@ -260,6 +260,9 @@ def generate(override_template):
     if "Artnet-Hi" in sw:
       sw["artnet"] = range(int(sw["Artnet-Lo"]), int(sw["Artnet-Hi"]) + 1)
   
+    if "Voip-Hi" in sw:
+      sw["voip"] = range(int(sw["Voip-Lo"]), int(sw["Voip-Hi"]) + 1)
+
     if "Camper-Hi" in sw:
       sw["camper"] = range(int(sw["Camper-Lo"]), int(sw["Camper-Hi"]) + 1)
     

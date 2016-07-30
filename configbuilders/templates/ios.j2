@@ -135,6 +135,42 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
 {% endfor %}
 {% endif %}
 
+{% if switch["voip"] %}
+{% for voipp in switch["voip"] %}
+interface {{ switch["Port-Prefix"] }}{{voipp}}
+ switchport mode access
+ switchport access vlan 2000
+ switchport nonegotiate
+ switchport block unicast
+{% if "C3560" in switch["Model"] %} 
+ small-frame violation-rate 1000
+{% else %}
+! yes this is twice; some switches have different syntax
+ small-frame violation rate 1000
+{% endif %}
+ storm-control broadcast level 5.00 4.00
+ storm-control multicast level 50.00 40.00
+ storm-control action shutdown
+ no vtp
+{% if "C3560" not in switch["Model"] %}
+ lldp transmit
+ lldp receive
+{% endif %}
+ no cdp enable
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ spanning-tree bpduguard enable
+ ip verify source
+ switchport port-security
+ switchport port-security maximum 6
+ switchport port-security aging time 1
+ switchport port-security aging type inactivity
+ load-interval 30
+ no shutdown
+
+{% endfor %}
+{% endif %}
+
 
 {% set downPortChannel = 2 %}
 
