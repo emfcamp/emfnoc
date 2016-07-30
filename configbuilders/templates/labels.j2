@@ -7,8 +7,11 @@ Management: {{ switch["Mgmt-IP"] }}
 Campers: {{ mycampervlan["ipv4-subnet"] }}
 Campers (VLAN {{ switch["Camper-VLAN"] }}): {{ switch["Port-Prefix"] }}{{ switch["Camper-Lo"] }} - {{ switch["Camper-Hi"] }}
 {%- endif %}
+{%- if switch["voip"] %}
+VoIP (VLAN 2000): {{ switch["Port-Prefix"] }}{{ switch["Voip-Lo"] }}{% if switch["Voip-Lo"]|int < switch["Voip-Hi"]|int %} - {{ switch["Voip-Hi"] }}{% endif %}
+{%- endif %}
 {%- if switch["artnet"] %}
-ArtNet (VLAN 10): {{ switch["Port-Prefix"] }}{{ switch["Artnet-Lo"] }}{% if switch["Artnet-Lo"]|int < switch["Artnet-Hi"]|int %} - {{ switch["Artnet-Hi"] }}{% endif %}
+ArtNet (VLAN 2001): {{ switch["Port-Prefix"] }}{{ switch["Artnet-Lo"] }}{% if switch["Artnet-Lo"]|int < switch["Artnet-Hi"]|int %} - {{ switch["Artnet-Hi"] }}{% endif %}
 {%- endif %}
 
 {%- if not switch["Type"].endswith("-core") %}
