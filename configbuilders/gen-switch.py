@@ -322,6 +322,8 @@ def generate(override_template):
       o += ";Extreme;up"
     elif sw["Type"] == "eos":
       o += ";arista;up"
+    elif sw["Type"] == "eos-core":
+      o += ";arista;up"
     elif sw["Type"] == "junos":
       o += ";juniper;up"
     elif sw["Type"] == "procurve":
