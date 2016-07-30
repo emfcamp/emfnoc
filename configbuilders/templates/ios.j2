@@ -90,7 +90,7 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  spanning-tree bpduguard enable
  ip verify source
  switchport port-security
- switchport port-security maximum 3
+ switchport port-security maximum 11
  switchport port-security aging time 1
  switchport port-security aging type inactivity
  load-interval 30
@@ -126,7 +126,7 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
  spanning-tree bpduguard enable
  ip verify source
  switchport port-security
- switchport port-security maximum 1
+ switchport port-security maximum 6
  switchport port-security aging time 1
  switchport port-security aging type inactivity
  load-interval 30
