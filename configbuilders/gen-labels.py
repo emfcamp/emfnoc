@@ -2,6 +2,10 @@
 
 # requires https://code.google.com/p/pyfpdf/
 
+# First generate all the switch "configs" but force the "labels.j2" template:
+# ./gen-switch.py  --generate --template labels
+
+
 import os
 from fpdf import FPDF
  
@@ -35,6 +39,7 @@ for file in files:
   label = label.replace("TenGigabitEthernet", "Te")
   label = label.replace("GigabitEthernet", "Gi")
   label = label.replace("FastEthernet", "Fa")
+  label = label.replace("Ethernet", "Eth")
 
   col += 1
   if (col >= cols):
