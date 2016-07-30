@@ -25,6 +25,14 @@ cdp run
 no ip domain-lookup
 ip domain-name emf.camp
 
+vtp mode transparent
+
+{% for vlan in vlans|sort %}
+vlan {{ vlans[vlan]['vlan'] }}
+ name {{ vlans[vlan]["name"] }}
+{%- endfor %}
+exit
+
 {% if switch["Camper-VLAN"] %}
 ! Only perform DHCP snooping if this switch supports campers
 {% if "C2950" not in switch["Model"] -%}
@@ -45,14 +53,6 @@ errdisable recovery interval 120
 
 spanning-tree mode pvst
 spanning-tree extend system-id
-
-vtp mode transparent
-
-{% for vlan in vlans|sort %}
-vlan {{ vlans[vlan]['vlan'] }}
- name {{ vlans[vlan]["name"] }}
-{%- endfor %}
-exit
 
 ip default-gateway 94.45.255.129
 interface Vlan132
