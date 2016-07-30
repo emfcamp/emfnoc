@@ -11,6 +11,7 @@ Campers (VLAN {{ switch["Camper-VLAN"] }}): {{ switch["Port-Prefix"] }}{{ switch
 ArtNet (VLAN 10): {{ switch["Port-Prefix"] }}{{ switch["Artnet-Lo"] }}{% if switch["Artnet-Lo"]|int < switch["Artnet-Hi"]|int %} - {{ switch["Artnet-Hi"] }}{% endif %}
 {%- endif %}
 
+{%- if not switch["Type"].endswith("-core") %}
 {% for link in switch["Links"] %}
 {%- if link["Dir"] == "up" %}
 Uplink to {{ link["To"] }}:{% for port in link["Ports"] %} {{ port[0] }}{%- endfor %}
@@ -19,3 +20,4 @@ Uplink to {{ link["To"] }}:{% for port in link["Ports"] %} {{ port[0] }}{%- endf
 Downlink to {{ link["To"] }}:{% for port in link["Ports"] %} {{ port[0] }}{%- endfor %}
 {%- endif %}
 {%- endfor %}
+{%- endif %}
