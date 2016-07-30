@@ -102,7 +102,7 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
 {% for anetp in switch["artnet"] %}
 interface {{ switch["Port-Prefix"] }}{{anetp}}
  switchport mode access
- switchport access vlan 10
+ switchport access vlan 2001
  switchport nonegotiate
  switchport block unicast
  ip access-group artnetv4_in in
