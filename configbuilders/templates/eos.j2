@@ -11,10 +11,13 @@ snmp-server contact EMF NOC
 
 spanning-tree mode rstp
 
-enable secret 0 {{ config.get("switchconfig", "enable") }}
+aaa authorization exec default local
+aaa authorization commands all default local
+no aaa root
+
 
 {% for user in users %}
-username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
+username {{user["Username"]}} role network-admin privilege 15 secret 5 {{ user["IOS password"] }}
 {% if "SSH key" in user and user['SSH key'] != "" %}
 username {{user["Username"]}} sshkey {{ user["SSH key"] }}
 {% endif %}
