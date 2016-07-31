@@ -48,7 +48,6 @@ def write_zones(f4, f6, description, vlan, domain, ipv4, ipv6, hosts):
     f4.write("    option routers %s;\n" % (ipv4.network + 1))
 
     if hosts:
-      print hosts
       f4.write("    group {\n")
       for h in hosts:
         indent = " " * 8
@@ -84,9 +83,9 @@ def write_zones(f4, f6, description, vlan, domain, ipv4, ipv6, hosts):
 
 prev_row = None
 for row in ipv4:
-  if "VLAN" in row and 'dhcp' in row and row['dhcp'] == 'y':
-    if prev_row:
-      write_zones(f4, f6, prev_row['Description'], prev_row['VLAN'], prev_row["Domain"], prev_row['IPv4'], prev_row['IPv6'], prev_row['Hosts'])
+  if "IPv4-Subnet" in row:
+    if prev_row and 'dhcp' in prev_row and prev_row['dhcp'] == 'y':
+      write_zones(f4, f6, prev_row['Description'], prev_row['VLAN'], prev_row["Domain"], prev_row['IPv4-Subnet'], prev_row['IPv6'], prev_row['Hosts'])
 
     scopes += 1
 
@@ -107,14 +106,14 @@ for row in ipv4:
     print "%s %s %s" % (ipv4, ipv6, domain)
 
     row['Domain'] = domain
-    row['IPv4'] = ipv4
+    row['IPv4-Subnet'] = ipv4
     row['IPv6'] = ipv6
     row['Hosts'] = []
+    row['HostUnique'] = {}
 
     prev_row = row
   elif "VLAN" not in row and 'dhcp' in row and row['dhcp'] == 'y' and 'MAC' in row:
     # {'MAC': '00:1e:c9:74:2c:a8', 'Notes': 'from lhs', 'Hostname': 'crappydesktop', 'IPv4': '151.216.134.3', 'dns': 'y', 'dhcp': 'y'}
-    print row
     things = {
         'name': row['Hostname'],
         'mac': row['MAC'],
@@ -135,9 +134,18 @@ for row in ipv4:
             extra += e + ";\n"
         things['extra'] = extra
     prev_row['Hosts'].append(things)
+  if "VLAN" not in row and 'IPv4' in row:
+    if not ipaddr.IPNetwork(row['IPv4']) in prev_row['IPv4-Subnet']:
+      print "PANIC: ip " +  row['IPv4'] + " not in subnet " + str(prev_row['IPv4-Subnet'])
+      sys.exit(1)
+    if row['IPv4'] in prev_row['HostUnique']:
+      print "WARNING: ip " + row['IPv4'] + " duplicated in " + str(prev_row['IPv4-Subnet'])
+    else:
+      prev_row['HostUnique'][row['IPv4']] = 1
 
 # the last subnet.
-write_zones(f4, f6, prev_row['Description'], prev_row['VLAN'], prev_row["Domain"], prev_row['IPv4'], prev_row['IPv6'], prev_row['Hosts'])
+if 'dhcp' in prev_row:
+  write_zones(f4, f6, prev_row['Description'], prev_row['VLAN'], prev_row["Domain"], prev_row['IPv4-Subnet'], prev_row['IPv6'], prev_row['Hosts'])
 
 f6.close()
 f4.close()
