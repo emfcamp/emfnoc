@@ -113,7 +113,6 @@ interface {{ port[0] }}
 
 interface Port-channel1
  description Uplink to {{ link["To"] }}
- switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
  load-interval 30
@@ -138,7 +137,6 @@ interface {{ port[0] }}
 
 interface Port-channel{{ downPortChannel }}
  description Downlink to {{ link["To"] }}
- switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
  load-interval 30
