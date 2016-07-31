@@ -25,7 +25,9 @@ lldp run
 
 {% for vlan in vlans|sort %}
 vlan {{ vlans[vlan]['vlan'] }}
+ {% if "name" in vlans[vlan] and vlans[vlan]["name"] != "" %}
  name {{ vlans[vlan]["name"] }}
+ {% endif %}
 {%- endfor %}
 exit
 
