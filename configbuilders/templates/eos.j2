@@ -41,7 +41,7 @@ interface Vlan132
 !Hardcoded artnet to CPU hack
 interface vlan2001
 event-handler boot-up-script
-   trigger on-boot
+   trigger on-intf Vlan2001 operstatus
    action bash /mnt/flash/artnet-bridge.sh
 
 
