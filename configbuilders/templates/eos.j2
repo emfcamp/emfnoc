@@ -23,8 +23,6 @@ username {{user["Username"]}} sshkey {{ user["SSH key"] }}
 no ip routing
 lldp run
 
-spanning-tree mode rstp
-
 {% for vlan in vlans|sort %}
 vlan {{ vlans[vlan]['vlan'] }}
  name {{ vlans[vlan]["name"] }}
