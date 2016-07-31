@@ -40,6 +40,10 @@ interface Vlan132
 
 !Hardcoded artnet to CPU hack
 interface vlan2001
+event-handler boot-up-script
+   trigger on-boot
+   action bash /mnt/flash/artnet-bridge.sh
+
 
 {% if switch["Port-Prefix"]%}
 {% for port in switch["camper"] %}
