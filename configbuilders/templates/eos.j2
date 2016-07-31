@@ -115,7 +115,7 @@ interface Port-channel1
  description Uplink to {{ link["To"] }}
  switchport trunk encapsulation dot1q
  switchport mode trunk
- switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}xyz
+ switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
  load-interval 30
  no shutdown
 
