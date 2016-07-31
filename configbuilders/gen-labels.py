@@ -13,8 +13,8 @@ from fpdf import FPDF
  
 pdf = FPDF(orientation='P', unit='mm', format='A4')
 
-leftmargin = 6
-rightmargin = 6
+leftmargin = 4.75
+rightmargin = 4.75
 topmargin = 6
 
 pdf.set_margins(leftmargin, topmargin, rightmargin)
@@ -24,7 +24,7 @@ rows=5
 cols=2
 cellwidth=99
 cellheight=57
-cellgapx=0
+cellgapx=2.5
 cellgapy=0
  
 col = -1
