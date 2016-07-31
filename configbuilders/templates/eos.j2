@@ -50,6 +50,7 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  switchport port-security
  switchport port-security maximum 64
  load-interval 30
+ mtu 9214
  no shutdown
 {% endfor %}
 {% endif %}
@@ -69,6 +70,7 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
  switchport port-security
  switchport port-security maximum 1
  load-interval 30
+ mtu 9214
  no shutdown
 {% endfor %}
 {% endif %}
@@ -87,6 +89,7 @@ interface {{ switch["Port-Prefix"] }}{{voipp}}
  switchport port-security
  switchport port-security maximum 5
  load-interval 30
+ mtu 9214
  no shutdown
 
 {% endfor %}
@@ -108,6 +111,7 @@ interface {{ port[0] }}
  load-interval 30
  lldp receive
  lldp transmit
+ mtu 9214
  no shutdown
 
 {% endfor %}
@@ -117,6 +121,7 @@ interface Port-channel1
  switchport mode trunk
  switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in switch["Uplink Vlans"] %},{{ v }}{% endfor %}
  load-interval 30
+ mtu 9214
  no shutdown
 
 {% endif %}{# Dir == up #}
@@ -132,6 +137,7 @@ interface {{ port[0] }}
  load-interval 30
  lldp receive
  lldp transmit
+ mtu 9214
  no shutdown
 
 {% endfor %}
@@ -141,6 +147,7 @@ interface Port-channel{{ downPortChannel }}
  switchport mode trunk
  switchport trunk allowed vlan {{ sitewide_vlans }}{% for v in uplink_vlans[link["To"]] %},{{ v }}{% endfor %}
  load-interval 30
+ mtu 9214
  no shutdown
 
 {% set downPortChannel = downPortChannel + 1 %}
