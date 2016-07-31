@@ -194,11 +194,15 @@ ip access-list standard 99
 no ip access-list extended artnetv4_in
 ip access-list extended artnetv4_in
   deny udp any eq bootps any
+  deny udp any any eq bootpc
+  permit ip any any
 
 {% if mycampervlan %}
 no ip access-list extended camper_v4_in
 ip access-list extended camper_v4_in
   deny udp any eq bootps any
+  deny udp any any eq bootpc
+  permit ip any any
 {% endif %}
 
 
