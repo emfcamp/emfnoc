@@ -38,12 +38,64 @@ f6.write("#\n")
 
 scopes = 0
 
+def write_zones(f4, f6, description, vlan, domain, ipv4, ipv6, hosts):
+    f4.write("\n")
+    f4.write("# %s\n" % (description))
+    f4.write("shared-network vlan%s {\n" % (vlan))
+    f4.write("  subnet %s netmask %s {\n" % (ipv4.network, ipv4.netmask))
+    f4.write("    option domain-name \"" + domain + "\";\n")
+    f4.write("    option domain-name-servers 78.158.87.11,78.158.87.12;\n")
+    f4.write("    option routers %s;\n" % (ipv4.network + 1))
+
+    if hosts:
+      print hosts
+      f4.write("    group {\n")
+      for h in hosts:
+        indent = " " * 8
+        f4.write(indent + "host " + h['name'] + " {\n")
+        indent = " " * 12
+        f4.write(indent + "hardware ethernet " + h['mac'] + ";\n")
+        f4.write(indent + "fixed-address " + h['ip'] + ";\n")
+        if 'extra' in h:
+            f4.write(h['extra'])
+        indent = " " * 8
+        f4.write(indent + "}\n")
+      f4.write("    }\n")
+
+    f4.write("    pool {\n")
+    f4.write("      failover peer \"failover-partner\";\n")
+    f4.write("      range %s %s;\n" % (ipv4.network + 11, ipv4.broadcast - 1))
+    f4.write("    }\n")
+    f4.write("  }\n")
+    f4.write("}\n")
+
+    if not ipv6:
+      return
+
+    f6.write("\n")
+    f6.write("# %s\n" % (description))
+    f6.write("shared-network vlan%s {\n" % (vlan))
+    f6.write("  subnet6 %s {\n" % (ipv6))
+    f6.write("    option dhcp6.domain-search \"" + domain + "\";\n")
+    f6.write("    option dhcp6.name-servers 2001:7f8:8c:57::11,2001:7f8:8c:57::12;\n")
+#stateful:    f6.write("    range6 %s %s;\n" % (ipv6.network + 0x11, ipv6.network + 0xffff))
+    f6.write("  }\n")
+    f6.write("}\n")
+
+prev_row = None
 for row in ipv4:
   if "VLAN" in row and 'dhcp' in row and row['dhcp'] == 'y':
+    if prev_row:
+      write_zones(f4, f6, prev_row['Description'], prev_row['VLAN'], prev_row["Domain"], prev_row['IPv4'], prev_row['IPv6'], prev_row['Hosts'])
+
     scopes += 1
 
     ipv4 = ipaddr.IPNetwork(row['IPv4-Subnet'])
-    ipv6 = ipaddr.IPNetwork(row['IPv6'])
+    ipv6 = None
+    if 'IPv6' in row:
+        ipv6 = ipaddr.IPNetwork(row['IPv6'])
+    else:
+        print "Warning: " + row['Description'] + " has no v6 subnet"
 
     if "Domain" in row:
       domain = row["Domain"]
@@ -54,55 +106,38 @@ for row in ipv4:
 
     print "%s %s %s" % (ipv4, ipv6, domain)
 
-    f4.write("\n")
-    f4.write("# %s\n" % (row['Description']))
-    f4.write("shared-network vlan%s {\n" % (row['VLAN']))
-    f4.write("  subnet %s netmask %s {\n" % (ipv4.network, ipv4.netmask))
-    f4.write("    option domain-name \"" + domain + "\";\n")
-    f4.write("    option domain-name-servers 78.158.87.11,78.158.87.12;\n")
-    f4.write("    option routers %s;\n" % (ipv4.network + 1))
+    row['Domain'] = domain
+    row['IPv4'] = ipv4
+    row['IPv6'] = ipv6
+    row['Hosts'] = []
 
-    # hack hack hack
-    if row['Description'] == "Bar":
-      f4.write("""
-    group {
-        host emftill1 {
-            hardware ethernet 00:30:18:A3:0A:4F;
-            fixed-address 151.216.255.2;
-       }
-       host emftill2 {
-            hardware ethernet 00:30:18:A6:F1:8B;
-            fixed-address 151.216.255.3;
-            option root-path "/var/lib/tftpboot";
-            filename "pxelinux.0";
-            next-server 151.216.255.2;
-        }
-       host emftill3 {
-            hardware ethernet 70:71:BC:AD:48:5D;
-            fixed-address 151.216.255.4;
-            option root-path "/var/lib/tftpboot";
-            filename "pxelinux.0";
-            next-server 151.216.255.2;
-        }
+    prev_row = row
+  elif "VLAN" not in row and 'dhcp' in row and row['dhcp'] == 'y' and 'MAC' in row:
+    # {'MAC': '00:1e:c9:74:2c:a8', 'Notes': 'from lhs', 'Hostname': 'crappydesktop', 'IPv4': '151.216.134.3', 'dns': 'y', 'dhcp': 'y'}
+    print row
+    things = {
+        'name': row['Hostname'],
+        'mac': row['MAC'],
+        'ip': row['IPv4'],
     }
-	""")
+    if 'DHCP Extra' in row:
+        extra = row['DHCP Extra']
+        # mangle it to fix formatting and indenting
+        extra = extra.split(';')
+        o = []
+        for e in extra:
+            e = e.strip()
+            if len(e) > 0:
+                o.append(e)
+        extra = ""
+        for e in o:
+            extra += " " * 12
+            extra += e + ";\n"
+        things['extra'] = extra
+    prev_row['Hosts'].append(things)
 
-    f4.write("    pool {\n")
-    f4.write("      failover peer \"failover-partner\";\n")
-    f4.write("      range %s %s;\n" % (ipv4.network + 11, ipv4.broadcast - 1))
-    f4.write("    }\n")
-    f4.write("  }\n")
-    f4.write("}\n")
-
-    f6.write("\n")
-    f6.write("# %s\n" % (row['Description']))
-    f6.write("shared-network vlan%s {\n" % (row['VLAN']))
-    f6.write("  subnet6 %s {\n" % (ipv6))
-    f6.write("    option dhcp6.domain-search \"" + domain + "\";\n")
-    f6.write("    option dhcp6.name-servers 2001:7f8:8c:57::11,2001:7f8:8c:57::12;\n")
-#stateful:    f6.write("    range6 %s %s;\n" % (ipv6.network + 0x11, ipv6.network + 0xffff))
-    f6.write("  }\n")
-    f6.write("}\n")
+# the last subnet.
+write_zones(f4, f6, prev_row['Description'], prev_row['VLAN'], prev_row["Domain"], prev_row['IPv4'], prev_row['IPv6'], prev_row['Hosts'])
 
 f6.close()
 f4.close()
