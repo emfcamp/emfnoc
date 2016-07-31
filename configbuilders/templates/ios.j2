@@ -91,7 +91,7 @@ interface {{ switch["Port-Prefix"] }}{{ port }}
  spanning-tree bpduguard enable
  ip verify source
  switchport port-security
- switchport port-security maximum 11
+ switchport port-security maximum 64
  switchport port-security aging time 1
  switchport port-security aging type inactivity
  load-interval 30
@@ -284,6 +284,7 @@ ip access-list standard 99
 no ip access-list extended artnetv4_in
 ip access-list extended artnetv4_in
   permit ip 192.168.0.0 0.0.3.255 any
+  permit udp any any eq bootps
 {% if "C2950" not in switch["Model"] -%}
   deny ip any any log-input
 {% else %}
@@ -296,6 +297,7 @@ ip access-list extended artnetv4_in
 no ip access-list extended camper_v4_in
 ip access-list extended camper_v4_in
  permit ip {{ mycampervlan["ipv4-subnet"].network }} {{ mycampervlan["ipv4-subnet"].hostmask }} any
+ permit udp any any eq 67
 {% if "C2950" not in switch["Model"] -%}
  deny   ip any any log-input
 {% else %}
@@ -311,6 +313,28 @@ ipv6 access-list camper_v6_in
  deny ipv6 any any log-input
 {%- endif %}
 {% endif %}
+
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause loopback
+errdisable recovery cause small-frame
+errdisable recovery interval 300
+
 
 snmp-server community {{ config.get("switchconfig", "community") }} RO 61
 snmp-server location EMF
