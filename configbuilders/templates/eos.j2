@@ -15,6 +15,9 @@ enable secret 0 {{ config.get("switchconfig", "enable") }}
 
 {% for user in users %}
 username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
+{% if "SSH key" in user and user['SSH key'] != "" %}
+username {{user["Username"]}} sshkey {{ user["SSH key"] }}
+{% endif %}
 {%- endfor %}
 
 no ip routing
@@ -57,7 +60,6 @@ interface {{ switch["Port-Prefix"] }}{{anetp}}
  description artnet port
  switchport mode access
  switchport access vlan 2001
- switchport block unicast
  ip access-group artnetv4_in in
  lldp transmit
  lldp receive
@@ -77,7 +79,6 @@ interface {{ switch["Port-Prefix"] }}{{voipp}}
  description voip port
  switchport mode access
  switchport access vlan 2000
- switchport block unicast
  lldp transmit
  lldp receive
  spanning-tree portfast
@@ -150,7 +151,7 @@ interface Port-channel{{ downPortChannel }}
 errdisable recovery cause arp-inspection
 errdisable recovery cause hitless-reload-down
 errdisable recovery cause link-flap
-errdisable recovery cause loopprotectgurad
+errdisable recovery cause loopprotectguard
 errdisable recovery cause no-internal-vlan
 errdisable recovery cause portchannelguard
 errdisable recovery cause portsec
