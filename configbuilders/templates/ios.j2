@@ -314,28 +314,6 @@ ipv6 access-list camper_v6_in
 {%- endif %}
 {% endif %}
 
-errdisable recovery cause udld
-errdisable recovery cause bpduguard
-errdisable recovery cause security-violation
-errdisable recovery cause channel-misconfig
-errdisable recovery cause pagp-flap
-errdisable recovery cause dtp-flap
-errdisable recovery cause link-flap
-errdisable recovery cause sfp-config-mismatch
-errdisable recovery cause gbic-invalid
-errdisable recovery cause l2ptguard
-errdisable recovery cause psecure-violation
-errdisable recovery cause port-mode-failure
-errdisable recovery cause dhcp-rate-limit
-errdisable recovery cause mac-limit
-errdisable recovery cause storm-control
-errdisable recovery cause inline-power
-errdisable recovery cause arp-inspection
-errdisable recovery cause loopback
-errdisable recovery cause small-frame
-errdisable recovery interval 300
-
-
 snmp-server community {{ config.get("switchconfig", "community") }} RO 61
 snmp-server location EMF
 snmp-server contact EMF NOC
