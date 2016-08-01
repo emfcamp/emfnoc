@@ -205,7 +205,7 @@ def generate(override_template):
 
   for k in sw_children:
     for c in sw_children[k]:
-      gfh.write(k + "->" + c + ";\n")
+      gfh.write('"' + k + '"' + " -> " + '"' +  c + "\";\n")
 
   gfh.write("""
   overlap=false
