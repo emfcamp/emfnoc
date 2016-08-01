@@ -52,6 +52,11 @@ chassis {
 			link-down ignore;
 		}
 	}
+	aggregated-devices {
+		ethernet {
+			device-count 8;
+		}
+	}
 }
 interfaces {
 {% if switch["artnet"] %}
@@ -306,7 +311,7 @@ vlans {
 	V{{ vlan }} {
 {% endif %}
 		vlan-id {{ vlan }};
-{% if vlan == 132 %}
+{% if vlan == "132" %}
 		l3-interface vlan.132;
 {% endif %}
 	}
