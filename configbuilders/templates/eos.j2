@@ -11,10 +11,14 @@ snmp-server contact EMF NOC
 
 spanning-tree mode rstp
 
-enable secret 0 {{ config.get("switchconfig", "enable") }}
+aaa authorization exec default local
+aaa authorization commands all default local
+no aaa root
 
+
+username admin role network-admin privilege 15 secret 5 {{ config.get("switchconfig", "admincrypted") }}
 {% for user in users %}
-username {{user["Username"]}} privilege 15 secret 5 {{ user["IOS password"] }}
+username {{user["Username"]}} role network-admin privilege 15 secret 5 {{ user["IOS password"] }}
 {% if "SSH key" in user and user['SSH key'] != "" %}
 username {{user["Username"]}} sshkey {{ user["SSH key"] }}
 {% endif %}
@@ -37,6 +41,10 @@ interface Vlan132
 
 !Hardcoded artnet to CPU hack
 interface vlan2001
+event-handler boot-up-script
+   trigger on-intf Vlan2001 operstatus
+   action bash /mnt/flash/artnet-bridge.sh
+
 
 {% if switch["Port-Prefix"]%}
 {% for port in switch["camper"] %}
@@ -169,7 +177,7 @@ errdisable recovery cause stuck-queue
 errdisable recovery cause tapagg
 errdisable recovery cause uplink-failure-detection
 errdisable recovery cause xcvr-unsupported
-errdisable recovery interval 300
+errdisable recovery interval 120
 
 
 ! ssh ! TODO

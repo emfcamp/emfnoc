@@ -1,0 +1,320 @@
+version 15.1R4.6;
+system {
+    host-name {{ switch["Hostname"] }};
+    root-authentication {
+		encrypted-password "{{ config.get("switchconfig", "admincrypted") }}";
+	}
+	name-server {
+		78.158.87.11;
+		78.158.87.12;
+	}
+	login {
+{% for user in users %}
+{% if "SSH key" in user and user["SSH key"] != "" %}
+		user {{ user["Username"] }} {
+			uid {{ user["uid"] }};
+			class super-user;
+			authentication {
+				ssh-rsa "{{ user["SSH key"] }}";
+			}
+		}
+{% endif %}
+{%- endfor %}
+	}
+	services {
+		ssh {
+			root-login deny-password;
+		}
+	}
+	syslog {
+		user * {
+			any emergency;
+		}
+		host 78.158.87.14 {
+			any any;
+			allow-duplicates;
+		}
+		file messages {
+			any notice;
+		}
+		file interactive-commands {
+			interactive-commands any;
+		}
+	}
+	ntp {
+		server 78.158.87.11;
+		server 78.158.87.12;
+	}
+}
+chassis {
+	alarm {
+		management-ethernet {
+			link-down ignore;
+		}
+	}
+}
+interfaces {
+{% if switch["artnet"] %}
+	interface-range ArtNet {
+		member ge-0/0/62;
+{% for port in switch["artnet"] %}
+		member {{ switch["Port-Prefix"] }}{{ port }};
+{% endfor %}
+		mtu 9216;
+		unit 0 {
+			family ethernet-switching {
+				vlan {
+					members [ ArtNet ];
+				}
+				filter {
+					input ra-guard;
+				}
+			}
+		}
+	}
+{% endif %}
+{% if switch["voip"] %}
+	interface-range VoIP {
+		member ge-0/0/61;
+{% for port in switch["voip"] %}
+		member {{ switch["Port-Prefix"] }}{{ port }};
+{% endfor %}
+		mtu 9216;
+		unit 0 {
+			family ethernet-switching {
+				vlan {
+					members [ voip ];
+				}
+				filter {
+					input ra-guard;
+				}
+			}
+		}
+	}
+{% endif %}
+	interface-range VOC-private {
+		member ge-0/0/60;
+		mtu 9216;
+		unit 0 {
+			family ethernet-switching {
+				vlan {
+					members [ voc-private ];
+				}
+				filter {
+					input ra-guard;
+				}
+			}
+		}
+	}
+	interface-range Camper {
+		member ge-0/0/59;
+{% if switch["Port-Prefix"]%}
+{% for port in switch["camper"] %}
+		member  {{ switch["Port-Prefix"] }}{{ port }};
+{% endfor %}
+{% endif %}
+		mtu 9216;
+		unit 0 {
+			family ethernet-switching {
+				vlan {
+					members [ {{ switch["Camper-VLAN"] }} ];
+				}
+				filter {
+					input ra-guard;
+				}
+			}
+		}
+	}
+
+{% set downPortChannel = 1 %}
+{% for link in switch["Links"] %}
+{% for port in link["Ports"] %}
+	{{ port[0] }} {
+{% if link["Dir"] == "up" %}
+		description "Uplink to {{ link["To"] }} port {{ port[1] }}";
+{% else %}
+		description "Downlink to {{ link["To"] }} port {{ port[1] }}";
+{% endif %}
+		ether-options {
+			802.3ad {
+				ae{{ 0 if link["Dir"] == "up" else downPortChannel }};
+			}
+		}
+	}
+	ae{{ 0 if link["Dir"] == "up" else downPortChannel }} {
+{% if link["Dir"] == "up" %}
+		description "Uplink to {{ link["To"] }}"
+{% else %}
+		description "Downlink to {{ link["To"] }}"
+{% endif %}
+		unit 0 {
+			family ethernet-switching {
+				port-mode trunk;
+				vlan {
+{% if link["Dir"] == "up" %}
+					members [ {{ sitewide_vlans.replace(","," ") }} {% for v in switch["Uplink Vlans"] %}{{ v }} {% endfor %}]
+{% else %}
+					members [ {{ sitewide_vlans.replace(","," ") }} {% for v in uplink_vlans[link["To"]] %}{{ v }} {% endfor %}]
+{% endif %}
+				}
+			}
+		}
+		mtu 9216;
+	}
+{% if link["Dir"] == "down" %}
+{% set downPortChannel = downPortChannel + 1 %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+
+	em0 {
+		disable;
+	}
+	vlan {
+		unit 132 {
+			family inet {
+				address {{ switch["Mgmt-IP"] }}/25;
+			}
+		}
+	}
+}	
+snmp {
+    contact "EMF NOC";
+	location "EMF";
+    community {{ config.get("switchconfig", "community") }} {
+        authorization read-only;
+    }
+}
+routing-options {
+    static {
+        route 0.0.0.0/0 next-hop 151.216.132.1;
+    }
+}
+protocols {
+    igmp-snooping {
+        vlan all;
+    }
+    rstp {
+
+{% if switch["artnet"] %}
+		interface ArtNet {
+			edge;
+			no-root-port;
+        }
+{% endif %}
+{% if switch["voip"] %}
+		interface VoIP {
+			edge;
+			no-root-port;
+        }
+{% endif %}
+		interface VOC-private {
+			edge;
+			no-root-port;
+        }
+		interface Camper {
+			edge;
+			no-root-port;
+		}
+		bpdu-block-on-edge;
+	}
+	lldp {
+		interface all;
+	}
+	lldp-med {
+		interface all;
+	}
+}
+firewall {
+	family ethernet-switching {
+		filter ra-guard	{
+			term block-ra {
+				from {
+					icmp-type router-advertisement;
+					icmp-code 0;
+				}
+				then {
+					discard;
+					log;
+				}
+			}
+			term block-dhcpv6 {
+				from {
+					protocol udp;
+					destination-port 546;
+				}
+				then {
+					discard;
+					log;
+				}
+			}
+			term default {
+				then {
+					accept;
+				}
+			}
+		}
+	}
+}
+ethernet-switching-options {
+	secure-access-port {
+{% if switch["artnet"] %}
+		interface ArtNet {
+			mac-limit 1 action shutdown;
+		}
+{% endif %}
+{% if switch["voip"] %}
+		interface VoIP {
+			mac-limit 5 action shutdown;
+		}
+{% endif %}
+		interface VOC-private {
+			mac-limit 64 action shutdown;
+		}
+		interface Camper {
+			mac-limit 64 action shutdown;
+		}
+{% for vlan in vlans|sort%}
+{% if "dhcp" in vlans[vlan] and vlans[vlan]["dhcp"] %}
+{% if "name" in vlans[vlan] and vlans[vlan]["name"] != "" %}
+		vlan {{ vlans[vlan]["name"] }} {
+{% else %}
+		vlan V{{ vlan }} {
+{% endif %}
+			arp-inspection;
+			examine-dhcp;
+			ip-source-guard;
+			dhcp-option82 {
+				circuit-id {
+					prefix hostname;
+				}
+			}
+		}
+{% endif %}
+{%- endfor %}
+	}
+	port-error-disable {
+		disable-timeout 120;
+	}
+}
+vlans {
+{% for vlan in vlans|sort%}
+{% if "name" in vlans[vlan] and vlans[vlan]["name"] != "" %}
+	{{ vlans[vlan]["name"] }} {
+{% else %}
+	V{{ vlan }} {
+{% endif %}
+		vlan-id {{ vlan }};
+{% if vlan == 132 %}
+		l3-interface vlan.132;
+{% endif %}
+	}
+{%- endfor %}
+}
+poe {
+	interface all {
+		maximum-power 30;
+	}
+}
+
