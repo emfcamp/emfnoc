@@ -63,50 +63,66 @@ def add_port(f, switch1, switch1port, switch2, servicegroup):
 vmhosts = {}
 monitorparent = None
 for vm in vms:
+  if 'Hostname' in vm and vm['Hostname'] == "!end":
+    break
   if "Parent" in vm:
     vmhosts[vm['Parent']] = vm['Parent']
-    if vm['Hostname'] == "monitor1.emf.camp":
-      monitorparent = vm['Parent']
+#    if vm['Hostname'] == "monitor1.emf.camp":
+#      monitorparent = vm['Parent']
 
 with open("out/icinga/vmhosts.cfg", "w") as f:
   # all the vmhosts
   for vmhost in vmhosts:
-    parent = "SWCORE"
+    # or maybe LOSELEY
+    parent = "SWNOC-DC"
     # the host holding monitor1 has a parent of monitor1
-    if monitorparent == vmhost:
-      parent = "monitor1"
+#    if monitorparent == vmhost:
+#      parent = "monitor1"
     add_host(vmhost, vmhost + ".emf.camp", parent)
 
 with open("out/icinga/vms.cfg", "w") as f:
   # all the vms
   for vm in vms:
+    if 'Hostname' in vm and vm['Hostname'] == "!end":
+      break
     if "IPv4" in vm:
+      print vm
+      if 'Parent' not in vm:
+        print "WARNING: no parent for " + vm['Hostname'] + " ignoreing."
+        continue
       parent = vm['Parent']
-      # monitor1 has no parent
-      if vm['Hostname'] == 'monitor1.emf.camp':
-        parent = None
       add_host(vm['Hostname'].replace(".emf.camp", ""), vm['IPv4'], parent)
 
 #TODO ssh etc
 
+hostnames = {}
 
 with open("out/icinga/network.cfg", "w") as f:
-
   for switch in switches:
     if "Hostname" in switch:
+      if switch['Hostname'] not in hostnames:
+        hostnames[switch['Hostname']] = 1
+      else:
+        print "PANIC: Duplicate switch hostname " + switch['Hostname']
+        sys.exit(1)
 
       # Find our parent. Search the links for one where we're in second position
       parent = None
       for link in links:
         if link['Switch2'] == switch['Hostname']:
           parent = link['Switch1']
-      if switch["Hostname"] == 'SWCORE':
-        parent = 'vmhost1'
+#      if switch["Hostname"] == 'SWCORE':
+#        parent = 'vmhost1'
 
       add_host(switch["Hostname"], switch["Mgmt-IP"], parent)
 
 # Links
   for link in links:
+    if link['Switch2'] not in hostnames:
+      # currently the uplink and the WLC
+      print "Unknown destination switch " + link['Switch2']
+      continue
+
     servicegroup = "link_" + link['Switch1'] + "_" + link['Switch2']
     f.write("define servicegroup {\n")
     f.write("  servicegroup_name " + servicegroup + "\n")
@@ -120,5 +136,5 @@ with open("out/icinga/network.cfg", "w") as f:
     if ('Switch2-Port2' in link):
       add_port(f, link['Switch2'], link['Switch2-Port2'], link['Switch1'], servicegroup)
 # Now add the port channel
-# Now craete the servicegorup
-      
+# Now create the servicegorup
+
