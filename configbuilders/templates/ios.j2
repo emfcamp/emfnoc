@@ -54,7 +54,9 @@ errdisable recovery interval 120
 spanning-tree mode pvst
 spanning-tree extend system-id
 
-ip default-gateway 94.45.255.129
+! wrong from lst year?
+!ip default-gateway 94.45.255.129
+ip default-gateway 151.216.132.1
 interface Vlan132
  ip address {{ switch["Mgmt-IP"] }} 255.255.255.128
  no ip redirects
@@ -360,3 +362,4 @@ logging source-interface Vlan132
 logging 78.158.87.14
 
 ! Don't forget to crypto key generate rsa general-keys modulus 2048
+end
