@@ -55,6 +55,9 @@ def get_vlans(addressing):
         print "No description for VLAN " + line['VLAN']
         sys.exit(1)
       desc = ''
+
+      if line['Description'] == "(Temp Staging pre event)":
+        line['Description'] = "Temp Staging pre event"
       for c in line['Description']:
         if c.isalnum():
           desc += c
@@ -124,6 +127,7 @@ def generate(override_template):
         if cvlan_to_sw[a["VLAN"]] != a["Description"]:
           print "WARNING - Camper VLAN missmatch?!?!"
           print a["VLAN"], a["Description"], cvlan_to_sw[a["VLAN"]]
+          print "^---"
 
   for link in links:
     o = {"Dir" : "down"}
