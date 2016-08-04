@@ -152,6 +152,11 @@ interfaces {
 {% else %}
 		description "Downlink to {{ link["To"] }}"
 {% endif %}
+		aggregated-ether-options {
+			lacp {
+				active;
+			}
+		}
 		unit 0 {
 			family ethernet-switching {
 				port-mode trunk;
