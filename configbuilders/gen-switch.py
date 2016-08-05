@@ -67,6 +67,7 @@ def get_vlans(addressing):
           if len(desc) > 0 and desc[len(desc)-1] != '-':
             desc += '-'
 
+      print "Preparing VLAN " + line['VLAN']
       vlans[line['VLAN']] = { 'ipv4': line['IPv4-Subnet'],
                               'ipv4_subnet': ipaddr.IPv4Network(line['IPv4-Subnet']),
                               'name': desc,
