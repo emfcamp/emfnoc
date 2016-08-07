@@ -55,6 +55,9 @@ def get_vlans(addressing):
         print "No description for VLAN " + line['VLAN']
         sys.exit(1)
       desc = ''
+
+      if line['Description'] == "(Temp Staging pre event)":
+        line['Description'] = "Temp Staging pre event"
       for c in line['Description']:
         if c.isalnum():
           desc += c
@@ -64,6 +67,7 @@ def get_vlans(addressing):
           if len(desc) > 0 and desc[len(desc)-1] != '-':
             desc += '-'
 
+      print "Preparing VLAN " + line['VLAN']
       vlans[line['VLAN']] = { 'ipv4': line['IPv4-Subnet'],
                               'ipv4_subnet': ipaddr.IPv4Network(line['IPv4-Subnet']),
                               'name': desc,
@@ -90,136 +94,143 @@ def switch_hostname_exists(switches, name):
   return False
 
 def generate(override_template):
-  switches = shelve.open("data/switches")["list"]
-  users = shelve.open("data/users")["list"]
+  if os.path.isfile("data/switches.db") and os.path.isfile("data/users.db") and os.path.isfile("data/addressing.db"):
+
+    switches = shelve.open("data/switches")["list"]
+    users = shelve.open("data/users")["list"]
+
+    addressing = shelve.open("data/addressing")["list"]
+    print "generating VLANs"
+    vlans = get_vlans(addressing)
   
-  addressing = shelve.open("data/addressing")["list"]
-  print "generating VLANs"
-  vlans = get_vlans(addressing)
-
-  links = shelve.open("data/links")["list"]
-
-  sw_links = {}
+    links = shelve.open("data/links")["list"]
   
-  sw_cvlan = {}
-  cvlan_to_sw = {}
+    sw_links = {}
 
-  # check camper vlans for issues
-  for sw in switches:
-    if "Camper-VLAN" in sw:
-      if sw["Hostname"] in sw_cvlan:
-        print "PANIC: Duplicate Hostname: >" + sw["Hostname"] + "<"
-        sys.exit(1)
-      sw_cvlan[sw["Hostname"]] = sw["Camper-VLAN"]
-
-      if sw["Camper-VLAN"] in cvlan_to_sw:
-        print "PANIC: Duplicate camper vlan id: >" + sw["Camper-VLAN"] + "<"
-        print "for " + sw["Hostname"] + " and " + cvlan_to_sw[sw["Camper-VLAN"]]
-        sys.exit(1)
-      cvlan_to_sw[sw["Camper-VLAN"]] = sw["Hostname"]
-
-  for a in addressing:
-    if "VLAN" in a:
-      if a["VLAN"] in cvlan_to_sw:
-        if cvlan_to_sw[a["VLAN"]] != a["Description"]:
-          print "WARNING - Camper VLAN missmatch?!?!"
-          print a["VLAN"], a["Description"], cvlan_to_sw[a["VLAN"]]
-
-  for link in links:
-    o = {"Dir" : "down"}
-    o2 = {"Dir" : "up"}
-#    print link
-
-    if not switch_hostname_exists(switches, link["Switch1"]):
-      print "WARNING: switch in links but not on the Switches sheet >" + link["Switch1"] + "<"
-
-    if not switch_hostname_exists(switches, link["Switch2"]):
-      print "WARNING: switch in links but not on the Switches sheet >" + link["Switch2"] + "<"
-
-    if link["Switch1"] not in sw_links:
-      sw_links[link["Switch1"]] = []
-
-    if link["Switch2"] not in sw_links:
-      sw_links[link["Switch2"]] = []
-
-    o["To"] = link["Switch2"]
-    o2["To"] = link["Switch1"]
-    o["Ports"] = []
-    for port in (("Switch1-Port1", "Switch2-Port1"), ("Switch1-Port2", "Switch2-Port2")):
-      if port[0] in link:
-        o["Ports"].append((link[port[0]], link[port[1]]))
-
-    o2["Ports"] = []
-    for port in (("Switch2-Port1", "Switch1-Port1"), ("Switch2-Port2", "Switch1-Port2")):
-      if port[0] in link:
-        o2["Ports"].append((link[port[0]], link[port[1]]))
-
-    sw_links[link["Switch1"]].append(o)
-    sw_links[link["Switch2"]].append(o2)
+    sw_cvlan = {}
+    cvlan_to_sw = {}
   
-  loader = FileSystemLoader('templates')
-  env = Environment(loader=loader)
-
-  if not os.path.exists('out'):
-    os.mkdir('out')
-  if not os.path.exists('out' + os.path.sep + "switches"):
-    os.mkdir('out' + os.path.sep + "switches")
-
-  # Hostname  -> vlan_id
-  sw_to_vlan = {}
-  for sw in switches:
-    if "Camper-VLAN" in sw:
-      sw_to_vlan[sw["Hostname"]] = sw["Camper-VLAN"]
+    # check camper vlans for issues
+    for sw in switches:
+      if "Camper-VLAN" in sw:
+        if sw["Hostname"] in sw_cvlan:
+          print "PANIC: Duplicate Hostname: >" + sw["Hostname"] + "<"
+          sys.exit(1)
+        sw_cvlan[sw["Hostname"]] = sw["Camper-VLAN"]
   
-  # Hostname -> [child Hostname, child Hostname]
-  sw_children = {}
-  for sw in switches:
-    if sw["Hostname"] in sw_links:
-      sw["Links"] = sw_links[sw["Hostname"]]
-      for l in sw["Links"]:
-        if l["Dir"] == "down":
-#          print l["To"], l["Dir"]
-          if sw["Hostname"] not in sw_children:
-            sw_children[sw["Hostname"]] = []
-          sw_children[sw["Hostname"]].append(l["To"])
-
-  # all sitewide vlans
-  sitewide_vlans = ""
-  for id, vlan in vlans.items():
-    if vlan['sitewide']:
-      if sitewide_vlans:
-        sitewide_vlans += ","
-      sitewide_vlans += str(vlan['vlan'])
-
-#  for k in sw_children:
-#    print k, sw_children[k]
-
-  # graphiz is fun :)
-  gfh = open("out/vlans.gv", "w")
-
-  gfh.write("##Command to produce the output: \"neato -Tpng thisfile > thisfile.png\"\n\n")
+        if sw["Camper-VLAN"] in cvlan_to_sw:
+          print "PANIC: Duplicate camper vlan id: >" + sw["Camper-VLAN"] + "<"
+          print "for " + sw["Hostname"] + " and " + cvlan_to_sw[sw["Camper-VLAN"]]
+          sys.exit(1)
+        cvlan_to_sw[sw["Camper-VLAN"]] = sw["Hostname"]
   
-  gfh.write("""digraph Vlans {\n""")
-#  node [shape=box];  gy2; yr2; rg2; gy1; yr1; rg1;
-#  node [shape=circle,fixedsize=true,width=0.9];  green2; yellow2; red2; safe2; safe1; green1; yellow1; red1;
+    for a in addressing:
+      if "VLAN" in a:
+        if a["VLAN"] in cvlan_to_sw:
+          if cvlan_to_sw[a["VLAN"]] != a["Description"]:
+            print "WARNING - Camper VLAN missmatch?!?!"
+            print a["VLAN"], a["Description"], cvlan_to_sw[a["VLAN"]]
+            print "^---"
+  
+    for link in links:
+      o = {"Dir" : "down"}
+      o2 = {"Dir" : "up"}
+  #    print link
+  
+      if not switch_hostname_exists(switches, link["Switch1"]):
+        print "WARNING: switch in links but not on the Switches sheet >" + link["Switch1"] + "<"
+  
+      if not switch_hostname_exists(switches, link["Switch2"]):
+        print "WARNING: switch in links but not on the Switches sheet >" + link["Switch2"] + "<"
+  
+      if link["Switch1"] not in sw_links:
+        sw_links[link["Switch1"]] = []
+  
+      if link["Switch2"] not in sw_links:
+        sw_links[link["Switch2"]] = []
+  
+      o["To"] = link["Switch2"]
+      o2["To"] = link["Switch1"]
+      o["Ports"] = []
+      for port in (("Switch1-Port1", "Switch2-Port1"), ("Switch1-Port2", "Switch2-Port2")):
+        if port[0] in link:
+          o["Ports"].append((link[port[0]], link[port[1]]))
+  
+      o2["Ports"] = []
+      for port in (("Switch2-Port1", "Switch1-Port1"), ("Switch2-Port2", "Switch1-Port2")):
+        if port[0] in link:
+          o2["Ports"].append((link[port[0]], link[port[1]]))
+  
+      sw_links[link["Switch1"]].append(o)
+      sw_links[link["Switch2"]].append(o2)
+    
+    loader = FileSystemLoader('templates')
+    env = Environment(loader=loader)
+  
+    if not os.path.exists('out'):
+      os.mkdir('out')
+    if not os.path.exists('out' + os.path.sep + "switches"):
+      os.mkdir('out' + os.path.sep + "switches")
+  
+    # Hostname  -> vlan_id
+    sw_to_vlan = {}
+    for sw in switches:
+      if "Camper-VLAN" in sw:
+        sw_to_vlan[sw["Hostname"]] = sw["Camper-VLAN"]
+    
+    # Hostname -> [child Hostname, child Hostname]
+    sw_children = {}
+    for sw in switches:
+      if sw["Hostname"] in sw_links:
+        sw["Links"] = sw_links[sw["Hostname"]]
+        for l in sw["Links"]:
+          if l["Dir"] == "down":
+  #          print l["To"], l["Dir"]
+            if sw["Hostname"] not in sw_children:
+              sw_children[sw["Hostname"]] = []
+            sw_children[sw["Hostname"]].append(l["To"])
+  
+    # all sitewide vlans
+    sitewide_vlans = ""
+    for id, vlan in vlans.items():
+      if vlan['sitewide']:
+        if sitewide_vlans:
+          sitewide_vlans += ","
+        sitewide_vlans += str(vlan['vlan'])
+  
+  #  for k in sw_children:
+  #    print k, sw_children[k]
+  
+    # graphiz is fun :)
+    gfh = open("out/vlans.gv", "w")
+  
+    gfh.write("##Command to produce the output: \"neato -Tpng thisfile > thisfile.png\"\n\n")
+    
+    gfh.write("""digraph Vlans {\n""")
+  #  node [shape=box];  gy2; yr2; rg2; gy1; yr1; rg1;
+  #  node [shape=circle,fixedsize=true,width=0.9];  green2; yellow2; red2; safe2; safe1; green1; yellow1; red1;
+  
+    for k in sw_children:
+      for c in sw_children[k]:
+        gfh.write('"' + k + '"' + " -> " + '"' +  c + "\";\n")
+  
+    gfh.write("""
+    overlap=false
+    label="EMFCamp Switches and Vlans\\nlaid out by Graphviz"
+    fontsize=12;
+    }
+    """)
+  
+    gfh.close()
+  
+  #  print sw_to_vlan
+  #  print
+  #  print sw_children
+  #  print
 
-  for k in sw_children:
-    for c in sw_children[k]:
-      gfh.write('"' + k + '"' + " -> " + '"' +  c + "\";\n")
-
-  gfh.write("""
-  overlap=false
-  label="EMFCamp Switches and Vlans\\nlaid out by Graphviz"
-  fontsize=12;
-  }
-  """)
-
-  gfh.close()
-
-#  print sw_to_vlan
-#  print
-#  print sw_children
-#  print
+  else:
+    print "No datasources, did you --download first?"
+    sys.exit(1)
 
   def get_swchildren(sw, cs = None):
     if not cs:
