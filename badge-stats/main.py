@@ -10,12 +10,14 @@ def cls():
     c.hide()
     c.show()
 
+# Initialise graphics
+
 ugfx.init()
 ugfx.area(0, 0, ugfx.width(), ugfx.height(), ugfx.BLACK)
 ugfx.set_default_font(ugfx.FONT_TITLE)
 
 
-
+# Set up all the styles
 
 sty = ugfx.Style()
 sty.set_enabled([ugfx.PURPLE, ugfx.BLACK, ugfx.GREEN, ugfx.GREY])
@@ -33,8 +35,10 @@ styVal = ugfx.Style()
 styVal.set_enabled([ugfx.WHITE, ugfx.BLACK, ugfx.GREEN, ugfx.GREY])
 styVal.background(ugfx.BLACK)
 
-
+# Root container
 c = ugfx.Container(0, 0, ugfx.width(), ugfx.height(), style=sty)
+
+# Connect to Wifi
 
 cls()
 ugfx.text(0, 0, "WIFI-CONNECT", ugfx.WHITE)
@@ -49,10 +53,7 @@ while True:
         continue
     break
 
-#ugfx.text(10,50,"use moar bandwidth!!11", ugfx.WHITE)
-
-#ugfx.text()
-
+# Set up display
 
 ugfx.set_default_font(ugfx.FONT_NAME)
 ugfx.Label(0, 0, ugfx.width(), ugfx.height(), "use moar bandwidth!", justification=ugfx.Label.RIGHTTOP, style=styUse, parent=c)
@@ -72,6 +73,7 @@ curOut = ugfx.Label(55, 0+180, ugfx.width()-50, 60, "PLZWAIT", justification=ugf
 
 c.show()
 
+# Unused, broadcast and multicasts are blocked on the wifi
 #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #s.bind(('', 14612))
 #s.setblocking(True)
@@ -80,7 +82,7 @@ c.show()
 #data, addr = s.recvfrom(1024)
 #curOut.text(data)
 
-imu=IMU()
+imu = IMU()
 
 connectto = usocket.getaddrinfo('monitor1.emf.camp',80)
 
@@ -95,6 +97,8 @@ while True:
     if (looped > 120):
         print("REseTTING")
         onboard.semihard_reset()
+
+    # A 5 second delay, but checking the accelerometer every 1 second
 
     for i in range(1, 6):
         print("miniloop")
@@ -112,6 +116,8 @@ while True:
         time.sleep(1)
 
     print("Get shit")
+
+    # Download the JSON file
 
     s = usocket.socket()
     try:
@@ -135,6 +141,8 @@ while True:
         curIn.text("JSON")
         curOut.text("ERROR")
         continue
+
+    # Update the display
 
     curIn.text("%.0f Mbps" % (data['uplink_in'] / 1000000))
     curOut.text("%.0f Mbps" % (data['uplink_out'] / 1000000))
