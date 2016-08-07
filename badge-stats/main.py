@@ -1,23 +1,29 @@
-import ugfx, time, wifi, sys
+# EMF NOC Stats badge app by davidc
+# License: CC0
+
+import ugfx, time, wifi, sys, onboard
 
 import usocket, ujson
 from imu import IMU
-
-import onboard
 
 def cls():
     ugfx.area(0, 0, 320, 240, ugfx.BLACK)
     c.hide()
     c.show()
 
+print("Stats app starting")
+
 # Initialise graphics
+
+print("Init uGFX")
 
 ugfx.init()
 ugfx.area(0, 0, ugfx.width(), ugfx.height(), ugfx.BLACK)
 ugfx.set_default_font(ugfx.FONT_TITLE)
 
-
 # Set up all the styles
+
+print("Init Styles")
 
 sty = ugfx.Style()
 sty.set_enabled([ugfx.PURPLE, ugfx.BLACK, ugfx.GREEN, ugfx.GREY])
@@ -40,6 +46,7 @@ c = ugfx.Container(0, 0, ugfx.width(), ugfx.height(), style=sty)
 
 # Connect to Wifi
 
+print("Init Wifi")
 cls()
 ugfx.text(0, 0, "WIFI-CONNECT", ugfx.WHITE)
 
@@ -54,6 +61,7 @@ while True:
     break
 
 # Set up display
+# NB: RIGHTTOP and CENTERTOP are reversed
 
 ugfx.set_default_font(ugfx.FONT_NAME)
 ugfx.Label(0, 0, ugfx.width(), ugfx.height(), "use moar bandwidth!", justification=ugfx.Label.RIGHTTOP, style=styUse, parent=c)
@@ -90,17 +98,42 @@ oldorientation = ugfx.orientation()
 
 looped = 0
 
-while True:
-    print("loopy")
 
-    looped += 1
-    if (looped > 120):
-        print("REseTTING")
-        onboard.semihard_reset()
+def updateStats():
+    # Download the JSON file
+    s = usocket.socket()
+    try:
+        s.connect(connectto[0][4])
 
-    # A 5 second delay, but checking the accelerometer every 1 second
+        s.send("GET /api/\r\n")
+        output = s.recv(4096)
+        s.close()
+    except Exception as e:
+        sys.print_exception(e)
+        curIn.text("NET")
+        curOut.text("GONE?")
+        time.sleep(5)
+        return
 
-    for i in range(1, 6):
+    # Decode the JSON
+    print(output)
+    try:
+        data = ujson.loads(output)
+    except Exception as e:
+        sys.print_exception(e)
+        curIn.text("JSON")
+        curOut.text("ERROR")
+        return
+
+    # Update the display
+
+    curIn.text("%.0f Mbps" % (data['uplink_in'] / 1000000))
+    curOut.text("%.0f Mbps" % (data['uplink_out'] / 1000000))
+
+# An X second delay, but checking the accelerometer every 1 second
+def delayLoop(secs):
+    global oldorientation
+    for i in range(0, secs):
         print("miniloop")
 
         ival = imu.get_acceleration()
@@ -115,40 +148,15 @@ while True:
             oldorientation = neworientation
         time.sleep(1)
 
-    print("Get shit")
+while True:
+    print("loopy")
 
-    # Download the JSON file
+    updateStats()
 
-    s = usocket.socket()
-    try:
-        s.connect(connectto[0][4])
+    looped += 1
+    if (looped > 120):
+        print("REseTTING")
+        onboard.semihard_reset()
 
-        s.send("GET /api/\r\n")
-        output = s.recv(4096)
-        s.close()
-    except Exception as e:
-        sys.print_exception(e)
-        curIn.text("NET")
-        curOut.text("GONE?")
-        time.sleep(5)
-        continue
-
-    print(output)
-    try:
-        data = ujson.loads(output)
-    except Exception as e:
-        sys.print_exception(e)
-        curIn.text("JSON")
-        curOut.text("ERROR")
-        continue
-
-    # Update the display
-
-    curIn.text("%.0f Mbps" % (data['uplink_in'] / 1000000))
-    curOut.text("%.0f Mbps" % (data['uplink_out'] / 1000000))
-
-#    time.sleep(5)
-
-
-#RIGHTTOP and CENTERTOP are reversed
+    delayLoop(5)
 
