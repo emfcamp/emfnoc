@@ -25,16 +25,16 @@ Presentations
 -------------
 
 EMF 2012:
-- Slides: https://github.com/emfcamp/emfnoc/blob/master/archives/2012/documents/EMF_2012_Infrastructure_Review.pdf
-- Video:
+- [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2012/documents/EMF_2012_Infrastructure_Review.pdf)
+- Video
 
 EMF 2014:
-- Slides: https://github.com/emfcamp/emfnoc/blob/master/archives/2014/documents/EMF%202014%20network%20presentation.pdf
-- Video: https://www.youtube.com/watch?v=H9p3hjRhpyg
+- [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2014/documents/EMF%202014%20network%20presentation.pdf)
+- [Video](https://www.youtube.com/watch?v=H9p3hjRhpyg)
 
 EMF 2016:
-- Slides: https://github.com/emfcamp/emfnoc/blob/master/archives/2016/documents/EMF_2016_Infrastructure_Review.pdf
-- Video: https://www.youtube.com/watch?v=TO8vWj6WYgk
+- [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2016/documents/EMF_2016_Infrastructure_Review.pdf)
+- [Video](https://www.youtube.com/watch?v=TO8vWj6WYgk)
 
 EMF 2018:
 - It'll be great.
