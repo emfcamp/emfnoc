@@ -5,7 +5,7 @@ All the scripts and configuration that power the EMFCamp network.
 
 Subnet plans and service configuration (DNS, DHCP, Icinga, etc) are all stored in a private Google Spreadsheet, the scripts in the configbuilders folder takes this data and produces local configs on the virtual machines.
 
-Every EMF, Google breaks their API in a backwards-compatible way, and makes the login more and more complicated. It's no longer sufficient to just login with credentials. Here's the procedure for 2018:
+Every EMF, Google breaks their API in a backwards-incompatible way, and makes the login more and more complicated. It's no longer sufficient to just login with credentials. Here's the procedure for 2018:
 
 First create /etc/emf-gdata.conf 
 
