@@ -26,7 +26,7 @@ Presentations
 
 EMF 2012:
 - [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2012/documents/EMF_2012_Infrastructure_Review.pdf)
-- Video
+- [Video](https://www.youtube.com/watch?v=qtT8MWfPRy0) - original not available, this is a later presentation at UKNOF
 
 EMF 2014:
 - [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2014/documents/EMF%202014%20network%20presentation.pdf)
