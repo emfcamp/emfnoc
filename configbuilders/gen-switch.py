@@ -340,6 +340,8 @@ def generate(override_template):
       o += ";arista;up"
     elif sw["Type"] == "junos":
       o += ";juniper;up"
+    elif sw["Type"] == "junos-els":
+      o += ";juniper;up"
     elif sw["Type"] == "procurve":
       o += ";hp;up"
     else:
