@@ -94,7 +94,7 @@ def switch_hostname_exists(switches, name):
   return False
 
 def generate(override_template):
-  if os.path.isfile("data/switches.db") and os.path.isfile("data/users.db") and os.path.isfile("data/addressing.db"):
+  if os.path.isfile("data/switches") and os.path.isfile("data/users") and os.path.isfile("data/addressing"):
 
     switches = shelve.open("data/switches")["list"]
     users = shelve.open("data/users")["list"]
