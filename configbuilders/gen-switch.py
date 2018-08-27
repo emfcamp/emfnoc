@@ -20,6 +20,13 @@ def download(spr_client, spreadsheet):
   sws['list'] = switches
   sws.close()
 
+  print "downloading port types"
+  port_types = get_worksheet_data(spr_client, spreadsheet, "Port Types")
+
+  pt = shelve.open("data/port_types")
+  pt['list'] = port_types
+  pt.close()
+
   print "downloading users"
   users = get_worksheet_data(spr_client, spreadsheet, "Users")
   for user in list(users):
@@ -97,6 +104,7 @@ def generate(override_template):
   if os.path.isfile("data/switches") and os.path.isfile("data/users") and os.path.isfile("data/addressing"):
 
     switches = shelve.open("data/switches")["list"]
+    port_types = shelve.open("data/port_types")["list"]
     users = shelve.open("data/users")["list"]
 
     addressing = shelve.open("data/addressing")["list"]
@@ -268,17 +276,23 @@ def generate(override_template):
   for sw in switches:
     print "Generating " + sw["Hostname"] + " of type " + sw["Type"]
 
-    if "Artnet-Hi" in sw:
-      sw["artnet"] = range(int(sw["Artnet-Lo"]), int(sw["Artnet-Hi"]) + 1)
-  
-    if "Voip-Hi" in sw:
-      sw["voip"] = range(int(sw["Voip-Lo"]), int(sw["Voip-Hi"]) + 1)
+##
+## Do something smart with port assignments here..
+## Artnet, Voip, Dect, Voc, Bar
+##
+    if not "Ports" in sw or len(sw["Ports"]) == 0:
+      sw["Ports"] = 48
 
-    if "Camper-Hi" in sw:
-      sw["camper"] = range(int(sw["Camper-Lo"]), int(sw["Camper-Hi"]) + 1)
-    
-#    for l in sw["Links"]:
-#      print l
+    sw['port_configs'] = []
+    for i in range(int(sw['Camper-Ports'])):
+        sw['port_configs'].append({ 'description': 'Camper', 'vlan': sw['Camper-VLAN']})
+
+    for port_type in reversed(port_types):
+        if ('#'+port_type["Port-Type"]) in sw:
+            for i in range(int(sw['#'+port_type['Port-Type']])):
+                sw['port_configs'].append({ 'description': port_type['Port-Type'], 'vlan': port_type['VLAN']})
+    print sw
+
 
     if "Links" not in sw:
       print "*** No links found for switch ", sw["Hostname"]
