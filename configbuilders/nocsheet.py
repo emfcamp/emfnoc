@@ -79,11 +79,9 @@ def get_worksheet_data(spr_client, spreadsheet, wks):
       
     if row != cur_row:
       if cur_row > 1:
-#        print row
-#        print r
+        if entry.content.text.strip() == "!end":
+          break
         out.append(r)
-      if entry.content.text == "!end":
-        break
       r = {}
       cur_row = row
 
