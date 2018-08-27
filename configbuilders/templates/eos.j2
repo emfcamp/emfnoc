@@ -37,7 +37,7 @@ exit
 
 ip route 0.0.0.0/0 151.216.132.1
 interface Vlan132
- ip address {{ switch["Mgmt-IP"] }} 255.255.255.128
+ ip address {{ switch["Mgmt-IP"] }} 255.255.255.0
 
 !Hardcoded artnet to CPU hack
 interface vlan2001
@@ -51,7 +51,7 @@ event-handler boot-up-script
 interface {{ switch["Port-Prefix"] }}{{ loop.index }}
  description {{ port['description'] }}-{{ loop.index }}
  switchport mode access
- switchport access vlan {{ switch["Camper-VLAN"] }}
+ switchport access vlan {{ port["VLAN"] }}
  ip access-group no_dhcp_v4_in in
  lldp transmit
  lldp receive
