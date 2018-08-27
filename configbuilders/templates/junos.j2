@@ -59,13 +59,13 @@ chassis {
 }
 interfaces {
 {%- for port in switch["port_configs"] %}
-	interface {{ switch["Port-Prefix"] }}{{ loop.index }} {
-        description "{{ port['description'] }}-{{ loop.index }}";
+	{{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
+                description "{{ port['description'] }}-{{ loop.index-1 }}";
 		mtu 9216;
 		unit 0 {
 			family ethernet-switching {
 				vlan {
-					members [ {{ switch["Camper-VLAN"] }} ];
+					members [ {{ port["vlan"] }} ];
 				}
 				filter {
 					input ra-guard;
@@ -148,7 +148,7 @@ protocols {
     }
     rstp {
 {%- for port in switch["port_configs"] %}
-		interface {{ switch["Port-Prefix"] }}{{ loop.index }} {
+		interface {{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
 			edge;
 			no-root-port;
 		}
@@ -196,7 +196,7 @@ firewall {
 ethernet-switching-options {
 	secure-access-port {
 {%- for port in switch["port_configs"] %}
-		interface {{ switch["Port-Prefix"] }}{{ loop.index }} {
+		interface {{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
 			mac-limit 64 action shutdown;
 		}
 {%- endfor %}
