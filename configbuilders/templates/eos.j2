@@ -51,7 +51,7 @@ event-handler boot-up-script
 interface {{ switch["Port-Prefix"] }}{{ loop.index }}
  description {{ port['description'] }}-{{ loop.index }}
  switchport mode access
- switchport access vlan {{ port["VLAN"] }}
+ switchport access vlan {{ port["vlan"] }}
  ip access-group no_dhcp_v4_in in
  lldp transmit
  lldp receive
