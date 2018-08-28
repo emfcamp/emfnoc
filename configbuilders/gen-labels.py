@@ -13,19 +13,21 @@ from fpdf import FPDF
  
 pdf = FPDF(orientation='P', unit='mm', format='A4')
 
-leftmargin = 4.75
-rightmargin = 4.75
-topmargin = 6
+# Avery L4745REV:
 
-pdf.set_margins(leftmargin, topmargin, rightmargin)
-pdf.set_auto_page_break(False)
- 
-rows=5
+leftmargin = 7.5
+rightmargin = 8
+topmargin = 21.5
+
+rows=4
 cols=2
-cellwidth=99
-cellheight=57
+cellwidth=96
+cellheight=63.5
 cellgapx=2.5
 cellgapy=0
+
+pdf.set_margins(leftmargin, topmargin, rightmargin)
+pdf.set_auto_page_break(False) 
  
 col = -1
 row = 0
@@ -39,6 +41,9 @@ files.sort()
 for file in files:
   if os.path.islink("out/switches/" + file) or file.endswith("~"):
     continue
+  if file == 'ESNORE.emf.camp' or file == 'DOCKLANDS.emf.camp':
+    continue
+
   with open("out/switches/" + file, "r") as f:
     label = f.read().strip()
 
@@ -89,8 +94,8 @@ for file in files:
     n += 1
         
 #  pdf.multi_cell(cellwidth - 25, cellheight-10, "ABC\nDEF", 1, align="C")
-  pdf.image('logo-label.png', cellx+3, celly+7, 15)
-  pdf.image('nocnocnoc.png', cellx+cellwidth-8, celly+2, 4.45)
+  pdf.image('logo-label.png', cellx+3, celly+12, 15)
+  pdf.image('nocnocnoc.png', cellx+cellwidth-8, celly+2, 0, cellheight-4)
 
 pdf.output('out/labels.pdf', 'F')
 
