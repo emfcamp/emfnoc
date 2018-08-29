@@ -3,6 +3,7 @@
 Management: {{ switch["Mgmt-IP"] }}
 {% if switch["Model"] %}Model: {{ switch["Model"] }}{%- endif %}
 {% if switch["Serial"] %}Serial: {{ switch["Serial"] }}{%- endif %}
+{% if switch["EventInfra ID"] %}Asset Tag: {{ switch["EventInfra ID"] }}{%- endif %}
 {% if switch["Camper-VLAN"] %}
 Campers: {{ mycampervlan["ipv4-subnet"] }}
 Campers (VLAN {{ switch["Camper-VLAN"] }}): {{ switch["Port-Prefix"] }}{{ switch["Camper-Lo"] }} - {{ switch["Camper-Hi"] }}

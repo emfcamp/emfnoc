@@ -1,4 +1,3 @@
-version 15.1R4.6;
 system {
     host-name {{ switch["Hostname"] }};
     root-authentication {
@@ -59,17 +58,14 @@ chassis {
 	}
 }
 interfaces {
-{% if switch["artnet"] %}
-	interface-range ArtNet {
-		member ge-0/0/62;
-{% for port in switch["artnet"] %}
-		member {{ switch["Port-Prefix"] }}{{ port }};
-{% endfor %}
+{%- for port in switch["port_configs"] %}
+	{{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
+                description "{{ port['description'] }}-{{ loop.index-1 }}";
 		mtu 9216;
 		unit 0 {
 			family ethernet-switching {
 				vlan {
-					members [ ArtNet ];
+					members [ {{ port["vlan"] }} ];
 				}
 				filter {
 					input ra-guard;
@@ -77,60 +73,7 @@ interfaces {
 			}
 		}
 	}
-{% endif %}
-{% if switch["voip"] %}
-	interface-range VoIP {
-		member ge-0/0/61;
-{% for port in switch["voip"] %}
-		member {{ switch["Port-Prefix"] }}{{ port }};
-{% endfor %}
-		mtu 9216;
-		unit 0 {
-			family ethernet-switching {
-				vlan {
-					members [ voip ];
-				}
-				filter {
-					input ra-guard;
-				}
-			}
-		}
-	}
-{% endif %}
-	interface-range VOC-private {
-		member ge-0/0/60;
-		mtu 9216;
-		unit 0 {
-			family ethernet-switching {
-				vlan {
-					members [ voc-private ];
-				}
-				filter {
-					input ra-guard;
-				}
-			}
-		}
-	}
-	interface-range Camper {
-		member ge-0/0/59;
-{% if switch["Port-Prefix"]%}
-{% for port in switch["camper"] %}
-		member  {{ switch["Port-Prefix"] }}{{ port }};
-{% endfor %}
-{% endif %}
-		mtu 9216;
-		unit 0 {
-			family ethernet-switching {
-				vlan {
-					members [ {{ switch["Camper-VLAN"] }} ];
-				}
-				filter {
-					input ra-guard;
-				}
-			}
-		}
-	}
-
+{%- endfor %}
 {% set downPortChannel = 1 %}
 {% for link in switch["Links"] %}
 {% for port in link["Ports"] %}
@@ -176,15 +119,13 @@ interfaces {
 {% endif %}
 {% endfor %}
 {% endfor %}
-
-
 	em0 {
 		disable;
 	}
 	vlan {
 		unit 132 {
 			family inet {
-				address {{ switch["Mgmt-IP"] }}/25;
+				address {{ switch["Mgmt-IP"] }}/24;
 			}
 		}
 	}
@@ -206,27 +147,12 @@ protocols {
         vlan all;
     }
     rstp {
-
-{% if switch["artnet"] %}
-		interface ArtNet {
-			edge;
-			no-root-port;
-        }
-{% endif %}
-{% if switch["voip"] %}
-		interface VoIP {
-			edge;
-			no-root-port;
-        }
-{% endif %}
-		interface VOC-private {
-			edge;
-			no-root-port;
-        }
-		interface Camper {
+{%- for port in switch["port_configs"] %}
+		interface {{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
 			edge;
 			no-root-port;
 		}
+{%- endfor %}
 		bpdu-block-on-edge;
 	}
 	lldp {
@@ -269,22 +195,11 @@ firewall {
 }
 ethernet-switching-options {
 	secure-access-port {
-{% if switch["artnet"] %}
-		interface ArtNet {
-			mac-limit 1 action shutdown;
-		}
-{% endif %}
-{% if switch["voip"] %}
-		interface VoIP {
-			mac-limit 5 action shutdown;
-		}
-{% endif %}
-		interface VOC-private {
+{%- for port in switch["port_configs"] %}
+		interface {{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
 			mac-limit 64 action shutdown;
 		}
-		interface Camper {
-			mac-limit 64 action shutdown;
-		}
+{%- endfor %}
 {% for vlan in vlans|sort%}
 {% if "dhcp" in vlans[vlan] and vlans[vlan]["dhcp"] %}
 {% if "name" in vlans[vlan] and vlans[vlan]["name"] != "" %}
@@ -327,4 +242,3 @@ poe {
 		maximum-power 30;
 	}
 }
-

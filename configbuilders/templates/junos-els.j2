@@ -1,0 +1,237 @@
+system {
+    host-name {{ switch["Hostname"] }};
+    root-authentication {
+		encrypted-password "{{ config.get("switchconfig", "admincrypted") }}";
+	}
+	name-server {
+		78.158.87.11;
+		78.158.87.12;
+	}
+	login {
+{% for user in users %}
+{% if "SSH key" in user and user["SSH key"] != "" %}
+		user {{ user["Username"] }} {
+			uid {{ user["uid"] }};
+			class super-user;
+			authentication {
+				ssh-rsa "{{ user["SSH key"] }}";
+			}
+		}
+{% endif %}
+{%- endfor %}
+	}
+	services {
+		ssh {
+			root-login deny-password;
+		}
+	}
+	syslog {
+		user * {
+			any emergency;
+		}
+		host 78.158.87.14 {
+			any any;
+			allow-duplicates;
+		}
+		file messages {
+			any notice;
+		}
+		file interactive-commands {
+			interactive-commands any;
+		}
+	}
+	ntp {
+		server 78.158.87.11;
+		server 78.158.87.12;
+	}
+}
+chassis {
+	alarm {
+		management-ethernet {
+			link-down ignore;
+		}
+	}
+	aggregated-devices {
+		ethernet {
+			device-count 8;
+		}
+	}
+}
+interfaces {
+{%- for port in switch["port_configs"] %}
+	{{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
+        description "{{ port['description'] }}-{{ loop.index-1 }}";
+		mtu 9216;
+		unit 0 {
+			family ethernet-switching {
+                interface-mode access;
+				vlan {
+					members [ {{ port["vlan"] }} ];
+				}
+				filter {
+					input ra-guard;
+				}
+				recovery-timeout 66;
+			}
+		}
+	}
+{%- endfor %}
+{% set downPortChannel = 1 %}
+{% for link in switch["Links"] %}
+{% for port in link["Ports"] %}
+	{{ port[0] }} {
+{% if link["Dir"] == "up" %}
+		description "Uplink to {{ link["To"] }} port {{ port[1] }}";
+{% else %}
+		description "Downlink to {{ link["To"] }} port {{ port[1] }}";
+{% endif %}
+		ether-options {
+			802.3ad {
+				ae{{ 0 if link["Dir"] == "up" else downPortChannel }};
+			}
+		}
+	}
+	ae{{ 0 if link["Dir"] == "up" else downPortChannel }} {
+{% if link["Dir"] == "up" %}
+		description "Uplink to {{ link["To"] }}"
+{% else %}
+		description "Downlink to {{ link["To"] }}"
+{% endif %}
+		aggregated-ether-options {
+			lacp {
+				active;
+			}
+		}
+		unit 0 {
+			family ethernet-switching {
+				interface-mode trunk;
+				vlan {
+{% if link["Dir"] == "up" %}
+					members [ {{ sitewide_vlans.replace(","," ") }} {% for v in switch["Uplink Vlans"] %}{{ v }} {% endfor %}]
+{% else %}
+					members [ {{ sitewide_vlans.replace(","," ") }} {% for v in uplink_vlans[link["To"]] %}{{ v }} {% endfor %}]
+{% endif %}
+				}
+			}
+		}
+		mtu 9216;
+	}
+{% if link["Dir"] == "down" %}
+{% set downPortChannel = downPortChannel + 1 %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+	em0 {
+		disable;
+	}
+	irb {
+		unit 132 {
+			family inet {
+				address {{ switch["Mgmt-IP"] }}/24;
+			}
+		}
+	}
+}	
+snmp {
+    contact "EMF NOC";
+	location "EMF";
+    community {{ config.get("switchconfig", "community") }} {
+        authorization read-only;
+    }
+}
+routing-options {
+    static {
+        route 0.0.0.0/0 next-hop 151.216.132.1;
+    }
+}
+protocols {
+    igmp-snooping {
+        vlan all;
+    }
+    rstp {
+{%- for port in switch["port_configs"] %}
+		interface {{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
+			edge;
+			no-root-port;
+		}
+{%- endfor %}
+		bpdu-block-on-edge;
+	}
+	lldp {
+		interface all;
+	}
+	lldp-med {
+		interface all;
+	}
+}
+firewall {
+	family ethernet-switching {
+		filter ra-guard	{
+			term block-ra {
+				from {
+					icmp-type router-advertisement;
+					icmp-code 0;
+				}
+				then {
+					discard;
+					log;
+				}
+			}
+			term block-dhcpv6 {
+				from {
+					protocol udp;
+					destination-port 546;
+				}
+				then {
+					discard;
+					log;
+				}
+			}
+			term default {
+				then {
+					accept;
+				}
+			}
+		}
+	}
+}
+switch-options {
+{%- for port in switch["port_configs"] %}
+    interface {{ switch["Port-Prefix"] }}{{ loop.index-1 }} {
+        interface-mac-limit {
+             64;
+             packet-action shutdown;
+        }
+    }
+{%- endfor %}
+	}
+	port-error-disable {
+		disable-timeout 120;
+	}
+}
+vlans {
+{% for vlan in vlans|sort%}
+{% if "name" in vlans[vlan] and vlans[vlan]["name"] != "" %}
+	{{ vlans[vlan]["name"] }} {
+{% else %}
+	V{{ vlan }} {
+{% endif %}
+		vlan-id {{ vlan }};
+{% if vlan == "132" %}
+		l3-interface irb.132;
+{% endif %}
+{%- if "dhcp" in vlans[vlan] and vlans[vlan]["dhcp"] %}
+        forwarding-options {
+            dhcp-security {
+                arp-inspection;
+            }
+        }
+{%- endif %}
+	}
+{%- endfor %}
+}
+poe {
+	interface all {
+		maximum-power 30;
+	}
+}
