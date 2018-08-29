@@ -94,7 +94,7 @@ for row in ipv4:
     if 'IPv6' in row:
         ipv6 = ipaddr.IPNetwork(row['IPv6'])
     else:
-        print "Warning: " + row['Description'] + " has no v6 subnet"
+        print "Warning: " + row['IPv4-Subnet'] + " has no v6 subnet"
 
     if "Domain" in row:
       domain = row["Domain"]
