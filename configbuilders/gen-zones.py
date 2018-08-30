@@ -241,8 +241,10 @@ parser = argparse.ArgumentParser(description='Generate cisco IOS config files fr
 parser.add_argument('--deploy', action='store_true',
                     help='deploy zone files after generating')
 
-args = parser.parse_args()
+parser.add_argument('--diff', action='store_true',
+                    help='diff zone files against live versions after generating')
 
+args = parser.parse_args()
 
 spreadsheet = config.get('gdata', 'noc_combined')
 
@@ -348,6 +350,10 @@ def get_serial(zonename):
   return zoneserial
 
 
+if args.deploy and args.diff:
+  print "only one of --deploy and --diff can be specified"
+  raise SystemExit
+
 print "Generating zones"
 success = 0
 failed = 0
@@ -364,6 +370,16 @@ for zonename in zones.keys():
         success += 1
       else:
         failed += 1
+    if args.diff:
+      cmd = "diff -u %s %s" % (live_zone_file(zonename), tempfile)
+      p = os.popen(cmd)
+      out = p.read()
+      ret = p.close()
+      if ret == None:
+        print out
+      else:
+        print "error diffing %s" % (str(ret))
+        print out
   else:
     print " VALIDATION FAILED: %s" % (tempfile)
 
