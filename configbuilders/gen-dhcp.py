@@ -75,9 +75,13 @@ def write_zones(f4, f6, description, vlan, domain, ipv4, ipv6, hosts):
     f6.write("# %s\n" % (description))
     f6.write("shared-network vlan%s {\n" % (vlan))
     f6.write("  subnet6 %s {\n" % (ipv6))
+    # stateful and temporay addresses:
+    if False:
+      f6.write("    range6 %s %s;\n" % (ipv6.network + 0x11, ipv6.network + 0xfff0))
+      f6.write("    range6 %s temporary;\n" % (ipv6))
     f6.write("    option dhcp6.domain-search \"" + domain + "\";\n")
     f6.write("    option dhcp6.name-servers 2a05:e201:0:57::11,2a05:e201:0:57::12;\n")
-#stateful:    f6.write("    range6 %s %s;\n" % (ipv6.network + 0x11, ipv6.network + 0xffff))
+    f6.write("    option dhcp6.sntp-servers 2a05:e201:0:57::11,2a05:e201:0:57::12;\n")
     f6.write("  }\n")
     f6.write("}\n")
 
