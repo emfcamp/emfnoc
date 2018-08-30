@@ -375,11 +375,35 @@ for zonename in zones.keys():
       p = os.popen(cmd)
       out = p.read()
       ret = p.close()
+      # no diff
       if ret == None:
-        print out
+        pass
       else:
-        print "error diffing %s" % (str(ret))
-        print out
+        # some change
+        z = """
+--- /etc/bind/master/223.216.151.in-addr.arpa	2018-08-30 18:08:01.787143282 +0000
++++ out/zones/223.216.151.in-addr.arpa	2018-08-30 18:08:44.023682338 +0000
+@@ -8,7 +8,7 @@
+ $TTL    1h
+ $ORIGIN 223.216.151.in-addr.arpa.
+ @   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (
+-            1469569893 ; serial
++            1469569894 ; serial
+             3H ; refresh
+             15 ; retry
+             1w ; expire
+
+             """
+        if ret == 256:
+          q = out.split("\n")
+          # don't print if just the serial changes
+          if len(q) == 12 and q[6].endswith("serial") and q[7].endswith("serial"):
+            pass
+          else:
+            print out
+        else:
+          print "error diffing %s" % (str(ret))
+          print out
   else:
     print " VALIDATION FAILED: %s" % (tempfile)
 
