@@ -188,11 +188,11 @@ def makezonelive(domain,file):
 
 def reloadzone(domain):
   # zkt pokes bind to reload the zone, so don't do it ourselves.
-  if !is_zone_signed(domain):
+  if not is_zone_signed(domain):
     reloadcmd = "rndc reload %s" % (domain)
     process = os.popen(reloadcmd)
     reloadresult = process.read()
-    ret = precess.close()
+    ret = process.close()
     # should process ret a bit?
     if ret != None:
       print("reload failed? %s" % (str(ret),))
@@ -372,4 +372,4 @@ if args.deploy:
   # tell zkt-signer that the zones have changed
   os.system("zkt-signer -v -r")
 
-  print("zones deployed %d successful %d failed" % (success, failed))
+  print("zones deployed: %d successfully, %d failed" % (success, failed))
