@@ -6,7 +6,7 @@ The majority of the scripts are written in Python and require a few modules for 
 
 Under a Debian based Linux distro:
 
-    aptitude install python-gdata python-gdata-doc python-ipaddr python-jinja2 graphviz bind9utils
+    aptitude install python-gdata python-gdata-doc python-ipaddr python-jinja2 graphviz bind9utils python-asterisk
 
 For OSX hosts (not fully vetted):
 
@@ -56,6 +56,8 @@ for servers but not links, because davidc couldn't be bothered to learn python l
 
 * `sanitise-rancid.sh` - remove passwords/communities/crypto keys before storing configs to github
 
+* `gen-phones.py` - generates the icinga config for the phones, needs to be
+  run on the voip server
 
 Generating switch config
 ------------------------
@@ -84,6 +86,42 @@ Then turn it into a PDF:
 ```
 ./gen-labels.py
 ```
+
+## Generating the phones icinga config
+
+You'll need to be able to read `/etc/asterisk/sip.conf`, so add youself to the asterisk group or something
+
+You'll need to add a manager user so:
+
+```
+cd /etc/asterisk/manager.d
+```
+
+add `something.conf` containing:
+
+```
+[username]
+secret = secret
+deny=0.0.0.0/0.0.0.0
+permit = 127.0.0.1/255.255.255.0
+read = all
+write = all
+writetimeout = 1000
+```
+
+The script uses the `python-asterisk` package on debian, which needs a config file too, so add `~/.py-asterisk.conf` containing:
+
+```
+[py-asterisk]
+default connection: fish
+
+[connection: fish]
+hostname: localhost
+port: 5038
+username: username from manager.d/something.conf
+secret: secret from manager.d/something.conf
+```
+
 
 Oauth2 stuff:
 

@@ -5,8 +5,9 @@ import gdata.spreadsheets.client
 import getpass, os, sys
 import pprint
 
-def login(source, config):
-  print "Connecting to spreadsheet"
+def login(source, config, verbose=True):
+  if verbose:
+    print "Connecting to spreadsheet"
 
   if config.has_option('gdata', 'oauth_token'):
     token = gdata.gauth.token_from_blob(config.get('gdata', 'oauth_token'))
