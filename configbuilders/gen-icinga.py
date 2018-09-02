@@ -115,6 +115,9 @@ with open("out/icinga/network.cfg", "w") as f:
 #      if switch["Hostname"] == 'SWCORE':
 #        parent = 'vmhost1'
 
+      if parent in returned_switches:
+        continue
+
       try:
         if switch["Teardown"].startswith("returned"):
             returned_switches.add(switch["Hostname"])
