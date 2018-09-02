@@ -37,5 +37,5 @@ EMF 2016:
 - [Video](https://www.youtube.com/watch?v=TO8vWj6WYgk)
 
 EMF 2018:
-- It'll be great.
-- You know it.
+- [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2018/documents/EMF_2018_Infrastructure_Review.pdf)
+- Video - coming soon.
