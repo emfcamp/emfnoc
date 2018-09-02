@@ -50,10 +50,7 @@ id_to_switch = {}
 
 for line in phones:
   if 'Phone-Name' in line:
-#    print line['Phone-Name'], line['Switch']
     id_to_switch[line['Phone-Name']] = {"switch": line['Switch']}
-#  else:
-#    print line
 
 def munge_id(name):
   if name.startswith("\""):
@@ -62,51 +59,6 @@ def munge_id(name):
     name = name[:-1]
   return name
 
-xxx = {
-'"HQ 1"': {"switch": "SWHQ"},
-'"HQ 2"': {"switch": "SWHQ"},
-'Crew 1"': {"switch": "SWCREW"},
-'"Crew 2"': {"switch": "SWCREW"},
-'"NOC 1"': {"switch": "SWNOC"},
-'"NOC 2"': {"switch": "SWNOC"},
-'"NOC DC"': {"switch": "SWNOCDC"},
-'"Volunteers"': {"switch": "SWNOCDC"},
-'"Entrance"': {"switch": "SWENTRANCE"},
-'"Gate"': {"switch": "SWGATE"},
-'"Youth 1"': {"switch": "SWKIDS"},
-'"Youth 2"': {"switch": "SWDKE2"},
-'"Bar 1"': {"switch": "SWBAR1"},
-'"Bar 2"': {"switch": "SWBAR2"},
-'"Bar 2 DJ"': {"switch": "SWBAR2"},
-'"Stage A"': {"switch": "SWSTAGEA"},
-'"Stage B"': {"switch": "SWSTAGEB"},
-'"Stage C"': {"switch": "SWSTAGEC"},
-'"GreenRoom"': {"switch": "SWFIRSTAID"},
-'"VOC"': {"switch": "SWVOC"},
-'"First Aid Tent"': {"switch": "SWFIRSTAID"},
-'"Info 1"': {"switch": "SWINFODESK"},
-'"Info 2"': {"switch": "SWINFODESK"},
-'"Workshop 1"': {"switch": "SWWORKSHOP1"},
-'"Workshop 2"': {"switch": "SWWORKSHOP2"},
-'"Workshop 3"': {"switch": "SWWORKSHOP3"},
-'"Workshop 4"': {"switch": "SWWORKSHOP4"},
-'"Badge"': {"switch": "SWBADGE"},
-'"Lounge"': {"switch": "SWLOUNGE"},
-'"Logistics"': {"switch": "SWNOCDC"},
-#'"SPARE"': {"switch": ""},
-}
-
-ks = xxx.keys()
-for k in ks:
-  nk = munge_id(k)
-  if nk in id_to_switch:
-    if id_to_switch[nk] != xxx[k]:
-      print k, nk, id_to_switch[nk], xxx[k]
-    else:
-      pass
-  else:
-    print k, "not found"
-
 peer_to_id = {}
 
 for k in sipconfig.keys():
@@ -114,7 +66,6 @@ for k in sipconfig.keys():
     label = k
     if sipconfig[k]["username"] != k:
       label = k + "/" + sipconfig[k]["username"]
-#    print "'%s': switch: \"\"," % (config[k]['callerid'],)
     id = sipconfig[k]['callerid']
     peer_to_id[k] = sipconfig[k]['callerid']
     id = munge_id(id)
