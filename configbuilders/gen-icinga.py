@@ -96,6 +96,7 @@ with open("out/icinga/vms.cfg", "w") as f:
 #TODO ssh etc
 
 hostnames = {}
+returned_switches = set()
 
 with open("out/icinga/network.cfg", "w") as f:
   for switch in switches:
@@ -114,6 +115,17 @@ with open("out/icinga/network.cfg", "w") as f:
 #      if switch["Hostname"] == 'SWCORE':
 #        parent = 'vmhost1'
 
+      if parent in returned_switches:
+        continue
+
+      try:
+        if switch["Teardown"].startswith("returned"):
+            returned_switches.add(switch["Hostname"])
+            continue
+      except KeyError:
+        pass
+
+
       add_host(switch["Hostname"], switch["Mgmt-IP"], parent)
 
 # Links
@@ -121,6 +133,10 @@ with open("out/icinga/network.cfg", "w") as f:
     if link['Switch2'] not in hostnames:
       # currently the uplink and the WLC
       print "Unknown destination switch " + link['Switch2']
+      continue
+
+    if (link['Switch1'] in returned_switches or
+        link['Switch2'] in returned_switches):
       continue
 
     servicegroup = "link_" + link['Switch1'] + "_" + link['Switch2']
