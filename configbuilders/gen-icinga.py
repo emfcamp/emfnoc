@@ -23,6 +23,9 @@ spr_client = login("emfcamp DHCP config generator", config)
 print "downloading Switches"
 switches = get_worksheet_data(spr_client, spreadsheet, "Switches")
 
+print "downloading AP placement"
+aps = get_worksheet_data(spr_client, spreadsheet, "AP placement")
+
 print "downloading Links"
 links = get_worksheet_data(spr_client, spreadsheet, "Links")
 
@@ -43,6 +46,13 @@ def add_host(hostname, ip, parent):
   f.write("  address " + ip + "\n")
   if parent:
     f.write("  parents " + parent + "\n")
+  f.write("}\n\n")
+
+def add_ap(f, ap_label, parent):
+  f.write("define host {\n")
+  f.write("  use aruba-ap\n")
+  f.write("  host_name {}\n".format(ap_label))
+  f.write("  parents {}\n".format(parent))
   f.write("}\n\n")
 
 
@@ -116,17 +126,34 @@ with open("out/icinga/network.cfg", "w") as f:
 #        parent = 'vmhost1'
 
       if parent in returned_switches:
+        # ignore this switch as well
+        returned_switches.add(switch["Hostname"])
         continue
 
       try:
         if switch["Teardown"].startswith("returned"):
-            returned_switches.add(switch["Hostname"])
-            continue
+          returned_switches.add(switch["Hostname"])
+          continue
       except KeyError:
         pass
 
-
       add_host(switch["Hostname"], switch["Mgmt-IP"], parent)
+
+with open("out/icinga/aps.cfg", "w") as f:
+  for ap in aps:
+    if ap["AP-name"].startswith("!end"):
+      break
+
+    try:
+      if ap["Teardown"].startswith("returned"):
+        continue
+    except KeyError:
+      pass
+
+    if ap["Upstream switch"] in returned_switches:
+      continue
+
+    add_ap(f, ap["AP Label"], ap["Upstream switch"])
 
 # Links
   for link in links:
