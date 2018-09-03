@@ -38,4 +38,4 @@ EMF 2016:
 
 EMF 2018:
 - [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2018/documents/EMF_2018_Infrastructure_Review.pdf)
-- Video - coming soon.
+- [Video](https://www.youtube.com/watch?v=RJshUiM1q3U)
