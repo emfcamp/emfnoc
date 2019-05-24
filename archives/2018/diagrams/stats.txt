@@ -1,0 +1,7 @@
+Number of physical links: 44
+- Fibre: 32 (Total 3365.7m, 82 total cores, total strand length 11220.9m)
+- Copper: 13 (Total 443.1m)
+Number of logical links: 44
+- Fibre: 32 (Total 11220.9m)
+- Copper: 12 (Total 443.1m)
+- Fibre couplers: 50
