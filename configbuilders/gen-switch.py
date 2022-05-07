@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 
 from nocsheet import login, get_worksheets, get_worksheet_data
-import ipaddr, jinja2, configparser, argparse, shelve, gdata, code, shelve, os, sys, pprint
+import ipaddr, jinja2, configparser, argparse, shelve, code, shelve, os, sys, pprint
 from jinja2 import Template, FileSystemLoader, Environment
 
 
-def print_worksheets(spr_client, spreadsheet):
-    worksheets = spr_client.GetWorksheetsFeed(key=spreadsheet)
-    for e in worksheets.entry:
-        print(e.title.text + " : " + e.id.text.rsplit("/", 1)[1])
 
 
 def download(spr_client, spreadsheet):
@@ -467,7 +463,8 @@ if __name__ == "__main__":
     done_something = False
 
     if args.listws:
-        print_worksheets(spr_client, spreadsheet)
+        for ws in get_worksheets(spr_client,spreadsheet):
+            print(ws)
         done_something = True
 
     if args.download:
