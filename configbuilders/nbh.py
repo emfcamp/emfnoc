@@ -52,6 +52,21 @@ class NetboxHelper:
     def create_inband_mgmt(self, device):
         return self.create_svi(device, self.mgmt_vlan)
 
+    def set_inband_mgmt_ip(self, device, ip):
+        mgmt_ip = self.netbox.ipam.ip_addresses.get(address=ip)
+        if not mgmt_ip:
+            mgmt_ip = self.netbox.ipam.ip_addresses.create(address=ip)
+        mgmt_interface = self.create_inband_mgmt(device)
+        mgmt_ip.assigned_object_type = "dcim.interface"
+        mgmt_ip.assigned_object_id = mgmt_interface.id
+        mgmt_ip.save()
+        device.primary_ip4 = mgmt_ip.id
+        device.save()
+        self.logger.info(
+            f"setting {device} primary ip to {mgmt_ip} on {mgmt_interface} "
+        )
+        return mgmt_ip
+
     def create_svi(self, device, vlan_id):
         manufacturer = device.device_type.manufacturer.name
         model = device.device_type.model
@@ -136,49 +151,3 @@ class NetboxHelper:
                 site=self.site,
             )
         return device
-
-
-import yaml
-
-with open("netbox.yml") as netbox_cfg_file:
-    try:
-        netbox_cfg = yaml.safe_load(netbox_cfg_file)
-    except yaml.YAMLError as yamlerror:
-        print(yamlerror)
-        sys.exit(1)
-
-switches = shelve.open("data/switches")["list"]
-port_types = shelve.open("data/port_types")["list"]
-helper = NetboxHelper(url=netbox_cfg["url"], token=netbox_cfg["token"], mgmt_vlan=132)
-
-vlan_lut = {}
-vlan_order = []
-for port_type in port_types:
-    vlan_lut[port_type["Port-Type"]] = port_type["VLAN"]
-    vlan_order.append(port_type["Port-Type"])
-
-for switch in switches:
-    if "Model" in switch.keys():
-        device_type = helper.get_device_type(switch["Model"])
-        if not device_type:
-            continue
-        device_type_id = device_type.id
-        port_prefix = switch.get("Port-Prefix", "")
-        port_start = int(switch.get("Port-Start", "1")) - 1
-        copper_ports = helper.get_sum_copper_ports(switch["Model"])
-        port_index = copper_ports + port_start
-        nb_switch = helper.get_switch(switch["Hostname"], device_type_id)
-
-        helper.create_inband_mgmt(nb_switch)
-        for key in switch.keys():
-            if key[0] == "#":
-                vlan = helper.get_vlan(vlan_lut[key[1:]], key[1:])
-                for i in range(int(switch[key])):
-                    helper.set_interface_vlan(
-                        nb_switch, port_prefix + str(port_index), vlan
-                    )
-                    port_index -= 1
-        if "Camper-VLAN" in switch:
-            camper_vlan = helper.get_vlan(switch["Camper-VLAN"], "Camper-vlan")
-            for k in range(port_start + 1, port_index + 1):
-                helper.set_interface_vlan(nb_switch, port_prefix + str(k), camper_vlan)

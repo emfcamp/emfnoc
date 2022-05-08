@@ -41,6 +41,9 @@ if __name__ == "__main__":
             nb_switch = helper.get_switch(switch["Hostname"], device_type_id)
 
             helper.create_inband_mgmt(nb_switch)
+            # For now hardcode a /24
+            if "Mgmt-IP" in switch:
+                helper.set_inband_mgmt_ip(nb_switch, switch["Mgmt-IP"] + "/24")
             for key in switch.keys():
                 if key[0] == "#":
                     vlan = helper.get_vlan(vlan_lut[key[1:]], key[1:])
