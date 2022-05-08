@@ -6,7 +6,7 @@ The majority of the scripts are written in Python and require a few modules for 
 
 Under a Debian based Linux distro:
 
-    aptitude install python-gdata python-gdata-doc python-ipaddr python-jinja2 graphviz bind9utils python-asterisk
+    aptitude install  python-ipaddr python-jinja2 graphviz bind9utils python-asterisk
 
 For OSX hosts (not fully vetted):
 
@@ -21,13 +21,16 @@ Create configuration file `/etc/emf-gdata.conf` containing:
 ```
 [gdata]
 noc_combined=<spreadsheet id of the spreadsheet, get it from the url>
-oauth_client_id=
-oauth_client_secret=
 
 [switchconfig]
 enable=<unencrypted enable password>
 community=<unencrypted snmp community>
 ```
+
+Next download the credentials as a json file and place them in ~/.config/emf/
+
+For netbox communication create a netbox.yml file with the url and token that will be used to talk to netbox.
+
 
 ### Scripts
 
