@@ -38,6 +38,55 @@ class NetboxHelper:
             self.logger.setLevel(logging.INFO)
             ch = logging.StreamHandler()
             self.logger.addHandler(ch)
+    
+    def set_interface_tagged_vlan(self, device, interface_name, vlans):
+        interface = self.netbox.dcim.interfaces.get(
+            device_id=device.id, name=interface_name
+        )
+        
+        vlan_ids = map(lambda x : x.id, vlans)
+
+        interface.mode = "tagged"
+        interface.save()
+        interface.tagged_vlans = list(vlan_ids)
+        interface.save()
+        self.logger.info(f"{device} -  {interface_name}, to vlans {vlans}")
+        return interface
+    
+    def link_two_interfaces(self, i1, i2, description):
+        c1 = i1.cable
+        c2 = i2.cable
+        cable = None
+        if c1 and c2:
+            if i1.link_peer.id != i2.id or i2.link_peer.id != i1.id:
+                c1.delete()
+                c2.delete()
+                c1 = None
+                c2 = None
+        elif c1:
+            c1.delete()
+            c1 = None
+        elif c2:
+            c2.delete()
+            c2 = None
+        if not c1 and not c2:
+            #Connect magic
+            cable = self.netbox.dcim.cables.create(termination_a_type="dcim.interface",
+                                          termination_b_type="dcim.interface",
+                                          termination_a_id=i1.id,
+                                          termination_b_id=i2.id,
+                                          label = description)
+        self.logger.info(f"linking {i1} with {i2}")
+        if c1:
+            return c1
+        else:
+            return cable
+
+    def get_interface_for_device(self, device, interface_name):
+        interface = self.netbox.dcim.interfaces.get(
+            device_id=device.id, name=interface_name
+        )
+        return interface
 
     def set_interface_vlan(self, device, interface_name, vlan):
         interface = self.netbox.dcim.interfaces.get(
@@ -78,7 +127,7 @@ class NetboxHelper:
             device_id=device.id, name=vlan_interface
         )
         if not nb_vlan_interface:
-            nb_vlan_interface = netbox.dcim.interfaces.create(
+            nb_vlan_interface = self.netbox.dcim.interfaces.create(
                 device=device.id,
                 name=vlan_interface,
                 type="virtual",
@@ -126,7 +175,7 @@ class NetboxHelper:
         logger.info(str(device_type) + " " + str(sum_copper))
         return sum_copper
 
-    def get_vlan(self, vlan_id, prefix):
+    def get_vlan(self, vlan_id, prefix=""):
         vlan = self.netbox.ipam.vlans.get(vid=vlan_id)
         if not vlan:
             vlan = self.netbox.ipam.vlans.create(

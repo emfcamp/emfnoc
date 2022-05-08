@@ -5,8 +5,6 @@ import ipaddr, jinja2, configparser, argparse, shelve, code, shelve, os, sys, pp
 from jinja2 import Template, FileSystemLoader, Environment
 
 
-
-
 def download(spr_client, spreadsheet):
     if not os.path.exists("data"):
         os.mkdir("data")
@@ -463,7 +461,7 @@ if __name__ == "__main__":
     done_something = False
 
     if args.listws:
-        for ws in get_worksheets(spr_client,spreadsheet):
+        for ws in get_worksheets(spr_client, spreadsheet):
             print(ws)
         done_something = True
 
