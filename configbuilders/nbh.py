@@ -1,13 +1,12 @@
-import shelve
-import pprint
-import sys
-import functools
-import re
-import pynetbox
-from dataclasses import dataclass
 import logging
-from functools import cached_property
+import os
+import re
+import sys
+from dataclasses import dataclass
 from functools import lru_cache
+
+import pynetbox
+import yaml
 
 
 @dataclass
@@ -38,13 +37,16 @@ class NetboxHelper:
             self.logger.setLevel(logging.INFO)
             ch = logging.StreamHandler()
             self.logger.addHandler(ch)
-    
+
+        # Do a noop to make sure we connected successfully
+        self.netbox.dcim.sites.all()
+
     def set_interface_tagged_vlan(self, device, interface_name, vlans):
         interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=interface_name
         )
-        
-        vlan_ids = map(lambda x : x.id, vlans)
+
+        vlan_ids = map(lambda x: x.id, vlans)
 
         interface.mode = "tagged"
         interface.save()
@@ -52,7 +54,7 @@ class NetboxHelper:
         interface.save()
         self.logger.info(f"{device} -  {interface_name}, to vlans {vlans}")
         return interface
-    
+
     def link_two_interfaces(self, i1, i2, description):
         c1 = i1.cable
         c2 = i2.cable
@@ -70,12 +72,12 @@ class NetboxHelper:
             c2.delete()
             c2 = None
         if not c1 and not c2:
-            #Connect magic
+            # Connect magic
             cable = self.netbox.dcim.cables.create(termination_a_type="dcim.interface",
-                                          termination_b_type="dcim.interface",
-                                          termination_a_id=i1.id,
-                                          termination_b_id=i2.id,
-                                          label = description)
+                                                   termination_b_type="dcim.interface",
+                                                   termination_a_id=i1.id,
+                                                   termination_b_id=i2.id,
+                                                   label=description)
         self.logger.info(f"linking {i1} with {i2}")
         if c1:
             return c1
@@ -143,7 +145,7 @@ class NetboxHelper:
     def _get_device_type(netbox, model_type):
         device_type = netbox.dcim.device_types.get(model=model_type)
         if device_type or (
-            device_type := netbox.dcim.device_types.get(part_number=model_type)
+                device_type := netbox.dcim.device_types.get(part_number=model_type)
         ):
             return device_type
         return None
@@ -168,7 +170,7 @@ class NetboxHelper:
         if device_type := NetboxHelper._get_device_type(netbox, model_type):
             sum_copper = -1
             for interface in netbox.dcim.interface_templates.filter(
-                devicetype_id=device_type.id
+                    devicetype_id=device_type.id
             ):
                 if interface.type.value in copper_ports:
                     sum_copper += 1
@@ -200,3 +202,29 @@ class NetboxHelper:
                 site=self.site,
             )
         return device
+
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        if NetboxHelper.__instance is None:
+            netbox_cfg = NetboxHelper.load_config()
+            NetboxHelper.__instance = NetboxHelper(
+                url=netbox_cfg["url"], token=netbox_cfg["token"], mgmt_vlan=netbox_cfg["mgmt_vlan"]
+            )
+
+        return NetboxHelper.__instance
+
+    @staticmethod
+    def load_config():
+        files = ['netbox.yml', '~/.emf-netbox.yml', '/etc/emf-netbox.yml']
+        for file in files:
+            if os.path.exists(file):
+                with open(file) as netbox_cfg_file:
+                    try:
+                        return yaml.safe_load(netbox_cfg_file)
+                    except yaml.YAMLError as yamlerror:
+                        print(yamlerror, file=sys.stderr)
+                        sys.exit(1)
+
+        print("No netbox config file found, looked in " + str(files), file=sys.stderr)

@@ -8,23 +8,15 @@ import re
 import yaml
 from nbh import NetboxHelper
 
-MGMT_VLAN = 132
+# MGMT_VLAN = 132 # mgmt-vlan in netbox.cfg
 
 
 if __name__ == "__main__":
 
-    with open("netbox.yml") as netbox_cfg_file:
-        try:
-            netbox_cfg = yaml.safe_load(netbox_cfg_file)
-        except yaml.YAMLError as yamlerror:
-            print(yamlerror)
-            sys.exit(1)
+    helper = NetboxHelper.getInstance()
 
     switches = shelve.open("data/switches")["list"]
     port_types = shelve.open("data/port_types")["list"]
-    helper = NetboxHelper(
-        url=netbox_cfg["url"], token=netbox_cfg["token"], mgmt_vlan=MGMT_VLAN
-    )
 
     vlan_lut = {}
     for port_type in port_types:

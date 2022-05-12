@@ -9,8 +9,6 @@ import yaml
 from nbh import NetboxHelper
 import ipaddr
 
-MGMT_VLAN = 132
-
 
 def get_vlans(addressing):
     vlans = {}
@@ -50,20 +48,13 @@ def get_vlans(addressing):
 
 if __name__ == "__main__":
 
-    with open("netbox.yml") as netbox_cfg_file:
-        try:
-            netbox_cfg = yaml.safe_load(netbox_cfg_file)
-        except yaml.YAMLError as yamlerror:
-            print(yamlerror)
-            sys.exit(1)
+    helper = NetboxHelper.getInstance()
 
     switches = shelve.open("data/switches")["list"]
     port_types = shelve.open("data/port_types")["list"]
     links = shelve.open("data/links")["list"]
     addressing = shelve.open("data/addressing")["list"]
-    helper = NetboxHelper(
-        url=netbox_cfg["url"], token=netbox_cfg["token"], mgmt_vlan=MGMT_VLAN
-    )
+
     vlans = get_vlans(addressing)
     sidewide = []
     for k, v in vlans.items():
