@@ -1,36 +1,82 @@
 # EMF NOC - Configuration Builders
-These various scripts generate portions of the EMF network infrastructure, spanning both physical appliances (switches) to services (DHCP) under VM's. The authoritative source of truth is a master Google Docs spreadsheet, a sanitised version of the spreadsheet with only the necessary data can be found in `../archives/2014/documents/NOC Team Combined - REDACTED.xlsx`
 
-### Prereqsuites
-The majority of the scripts are written in Python and require a few modules for IP address calculations, template generation, etc.
+These various scripts generate portions of the EMF network infrastructure, spanning both physical appliances (switches)
+to services (DHCP) under VMs. The authoritative source of truth is a master Google Docs spreadsheet, which is used
+once to populate swathes of data into Netbox.
+
+## Configuration
+
+You will need a configuration file in ini format (specifically, Python ConfigParser).
+This should go in `./emfnoc.conf` (for testing), `~/.emfnoc.conf` (preferred), or `/etc/emfnoc.conf` (global).
+
+The sections you need depend on what script you are running.
+
+Scripts that put data *into* Netbox need the `[gdata]` section to access the Google spreadsheet.
+Scripts that put data into Netbox or take data from Netbox need the `[netbox]` section to access Netbox.
+
+### Ini settings for Google Sheets
+
+`populate-netbox.py` needs a connection to the NOC Combined spreadsheet to get the high-level data to populate Netbox
+with.
+
+Go to https://console.developers.google.com/iam-admin/projects?pli=1
+
+Click on create project, fill in a name and tick the boxes.
+
+Go to https://console.cloud.google.com/apis/credentials and select  your project
+and create credentials, this will give you the OAuth Client ID and Client Secret.
+
+Add this section to your config file:
+
+```ini
+[gdata]
+noc_combined=<spreadsheet id of the spreadsheet, get it from the url>
+oauth_client_id=<client id>
+oauth_client_secret=<secret>
+```
+
+Run `populate-netbox.py` with the --download option. It will automatically open a web browser for you to authorise
+access to Google Sheets. The access token is then stored in `.emf-gdata-token.json` so you shouldn't need to do this
+again this year.
+
+### Ini settings for Netbox
+
+Most of the scripts pull data from or insert data into Netbox. You need to configure the Netbox connection parameters
+in a `[netbox]` section in your config file.
+
+First create an API token using the Profile option after clicking your name in the top right of Netbox and then going
+to the API Tokens tab. Make the token read-only if you're only reading from Netbox, for safety.
+
+Then add a Netbox section to your config file:
+
+```ini
+[netbox]
+url=https://netbox.noc.emfcamp.org/
+token=<token>
+mgmt_vlan=132
+tenant=emf2022
+```
+
+| Key | Meaning |
+|-----|---------|
+| url | base URL of Netbox installation |
+| token | API token (can be read-only for config builders) |
+| mgmt_vlan | Management VLAN (used by `populate-netbox.py`) |
+| tenant | *slug* of the Netbox tenant to create everything under (used by `populate-netbox.py`) |
+
+
+### Prerequisites
+
+The majority of the scripts are written in Python and require a few modules for IP address calculations, template
+generation, etc.
 
 Under a Debian based Linux distro:
 
-    aptitude install  python-ipaddr python-jinja2 graphviz bind9utils python-asterisk
+    aptitude install python-ipaddr python-jinja2 graphviz bind9utils python-asterisk
 
 For OSX hosts (not fully vetted):
 
     sudo pip install gdata ipaddr jinja2
-
-Go to https://console.developers.google.com/iam-admin/projects?pli=1
-
-Click on create project, fill in a name and tick the boxes, choose Google Sheets API, click on credentials, (you may need to create a credential first?), and that's where the `oauth_client_id` and `secret` are.
-
-Create configuration file `/etc/emf-gdata.conf` containing:
-
-```
-[gdata]
-noc_combined=<spreadsheet id of the spreadsheet, get it from the url>
-
-[switchconfig]
-enable=<unencrypted enable password>
-community=<unencrypted snmp community>
-```
-
-Next download the credentials as a json file and place them in ~/.config/emf/
-
-For netbox communication create a netbox.yml file with the url and token that will be used to talk to netbox.
-
 
 ### Scripts
 
@@ -38,8 +84,8 @@ For netbox communication create a netbox.yml file with the url and token that wi
 
 * `gen-icinga.py` - generates switch and link monitoring
 
-* `gen-icinga.php` - 2012 icinga generation, not used this time around, has additional monitoring
-for servers but not links, because davidc couldn't be bothered to learn python last time round
+* `gen-icinga.php` - 2012 icinga generation, not used this time around, has additional monitoring for servers but not
+  links, because davidc couldn't be bothered to learn python last time round
 
 * `gen-labels.py` - generates labels for the switches (after gen-switch.py --template=label)
 
@@ -59,8 +105,7 @@ for servers but not links, because davidc couldn't be bothered to learn python l
 
 * `sanitise-rancid.sh` - remove passwords/communities/crypto keys before storing configs to github
 
-* `gen-phones.py` - generates the icinga config for the phones, needs to be
-  run on the voip server
+* `gen-phones.py` - generates the icinga config for the phones, needs to be run on the voip server
 
 Generating switch config
 ------------------------
@@ -70,6 +115,7 @@ The first time you run a configbuilder command it will give you a url to go to.
 Go there, and it will give you an oauth token to add to emf-gdata.conf as well.
 
 Then run
+
 ```
 ./gen-switch.py --download
 ./gen-switch.py --generate
@@ -112,7 +158,8 @@ write = all
 writetimeout = 1000
 ```
 
-The script uses the `python-asterisk` package on debian, which needs a config file too, so add `~/.py-asterisk.conf` containing:
+The script uses the `python-asterisk` package on debian, which needs a config file too, so add `~/.py-asterisk.conf`
+containing:
 
 ```
 [py-asterisk]
@@ -124,7 +171,6 @@ port: 5038
 username: username from manager.d/something.conf
 secret: secret from manager.d/something.conf
 ```
-
 
 Oauth2 stuff:
 

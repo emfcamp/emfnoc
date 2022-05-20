@@ -1,13 +1,11 @@
 import logging
-import os
 import re
-import sys
 from dataclasses import dataclass
 from functools import lru_cache
-from pprint import pprint
 
 import pynetbox
-import yaml
+
+from emfnoc import EmfNoc
 
 
 @dataclass
@@ -218,21 +216,7 @@ class NetboxHelper:
     @staticmethod
     def getInstance():
         if NetboxHelper.__instance is None:
-            netbox_cfg = NetboxHelper.load_config()
+            netbox_cfg = dict(EmfNoc.load_config().items('netbox'))
             NetboxHelper.__instance = NetboxHelper(netbox_cfg)
 
         return NetboxHelper.__instance
-
-    @staticmethod
-    def load_config():
-        files = ['netbox.yml', '~/.emf-netbox.yml', '/etc/emf-netbox.yml']
-        for file in files:
-            if os.path.exists(file):
-                with open(file) as netbox_cfg_file:
-                    try:
-                        return yaml.safe_load(netbox_cfg_file)
-                    except yaml.YAMLError as yamlerror:
-                        print(yamlerror, file=sys.stderr)
-                        sys.exit(1)
-
-        print("No netbox config file found, looked in " + str(files), file=sys.stderr)

@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
-
-import shelve
-import pprint
+import argparse
 import sys
-import functools
-import re
-import yaml
+
+from nocsheet import NocSheetHelper
 from nbh import NetboxHelper
 
-# MGMT_VLAN = 132 # mgmt-vlan in netbox.cfg
 
-
-if __name__ == "__main__":
-
+def populate_netbox(nocsheet):
     helper = NetboxHelper.getInstance()
 
-    switches = shelve.open("data/switches")["list"]
-    port_types = shelve.open("data/port_types")["list"]
+    switches = nocsheet.get_shelf('switches')
+    port_types = nocsheet.get_shelf('port_types')
 
     vlan_lut = {}
     for port_type in port_types:
@@ -52,3 +46,25 @@ if __name__ == "__main__":
                     helper.set_interface_vlan(
                         nb_switch, port_prefix + str(k), camper_vlan
                     )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Populate Netbox with summary data from google sheets."
+    )
+
+    nocsheet = NocSheetHelper()
+    nocsheet.add_arguments(parser)
+
+    parser.add_argument("--populate", action="store_true", help="Populate data into Netbox")
+
+    args = parser.parse_args()
+
+    done_something = nocsheet.process_arguments(args)
+
+    if args.populate:
+        populate_netbox(nocsheet)
+        done_something = True
+
+    if not done_something:
+        print("Nothing to do, try " + sys.argv[0] + " --help")
