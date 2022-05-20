@@ -4,6 +4,7 @@ import re
 import sys
 from dataclasses import dataclass
 from functools import lru_cache
+from pprint import pprint
 
 import pynetbox
 import yaml
@@ -11,10 +12,8 @@ import yaml
 
 @dataclass
 class NetboxHelper:
-    url: str
-    token: str
     mgmt_vlan: int
-    tenant: int = 1
+    tenant: int
     site: int = 1
     device_role: int = 1
     verbose: bool = True
@@ -30,8 +29,13 @@ class NetboxHelper:
         "Brocade": "ve {0}",
     }
 
-    def __post_init__(self):
-        self.netbox = pynetbox.api(self.url, self.token)
+    def __init__(self, netbox_cfg):
+        url = netbox_cfg['url']
+        token = netbox_cfg['token']
+        self.mgmt_vlan = netbox_cfg['mgmt_vlan']
+        self.verbose = netbox_cfg['verbose'] if 'verbose' in netbox_cfg else False
+
+        self.netbox = pynetbox.api(url, token)
         self.logger = logging.getLogger(__name__)
         if self.verbose:
             self.logger.setLevel(logging.INFO)
@@ -40,6 +44,12 @@ class NetboxHelper:
 
         # Do a noop to make sure we connected successfully
         self.netbox.dcim.sites.all()
+
+        # Look up the tenant to create everything under
+        tenant = self.netbox.tenancy.tenants.get(slug=netbox_cfg['tenant'])
+        if tenant is None:
+            raise ValueError('Tenant with slug %s not found in Netbox' % netbox_cfg['tenant'])
+        self.tenant = tenant.id
 
     def set_interface_tagged_vlan(self, device, interface_name, vlans):
         interface = self.netbox.dcim.interfaces.get(
@@ -209,9 +219,7 @@ class NetboxHelper:
     def getInstance():
         if NetboxHelper.__instance is None:
             netbox_cfg = NetboxHelper.load_config()
-            NetboxHelper.__instance = NetboxHelper(
-                url=netbox_cfg["url"], token=netbox_cfg["token"], mgmt_vlan=netbox_cfg["mgmt_vlan"]
-            )
+            NetboxHelper.__instance = NetboxHelper(netbox_cfg)
 
         return NetboxHelper.__instance
 
