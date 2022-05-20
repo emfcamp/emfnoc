@@ -31,6 +31,8 @@ class NetboxHelper:
     def __init__(self, netbox_cfg):
         url = netbox_cfg['url']
         token = netbox_cfg['token']
+
+        self.config = netbox_cfg
         self.mgmt_vlan = netbox_cfg['mgmt_vlan']
         self.verbose = netbox_cfg['verbose'] if 'verbose' in netbox_cfg else False
 
@@ -195,7 +197,7 @@ class NetboxHelper:
         # TODO this should in fact raise an error, VLAN creation should have been done first
         if not vlan:
             vlan = self.netbox.ipam.vlans.create(
-                vid=vlan_id, name=prefix + "-" + vlan_id, tenant=self.tenant
+                vid=vlan_id, name=prefix + "-" + str(vlan_id), tenant=self.tenant
             )
         vlan.tenant = self.tenant
         vlan.save()

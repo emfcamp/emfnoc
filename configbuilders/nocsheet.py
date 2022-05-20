@@ -101,7 +101,7 @@ class NocSheetHelper:
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
-                print("Refresh!")
+                print("Refreshed your OAuth token - you're welcome!")
             else:
                 client_config = {
                     'installed': {

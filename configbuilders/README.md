@@ -54,6 +54,7 @@ Then add a Netbox section to your config file:
 url=https://netbox.noc.emfcamp.org/
 token=<token>
 mgmt_vlan=132
+mgmt_subnet_length=/24
 tenant=emf2022
 ```
 

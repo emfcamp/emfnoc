@@ -56,7 +56,8 @@ def populate_netbox(nocsheet, verbose):
                     vlandef_switches = vlandef['Switch'].split(',')
                     if device['Hostname'] in vlandef_switches:
                         if camper_vlan_id is not None:
-                            print('Warning: multiple matching Camper-VLANs for %s' % device['Hostname'], file=sys.stderr)
+                            print('Warning: multiple matching Camper-VLANs for %s' % device['Hostname'],
+                                  file=sys.stderr)
                         camper_vlan_id = int(vlandef['VLAN'])
 
             if camper_vlan_id is None:
@@ -64,9 +65,11 @@ def populate_netbox(nocsheet, verbose):
 
             if verbose: print('Camper-VLAN for %s is %d' % (device['Hostname'], camper_vlan_id))
 
+            camper_vlan = helper.get_vlan(camper_vlan_id, 'Camper')
+
             for k in range(port_start + 1, port_index + 1):
                 helper.set_interface_vlan(
-                    nb_switch, port_prefix + str(k), camper_vlan_id if camper_vlan_id is not None else 1
+                    nb_switch, port_prefix + str(k), camper_vlan
                 )
 
 
