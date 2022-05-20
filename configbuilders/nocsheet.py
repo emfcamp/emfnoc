@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
-import configparser
 import os.path
-import pathlib
 import shelve
 import sys
-from pprint import pprint
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -19,6 +16,11 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
 
 class NocSheetHelper:
+    SHELF_VLANS = 'vlans'
+    SHELF_LINKS = 'links'
+    SHELF_USERS = 'users'
+    SHELF_PORT_TYPES = 'port_types'
+    SHELF_DEVICES = 'devices'
 
     def add_arguments(self, parser):
         parser.add_argument("--listws", action="store_true", help="list worksheets")
@@ -66,45 +68,20 @@ class NocSheetHelper:
         if not os.path.exists("data"):
             os.mkdir("data")
 
-        print("downloading switches")
-        switches = self.get_worksheet_data(spr_client, spreadsheet, "Switches")
-
-        sws = shelve.open("data/switches")
-        sws["list"] = switches
-        sws.close()
-
-        print("downloading port types")
-        port_types = self.get_worksheet_data(spr_client, spreadsheet, "Port Types")
-
-        pt = shelve.open("data/port_types")
-        pt["list"] = port_types
-        pt.close()
-
-        print("downloading users")
-        users = self.get_worksheet_data(spr_client, spreadsheet, "Users")
-        for user in list(users):
-            if not "IOS password" in user:
-                users.remove(user)
-
-        u = shelve.open("data/users")
-        u["list"] = users
-        u.close()
-
-        print("downloading Addressing")
-        addressing = self.get_worksheet_data(spr_client, spreadsheet, "Addressing")
-
-        v4 = shelve.open("data/addressing")
-        v4["list"] = addressing
-        v4.close()
-
-        print("downloading Links")
-        links = self.get_worksheet_data(spr_client, spreadsheet, "Links")
-
-        l = shelve.open("data/links")
-        l["list"] = links
-        l.close()
+        self.download_sheet_to_shelf('Devices', self.SHELF_DEVICES, spr_client, spreadsheet)
+        self.download_sheet_to_shelf('Port Types', self.SHELF_PORT_TYPES, spr_client, spreadsheet)
+        self.download_sheet_to_shelf('Users', self.SHELF_USERS, spr_client, spreadsheet)
+        self.download_sheet_to_shelf('Links', self.SHELF_LINKS, spr_client, spreadsheet)
+        self.download_sheet_to_shelf('VLANs', self.SHELF_VLANS, spr_client, spreadsheet)
 
         print("done")
+
+    def download_sheet_to_shelf(self, sheet_name, shelf_name, spr_client, spreadsheet):
+        print("downloading %s" % sheet_name)
+        data = self.get_worksheet_data(spr_client, spreadsheet, sheet_name)
+        shelf = shelve.open('data/%s' % shelf_name)
+        shelf["list"] = data
+        shelf.close()
 
     def dump_worksheet(self, spr_client, spreadsheet, wks):
         print(self.get_worksheet_data(spr_client, spreadsheet, wks))
@@ -158,14 +135,14 @@ class NocSheetHelper:
             worksheets.append((k["properties"]["title"]))
         return worksheets
 
-    def get_worksheet_data(self, spr_client, spreadsheet, wks):
+    def get_worksheet_data(self, spr_client, spreadsheet, sheet_name):
         sheets = self.get_worksheets(spr_client, spreadsheet)
-        if wks not in sheets:
-            print("worksheet " + wks + " not found")
-            exit()
+        if sheet_name not in sheets:
+            print("Worksheet " + sheet_name + " not found", file=sys.stderr)
+            sys.exit(1)
 
         request = (
-            spr_client.spreadsheets().values().get(spreadsheetId=spreadsheet, range=wks)
+            spr_client.spreadsheets().values().get(spreadsheetId=spreadsheet, range=sheet_name)
         )
         response = request.execute()
         col_keys = {}
@@ -187,4 +164,4 @@ class NocSheetHelper:
         return out
 
     def get_shelf(self, name):
-        return shelve.open("data/switches")["list"]
+        return shelve.open('data/%s' % name)["list"]

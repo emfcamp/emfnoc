@@ -1,5 +1,6 @@
 import logging
 import re
+import sys
 from dataclasses import dataclass
 from functools import lru_cache
 
@@ -102,6 +103,10 @@ class NetboxHelper:
         interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=interface_name
         )
+        if interface is None:
+            print('Interface %s does not exist on device %s' % (interface_name, device.name), file=sys.stderr)
+            sys.exit(1)
+
         interface.mode = "access"
         interface.untagged_vlan = vlan.id
         interface.save()
@@ -187,6 +192,7 @@ class NetboxHelper:
 
     def get_vlan(self, vlan_id, prefix=""):
         vlan = self.netbox.ipam.vlans.get(vid=vlan_id)
+        # TODO this should in fact raise an error, VLAN creation should have been done first
         if not vlan:
             vlan = self.netbox.ipam.vlans.create(
                 vid=vlan_id, name=prefix + "-" + vlan_id, tenant=self.tenant
