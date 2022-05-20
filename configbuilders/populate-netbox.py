@@ -28,16 +28,16 @@ def populate_netbox(nocsheet, verbose):
                 continue
 
             device_type_id = device_type.id
-            port_prefix = device.get("Port-Prefix")
-            port_start = int(device.get("Port-Start", "1")) - 1
-            copper_ports = helper.get_sum_copper_ports(device["Model"])
+            port_prefix = device['Port-Prefix']
+            port_start = int(device['Port-Start']) - 1
+            copper_ports = helper.get_sum_copper_ports(device['Model'])
             port_index = copper_ports + port_start
-            nb_switch = helper.get_switch(device["Hostname"], device_type_id)
+            nb_switch = helper.get_switch(device['Hostname'], device_type_id)
 
             helper.create_inband_mgmt(nb_switch)
             # For now hardcode a /24
             if "Mgmt-IP" in device:
-                helper.set_inband_mgmt_ip(nb_switch, device["Mgmt-IP"] + "/24")
+                helper.set_inband_mgmt_ip(nb_switch, device["Mgmt-IP"] + helper.config.get('mgmt_subnet_length'))
 
             # Allocate the special-VLAN ports from the top down
             for key in device.keys():
