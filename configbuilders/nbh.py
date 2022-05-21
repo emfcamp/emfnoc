@@ -15,7 +15,7 @@ class NetboxHelper:
     mgmt_vlan: int
     tenant_id: int
     vlan_group_id: int
-    site: int = 1
+    site_id: int
     device_role: int = 1
     verbose: bool = True
 
@@ -54,14 +54,17 @@ class NetboxHelper:
             raise ValueError('Tenant with slug %s not found in Netbox' % netbox_cfg['tenant'])
         self.tenant_id = tenant.id
 
+        # Look up the site
+        site = self.netbox.dcim.sites.get(slug=netbox_cfg['site'])
+        if site is None:
+            raise ValueError('Site with slug %s not found in Netbox' % netbox_cfg['site'])
+        self.site_id = site.id
+
         # Look up the VLAN group
         vlan_group = self.netbox.ipam.vlan_groups.get(slug=netbox_cfg['vlan_group'])
         if vlan_group is None:
             raise ValueError('VLAN Group with slug %s not found in Netbox' % netbox_cfg['vlan_group'])
         self.vlan_group_id = vlan_group.id
-        pprint(vlan_group)
-        pprint(dir(vlan_group))
-        pprint(self.vlan_group_id)
         self.vlan_group_slug = netbox_cfg['vlan_group']
 
     def set_interface_tagged_vlan(self, device, interface_name, vlans):
@@ -204,21 +207,18 @@ class NetboxHelper:
         logger.info(str(device_type) + " " + str(sum_copper))
         return sum_copper
 
-    def create_vlan(self, vlan_id, vlan_name):
+    def create_vlan(self, vlan_id, vlan_name, description):
         vlan = self.netbox.ipam.vlans.get(vid=vlan_id, group=self.vlan_group_slug)
         if vlan:
-            if vlan.tenant.id != self.tenant_id:
-                print("Moving vlan %d to correct tenant (%d to %d)" % (vlan_id, vlan.tenant_id, self.tenant_id))
-                vlan.tenant_id = self.tenant_id
-                vlan.save()
-            if vlan.name != vlan_name:
-                print("Renaming vlan %d to %s" % (vlan_id, vlan_name))
-                vlan.name = vlan_name
-                vlan.save()
+            # We can just make these changes and save(), since that already does nothing if nothing has changed
+            vlan.tenant = self.tenant_id
+            vlan.name = vlan_name
+            vlan.description = description
+            vlan.save()
             return vlan
         else:
-            return self.netbox.ipam.vlans.create(vid=vlan_id, name=vlan_name, tenant=self.tenant_id,
-                                                 group={'id': self.vlan_group_id})
+            return self.netbox.ipam.vlans.create(vid=vlan_id, name=vlan_name, description=description,
+                                                 tenant=self.tenant_id, group={'id': self.vlan_group_id})
 
     def get_vlan(self, vlan_id):
         vlan = self.netbox.ipam.vlans.get(vid=vlan_id, vlan_group=self.vlan_group_id)
@@ -226,6 +226,24 @@ class NetboxHelper:
             raise ValueError('Tried to use VLAN ID %d but does not exist fool' % vlan_id)
 
         return vlan
+
+    def create_prefix(self, prefix_str: str, description: str, vlan, dhcp: bool, dhcp_reserved: int):
+        prefix = self.netbox.ipam.prefixes.get(prefix=prefix_str)
+        if prefix:
+            # We can just make these changes and save(), since that already does nothing if nothing has changed
+            prefix.tenant = self.tenant_id
+            prefix.site = self.site_id
+            prefix.description = description
+            prefix.vlan = vlan
+            prefix.dhcp = dhcp
+            prefix.custom_fields['dhcp'] = dhcp
+            prefix.custom_fields['dhcp_reserved'] = dhcp_reserved
+            prefix.save()
+            return prefix
+        else:
+            return self.netbox.ipam.prefixes.create(prefix=prefix_str, tenant=self.tenant_id, site=self.site_id,
+                                                    vlan=vlan.id, description=description,
+                                                    custom_fields={'dhcp': dhcp, 'dhcp_reserved': dhcp_reserved})
 
     def get_switch(self, hostname, model_id):
         device = self.netbox.dcim.devices.get(name=hostname)
@@ -239,7 +257,7 @@ class NetboxHelper:
                 device_type=model_id,
                 device_role=self.device_role,
                 tenant=self.tenant_id,
-                site=self.site,
+                site=self.site_id,
             )
         return device
 

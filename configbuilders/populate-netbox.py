@@ -23,10 +23,21 @@ class NetboxPopulator:
         self.vlans = nocsheet.get_shelf(NocSheetHelper.SHELF_VLANS)
 
     def populate_vlans(self):
-        with click.progressbar(self.vlans, label='VLANs',
+        with click.progressbar(self.vlans, label='VLANs and Prefixes ',
                                item_show_func=lambda item: item['Name'] if item else None) as bar:
             for vlandef in bar:
-                self.helper.create_vlan(int(vlandef['VLAN']), vlandef['Name'])
+                vlan = self.helper.create_vlan(int(vlandef['VLAN']), vlandef['Name'],
+                                               vlandef['Description'] if 'Description' in vlandef else '')
+
+                dhcp = vlandef['DHCP'] == 'y' if 'DHCP' in vlandef else False
+                dhcp_reserved = int(vlandef['DHCP-Reserved']) if 'DHCP-Reserved' in vlandef else None
+
+                if 'IPv4-Prefix' in vlandef:
+                    self.helper.create_prefix(vlandef['IPv4-Prefix'], vlandef['Name'], vlan,
+                                              dhcp, dhcp_reserved)
+                if 'IPv6-Prefix' in vlandef:
+                    self.helper.create_prefix(vlandef['IPv6-Prefix'], vlandef['Name'], vlan,
+                                              dhcp, dhcp_reserved)
 
     def populate_switches(self):
         vlan_lut = {}
@@ -112,6 +123,8 @@ if __name__ == "__main__":
 
         populator.populate_vlans()
         populator.populate_switches()
+        # populator.populate_switch_ports()
+        # populator.populate_core_svis()
         done_something = True
 
     if not done_something:

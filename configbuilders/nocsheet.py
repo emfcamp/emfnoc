@@ -164,6 +164,7 @@ class NocSheetHelper:
         return out
 
     def get_shelf(self, name):
+        # TODO print a warning if someone tries to open a shelf over a few hours old
         with shelve.open('data/%s' % name, 'r') as shelf:
             data = shelf['list']
         return data
