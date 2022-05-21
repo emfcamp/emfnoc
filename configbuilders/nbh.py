@@ -3,6 +3,7 @@ import re
 import sys
 from dataclasses import dataclass
 from functools import lru_cache
+from pprint import pprint
 
 import pynetbox
 
@@ -12,7 +13,8 @@ from emfnoc import EmfNoc
 @dataclass
 class NetboxHelper:
     mgmt_vlan: int
-    tenant: int
+    tenant_id: int
+    vlan_group_id: int
     site: int = 1
     device_role: int = 1
     verbose: bool = True
@@ -50,7 +52,17 @@ class NetboxHelper:
         tenant = self.netbox.tenancy.tenants.get(slug=netbox_cfg['tenant'])
         if tenant is None:
             raise ValueError('Tenant with slug %s not found in Netbox' % netbox_cfg['tenant'])
-        self.tenant = tenant.id
+        self.tenant_id = tenant.id
+
+        # Look up the VLAN group
+        vlan_group = self.netbox.ipam.vlan_groups.get(slug=netbox_cfg['vlan_group'])
+        if vlan_group is None:
+            raise ValueError('VLAN Group with slug %s not found in Netbox' % netbox_cfg['vlan_group'])
+        self.vlan_group_id = vlan_group.id
+        pprint(vlan_group)
+        pprint(dir(vlan_group))
+        pprint(self.vlan_group_id)
+        self.vlan_group_slug = netbox_cfg['vlan_group']
 
     def set_interface_tagged_vlan(self, device, interface_name, vlans):
         interface = self.netbox.dcim.interfaces.get(
@@ -192,15 +204,27 @@ class NetboxHelper:
         logger.info(str(device_type) + " " + str(sum_copper))
         return sum_copper
 
-    def get_vlan(self, vlan_id, prefix=""):
-        vlan = self.netbox.ipam.vlans.get(vid=vlan_id)
-        # TODO this should in fact raise an error, VLAN creation should have been done first
+    def create_vlan(self, vlan_id, vlan_name):
+        vlan = self.netbox.ipam.vlans.get(vid=vlan_id, group=self.vlan_group_slug)
+        if vlan:
+            if vlan.tenant.id != self.tenant_id:
+                print("Moving vlan %d to correct tenant (%d to %d)" % (vlan_id, vlan.tenant_id, self.tenant_id))
+                vlan.tenant_id = self.tenant_id
+                vlan.save()
+            if vlan.name != vlan_name:
+                print("Renaming vlan %d to %s" % (vlan_id, vlan_name))
+                vlan.name = vlan_name
+                vlan.save()
+            return vlan
+        else:
+            return self.netbox.ipam.vlans.create(vid=vlan_id, name=vlan_name, tenant=self.tenant_id,
+                                                 group={'id': self.vlan_group_id})
+
+    def get_vlan(self, vlan_id):
+        vlan = self.netbox.ipam.vlans.get(vid=vlan_id, vlan_group=self.vlan_group_id)
         if not vlan:
-            vlan = self.netbox.ipam.vlans.create(
-                vid=vlan_id, name=prefix + "-" + str(vlan_id), tenant=self.tenant
-            )
-        vlan.tenant = self.tenant
-        vlan.save()
+            raise ValueError('Tried to use VLAN ID %d but does not exist fool' % vlan_id)
+
         return vlan
 
     def get_switch(self, hostname, model_id):
@@ -214,7 +238,7 @@ class NetboxHelper:
                 name=hostname,
                 device_type=model_id,
                 device_role=self.device_role,
-                tenant=self.tenant,
+                tenant=self.tenant_id,
                 site=self.site,
             )
         return device

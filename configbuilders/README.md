@@ -56,6 +56,7 @@ token=<token>
 mgmt_vlan=132
 mgmt_subnet_length=/24
 tenant=emf2022
+vlan_group=emf2022-site-vlans
 ```
 
 | Key | Meaning |
@@ -71,13 +72,9 @@ tenant=emf2022
 The majority of the scripts are written in Python and require a few modules for IP address calculations, template
 generation, etc.
 
-Under a Debian based Linux distro:
-
-    aptitude install python-ipaddr python-jinja2 graphviz bind9utils python-asterisk
-
-For OSX hosts (not fully vetted):
-
-    sudo pip install gdata ipaddr jinja2
+```
+pip install -r requirements.txt
+```
 
 ### Scripts
 

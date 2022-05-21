@@ -164,4 +164,6 @@ class NocSheetHelper:
         return out
 
     def get_shelf(self, name):
-        return shelve.open('data/%s' % name)["list"]
+        with shelve.open('data/%s' % name, 'r') as shelf:
+            data = shelf['list']
+        return data
