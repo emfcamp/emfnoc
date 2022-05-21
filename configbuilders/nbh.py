@@ -154,7 +154,7 @@ class NetboxHelper:
         if re.match("EX(2300|3400|4300|4600|9200).*", model):
             manufacturer = "JuniperELS"
         vlan_interface = self.__vlan_interfaces[manufacturer].format(vlan_id)
-        vlan = self.get_vlan(vlan_id, "mangement")
+        vlan = self.get_vlan(vlan_id)
         nb_vlan_interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=vlan_interface
         )
@@ -245,13 +245,37 @@ class NetboxHelper:
                                                     vlan=vlan.id, description=description,
                                                     custom_fields={'dhcp': dhcp, 'dhcp_reserved': dhcp_reserved})
 
-    def get_switch(self, hostname, model_id):
-        device = self.netbox.dcim.devices.get(name=hostname)
+    @staticmethod
+    @lru_cache(maxsize=500)
+    def _get_device(netbox, hostname):
+        device = netbox.dcim.devices.get(name=hostname)
+        if device:
+            return device
+        return None
+
+    def get_switch(self, hostname):
+        device = NetboxHelper._get_device(self.netbox, hostname)
+        if not device:
+            raise ValueError('Tried to use device with hostname %s but does not exist fool' % hostname)
+        return device
+
+    def create_switch(self, hostname, model_id):
+        device = NetboxHelper._get_device(self.netbox, hostname)
         if device and device.device_type.id != model_id:
             self.logger.warning("WARNING MODEL DOES NOT MATCH, deleting")
             device.delete()
             device = None
-        if not device:
+            NetboxHelper._get_device.cache_clear()
+
+        if device:
+            device.tenant = self.tenant_id
+            device.site = self.site_id
+            device.device_role = self.device_role
+            if device.updates():
+                print("Device %s has changed, saving" % hostname)
+                device.save() # TODO should we be checking return value?
+                NetboxHelper._get_device.cache_clear()
+        else:
             device = self.netbox.dcim.devices.create(
                 name=hostname,
                 device_type=model_id,

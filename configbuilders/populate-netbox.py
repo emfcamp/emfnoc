@@ -23,7 +23,7 @@ class NetboxPopulator:
         self.vlans = nocsheet.get_shelf(NocSheetHelper.SHELF_VLANS)
 
     def populate_vlans(self):
-        with click.progressbar(self.vlans, label='VLANs and Prefixes ',
+        with click.progressbar(self.vlans, label='VLANs and Prefixes',
                                item_show_func=lambda item: item['Name'] if item else None) as bar:
             for vlandef in bar:
                 vlan = self.helper.create_vlan(int(vlandef['VLAN']), vlandef['Name'],
@@ -40,67 +40,78 @@ class NetboxPopulator:
                                               dhcp, dhcp_reserved)
 
     def populate_switches(self):
+        with click.progressbar(self.devices, label='Switches',
+                               item_show_func=lambda item: item['Hostname'] if item else None) as bar:
+
+            # TODO location
+
+            for device in bar:
+                if "Model" in device.keys():
+                    device_type = self.helper.get_device_type(device["Model"])
+                    if not device_type:
+                        print('Warning: device type %s for %s does not exist, skipping!' %
+                              (device['Model'], device['Hostname']))
+                        continue
+
+                    device_type_id = device_type.id
+                    nb_switch = self.helper.create_switch(device['Hostname'], device_type_id)
+
+                    # For now hardcode a /24
+                    # TODO just get the prefix that has already been created
+                    if 'Mgmt-IP' in device:
+                        self.helper.create_inband_mgmt(nb_switch)
+                        self.helper.set_inband_mgmt_ip(nb_switch,
+                                                       device["Mgmt-IP"] + self.helper.config.get('mgmt_subnet_length'))
+
+    def populate_switch_ports(self):
         vlan_lut = {}
         for port_type in self.port_types:
             vlan_lut[port_type["Port-Type"]] = port_type["VLAN"]
 
-        for device in self.devices:
-            if self.verbose: print('Checking %s' % device['Hostname'])
-            if "Model" in device.keys():
-                if self.verbose: print('Doing %s' % device['Hostname'])
+        with click.progressbar(self.devices, label='Switch Ports',
+                               item_show_func=lambda item: item['Hostname'] if item else None) as bar:
+            for device in bar:
+                if "Model" in device.keys():
 
-                device_type = self.helper.get_device_type(device["Model"])
-                if not device_type:
-                    print(
-                        'Warning, device type %s for %s does not exist, skipping!' % (
-                            device['Model'], device['Hostname']))
-                    continue
+                    nb_switch = self.helper.get_switch(device['Hostname'])
 
-                device_type_id = device_type.id
-                port_prefix = device['Port-Prefix']
-                port_start = int(device['Port-Start']) - 1
-                copper_ports = self.helper.get_sum_copper_ports(device['Model'])
-                port_index = copper_ports + port_start
-                nb_switch = self.helper.get_switch(device['Hostname'], device_type_id)
+                    port_start = int(device['Port-Start']) - 1
+                    copper_ports = self.helper.get_sum_copper_ports(device['Model'])
+                    port_prefix = device['Port-Prefix']
+                    port_index = copper_ports + port_start
 
-                self.helper.create_inband_mgmt(nb_switch)
-                # For now hardcode a /24
-                if "Mgmt-IP" in device:
-                    self.helper.set_inband_mgmt_ip(nb_switch,
-                                                   device["Mgmt-IP"] + self.helper.config.get('mgmt_subnet_length'))
+                    # Allocate the special-VLAN ports from the top down
+                    for key in device.keys():
+                        if key[0] == "#":
+                            vlan = self.helper.get_vlan(vlan_lut[key[1:]])
+                            for i in range(int(device[key])):
+                                self.helper.set_interface_vlan(
+                                    nb_switch, port_prefix + str(port_index), vlan
+                                )
+                                port_index -= 1
 
-                # Allocate the special-VLAN ports from the top down
-                for key in device.keys():
-                    if key[0] == "#":
-                        vlan = self.helper.get_vlan(vlan_lut[key[1:]])
-                        for i in range(int(device[key])):
-                            self.helper.set_interface_vlan(
-                                nb_switch, port_prefix + str(port_index), vlan
-                            )
-                            port_index -= 1
+                    # See if it needs a camper VLAN, look for a VLAN with camper='y' and this switch name in the Switch column
+                    camper_vlan_id = None
+                    for vlandef in self.vlans:
+                        if 'Camper' in vlandef and vlandef['Camper'] == 'y':
+                            vlandef_switches = vlandef['Switch'].split(',')
+                            if device['Hostname'] in vlandef_switches:
+                                if camper_vlan_id is not None:
+                                    print('Warning: multiple matching Camper-VLANs for %s' % device['Hostname'],
+                                          file=sys.stderr)
+                                camper_vlan_id = int(vlandef['VLAN'])
 
-                # See if it needs a camper VLAN, look for a VLAN with camper='y' and this switch name in the Switch column
-                camper_vlan_id = None
-                for vlandef in self.vlans:
-                    if 'Camper' in vlandef and vlandef['Camper'] == 'y':
-                        vlandef_switches = vlandef['Switch'].split(',')
-                        if device['Hostname'] in vlandef_switches:
-                            if camper_vlan_id is not None:
-                                print('Warning: multiple matching Camper-VLANs for %s' % device['Hostname'],
-                                      file=sys.stderr)
-                            camper_vlan_id = int(vlandef['VLAN'])
+                    if camper_vlan_id is None:
+                        print('Warning: no Camper-VLAN found for %s' % device['Hostname'])
 
-                if camper_vlan_id is None:
-                    print('Warning: no Camper-VLAN found for %s' % device['Hostname'])
+                    if self.verbose: print('Camper-VLAN for %s is %d' % (device['Hostname'], camper_vlan_id))
 
-                if self.verbose: print('Camper-VLAN for %s is %d' % (device['Hostname'], camper_vlan_id))
+                    camper_vlan = self.helper.get_vlan(camper_vlan_id)
 
-                camper_vlan = self.helper.get_vlan(camper_vlan_id)
-
-                for k in range(port_start + 1, port_index + 1):
-                    self.helper.set_interface_vlan(
-                        nb_switch, port_prefix + str(k), camper_vlan
-                    )
+                    for k in range(port_start + 1, port_index + 1):
+                        self.helper.set_interface_vlan(
+                            nb_switch, port_prefix + str(k), camper_vlan
+                        )
 
 
 if __name__ == "__main__":
@@ -111,21 +122,30 @@ if __name__ == "__main__":
     nocsheet = NocSheetHelper()
     nocsheet.add_arguments(parser)
 
-    parser.add_argument("--populate", action="store_true", help="Populate data into Netbox")
     parser.add_argument("--verbose", action="store_true", help="Print what it's doing")
+    parser.add_argument("--populate-all", action="store_true", help="Populate EVERYTHING into Netbox")
+    parser.add_argument("--populate-vlans", action="store_true", help="Populate VLANs and prefixes")
+    parser.add_argument("--populate-switches", action="store_true", help="Populate switches")
+    parser.add_argument("--populate-switch-ports", action="store_true", help="Populate switch ports")
 
     args = parser.parse_args()
 
     done_something = nocsheet.process_arguments(args)
 
-    if args.populate:
-        populator = NetboxPopulator(nocsheet, args.verbose)
-
+    populator = NetboxPopulator(nocsheet, args.verbose)
+    if args.populate_all or args.populate_vlans:
         populator.populate_vlans()
-        populator.populate_switches()
-        # populator.populate_switch_ports()
-        # populator.populate_core_svis()
         done_something = True
+
+    if args.populate_all or args.populate_switches:
+        populator.populate_switches()
+        done_something = True
+
+    if args.populate_all or args.populate_switch_ports:
+        populator.populate_switch_ports()
+        done_something = True
+
+    # populator.populate_core_svis()
 
     if not done_something:
         print("Nothing to do, try " + sys.argv[0] + " --help")

@@ -66,6 +66,13 @@ vlan_group=emf2022-site-vlans
 | mgmt_vlan | Management VLAN (used by `populate-netbox.py`) |
 | tenant | *slug* of the Netbox tenant to create everything under (used by `populate-netbox.py`) |
 
+### Populating Netbox
+
+```
+./populate-netbox.py --download
+./populate-netbox.py --populate-all
+```
+
 
 ### Prerequisites
 
