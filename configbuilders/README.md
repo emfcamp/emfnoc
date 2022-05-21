@@ -57,6 +57,7 @@ mgmt_vlan=132
 mgmt_subnet_length=/24
 tenant=emf2022
 vlan_group=emf2022-site-vlans
+site=eastnor
 ```
 
 | Key | Meaning |

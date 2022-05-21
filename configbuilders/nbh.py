@@ -16,8 +16,7 @@ class NetboxHelper:
     tenant_id: int
     vlan_group_id: int
     site_id: int
-    device_role: int = 1
-    verbose: bool = True
+    verbose: bool = False
 
     __vlan_interfaces = {
         "Arista": "Vlan{0}",
@@ -36,7 +35,6 @@ class NetboxHelper:
 
         self.config = netbox_cfg
         self.mgmt_vlan = netbox_cfg['mgmt_vlan']
-        self.verbose = netbox_cfg['verbose'] if 'verbose' in netbox_cfg else False
 
         self.netbox = pynetbox.api(url, token)
         self.logger = logging.getLogger(__name__)
@@ -66,6 +64,9 @@ class NetboxHelper:
             raise ValueError('VLAN Group with slug %s not found in Netbox' % netbox_cfg['vlan_group'])
         self.vlan_group_id = vlan_group.id
         self.vlan_group_slug = netbox_cfg['vlan_group']
+
+    def set_verbose(self, verbose):
+        self.verbose = verbose
 
     def set_interface_tagged_vlan(self, device, interface_name, vlans):
         interface = self.netbox.dcim.interfaces.get(
@@ -259,7 +260,7 @@ class NetboxHelper:
             raise ValueError('Tried to use device with hostname %s but does not exist fool' % hostname)
         return device
 
-    def create_switch(self, hostname, model_id, location_name):
+    def create_switch(self, hostname, model_id, device_role_id, location_name):
         device = NetboxHelper._get_device(self.netbox, hostname)
         location = self.get_location(location_name)
 
@@ -272,18 +273,18 @@ class NetboxHelper:
         if device:
             device.tenant = self.tenant_id
             device.site = self.site_id
-            device.device_role = self.device_role
+            device.device_role = device_role_id
             device.location = location
             if device.updates():
                 if self.verbose:
                     print("Device %s has changed, saving" % hostname)
-                device.save() # TODO should we be checking return value?
+                device.save()  # TODO should we be checking return value?
                 NetboxHelper._get_device.cache_clear()
         else:
             device = self.netbox.dcim.devices.create(
                 name=hostname,
                 device_type=model_id,
-                device_role=self.device_role,
+                device_role=device_role_id,
                 tenant=self.tenant_id,
                 site=self.site_id,
                 location={'id': location.id}

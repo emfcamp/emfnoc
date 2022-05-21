@@ -9,6 +9,10 @@ from nocsheet import NocSheetHelper
 
 # TODO should warn about things that exist on this tenant that we didn't create (old stuff that probably needs removing)
 
+# no time to do this in a better way right now
+DEVICE_ROLE_DEFAULT = 3
+DEVICE_ROLE_OVERRIDES = {'ESNORE': 2, 'LATVIA': 1}
+
 
 class NetboxPopulator:
     nocsheet: NocSheetHelper
@@ -19,6 +23,7 @@ class NetboxPopulator:
         self.nocsheet = nocsheet
         self.verbose = verbose
         self.helper = NetboxHelper.getInstance()
+        self.helper.set_verbose(verbose)
 
         self.devices = nocsheet.get_shelf(NocSheetHelper.SHELF_DEVICES)
         self.port_types = nocsheet.get_shelf(NocSheetHelper.SHELF_PORT_TYPES)
@@ -55,13 +60,17 @@ class NetboxPopulator:
             for device in bar:
                 if "Model" in device.keys():
                     device_type = self.helper.get_device_type(device["Model"])
+                    hostname = device['Hostname']
                     if not device_type:
                         print('Warning: device type %s for %s does not exist, skipping!' %
-                              (device['Model'], device['Hostname']))
+                              (device['Model'], hostname))
                         continue
 
                     device_type_id = device_type.id
-                    nb_switch = self.helper.create_switch(device['Hostname'], device_type_id, device['Location'])
+
+                    device_role_id = DEVICE_ROLE_OVERRIDES[hostname] if hostname in DEVICE_ROLE_OVERRIDES else DEVICE_ROLE_DEFAULT
+
+                    nb_switch = self.helper.create_switch(hostname, device_type_id, device_role_id, device['Location'])
 
                     # For now hardcode a /24
                     # TODO just get the prefix that has already been created
