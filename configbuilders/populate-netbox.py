@@ -7,6 +7,8 @@ import click
 from nbh import NetboxHelper
 from nocsheet import NocSheetHelper
 
+# TODO should warn about things that exist on this tenant that we didn't create (old stuff that probably needs removing)
+
 
 class NetboxPopulator:
     nocsheet: NocSheetHelper
@@ -21,6 +23,13 @@ class NetboxPopulator:
         self.devices = nocsheet.get_shelf(NocSheetHelper.SHELF_DEVICES)
         self.port_types = nocsheet.get_shelf(NocSheetHelper.SHELF_PORT_TYPES)
         self.vlans = nocsheet.get_shelf(NocSheetHelper.SHELF_VLANS)
+        self.locations = nocsheet.get_shelf(NocSheetHelper.SHELF_LOCATIONS)
+
+    def populate_locations(self):
+        with click.progressbar(self.locations, label='Locations',
+                               item_show_func=lambda item: item['Location-Name'] if item else None) as bar:
+            for locationdef in bar:
+                self.helper.create_location(locationdef['Location-Name'])
 
     def populate_vlans(self):
         with click.progressbar(self.vlans, label='VLANs and Prefixes',
@@ -43,8 +52,6 @@ class NetboxPopulator:
         with click.progressbar(self.devices, label='Switches',
                                item_show_func=lambda item: item['Hostname'] if item else None) as bar:
 
-            # TODO location
-
             for device in bar:
                 if "Model" in device.keys():
                     device_type = self.helper.get_device_type(device["Model"])
@@ -54,7 +61,7 @@ class NetboxPopulator:
                         continue
 
                     device_type_id = device_type.id
-                    nb_switch = self.helper.create_switch(device['Hostname'], device_type_id)
+                    nb_switch = self.helper.create_switch(device['Hostname'], device_type_id, device['Location'])
 
                     # For now hardcode a /24
                     # TODO just get the prefix that has already been created
@@ -124,6 +131,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--verbose", action="store_true", help="Print what it's doing")
     parser.add_argument("--populate-all", action="store_true", help="Populate EVERYTHING into Netbox")
+    parser.add_argument("--populate-locations", action="store_true", help="Populate locations")
     parser.add_argument("--populate-vlans", action="store_true", help="Populate VLANs and prefixes")
     parser.add_argument("--populate-switches", action="store_true", help="Populate switches")
     parser.add_argument("--populate-switch-ports", action="store_true", help="Populate switch ports")
@@ -133,6 +141,11 @@ if __name__ == "__main__":
     done_something = nocsheet.process_arguments(args)
 
     populator = NetboxPopulator(nocsheet, args.verbose)
+
+    if args.populate_all or args.populate_locations:
+        populator.populate_locations()
+        done_something = True
+
     if args.populate_all or args.populate_vlans:
         populator.populate_vlans()
         done_something = True

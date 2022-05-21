@@ -17,6 +17,7 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
 
 class NocSheetHelper:
+    SHELF_LOCATIONS = 'locations'
     SHELF_VLANS = 'vlans'
     SHELF_LINKS = 'links'
     SHELF_USERS = 'users'
@@ -69,11 +70,12 @@ class NocSheetHelper:
         if not os.path.exists("data"):
             os.mkdir("data")
 
+        self.download_sheet_to_shelf('Locations', self.SHELF_LOCATIONS, spr_client, spreadsheet)
+        self.download_sheet_to_shelf('VLANs', self.SHELF_VLANS, spr_client, spreadsheet)
         self.download_sheet_to_shelf('Devices', self.SHELF_DEVICES, spr_client, spreadsheet)
         self.download_sheet_to_shelf('Port Types', self.SHELF_PORT_TYPES, spr_client, spreadsheet)
         self.download_sheet_to_shelf('Users', self.SHELF_USERS, spr_client, spreadsheet)
         self.download_sheet_to_shelf('Links', self.SHELF_LINKS, spr_client, spreadsheet)
-        self.download_sheet_to_shelf('VLANs', self.SHELF_VLANS, spr_client, spreadsheet)
 
         print("done")
 

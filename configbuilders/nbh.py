@@ -220,7 +220,7 @@ class NetboxHelper:
             return self.netbox.ipam.vlans.create(vid=vlan_id, name=vlan_name, description=description,
                                                  tenant=self.tenant_id, group={'id': self.vlan_group_id})
 
-    def get_vlan(self, vlan_id):
+    def get_vlan(self, vlan_id):  # TODO cache
         vlan = self.netbox.ipam.vlans.get(vid=vlan_id, vlan_group=self.vlan_group_id)
         if not vlan:
             raise ValueError('Tried to use VLAN ID %d but does not exist fool' % vlan_id)
@@ -259,8 +259,10 @@ class NetboxHelper:
             raise ValueError('Tried to use device with hostname %s but does not exist fool' % hostname)
         return device
 
-    def create_switch(self, hostname, model_id):
+    def create_switch(self, hostname, model_id, location_name):
         device = NetboxHelper._get_device(self.netbox, hostname)
+        location = self.get_location(location_name)
+
         if device and device.device_type.id != model_id:
             self.logger.warning("WARNING MODEL DOES NOT MATCH, deleting")
             device.delete()
@@ -271,8 +273,10 @@ class NetboxHelper:
             device.tenant = self.tenant_id
             device.site = self.site_id
             device.device_role = self.device_role
+            device.location = location
             if device.updates():
-                print("Device %s has changed, saving" % hostname)
+                if self.verbose:
+                    print("Device %s has changed, saving" % hostname)
                 device.save() # TODO should we be checking return value?
                 NetboxHelper._get_device.cache_clear()
         else:
@@ -282,8 +286,42 @@ class NetboxHelper:
                 device_role=self.device_role,
                 tenant=self.tenant_id,
                 site=self.site_id,
+                location={'id': location.id}
             )
+            NetboxHelper._get_device.cache_clear()
         return device
+
+    @staticmethod
+    @lru_cache(maxsize=100)
+    def _get_location(netbox, name):
+        return netbox.dcim.locations.get(name=name)
+
+    def get_location(self, name):
+        location = NetboxHelper._get_location(self.netbox, name)
+        if not location:
+            raise ValueError('Tried to use location %s but does not exist fool' % name)
+        return location
+
+    def create_location(self, name):
+        location = NetboxHelper._get_location(self.netbox, name)
+        if location:
+            location.slug = name.lower()
+            location.tenant = self.tenant_id
+            location.site = self.site_id
+            if location.updates():
+                if self.verbose:
+                    print("Location %s has changed, saving" % name)
+                location.save()  # TODO should we be checking return value?
+                NetboxHelper._get_location.cache_clear()
+        else:
+            location = self.netbox.dcim.locations.create(
+                name=name,
+                slug=name.lower(),
+                tenant=self.tenant_id,
+                site=self.site_id,
+            )
+            NetboxHelper._get_location.cache_clear()
+        return location
 
     __instance = None
 
