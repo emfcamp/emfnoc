@@ -2,6 +2,7 @@
 import os.path
 import shelve
 import sys
+import time
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -164,7 +165,16 @@ class NocSheetHelper:
         return out
 
     def get_shelf(self, name):
-        # TODO print a warning if someone tries to open a shelf over a few hours old
-        with shelve.open('data/%s' % name, 'r') as shelf:
+        shelf_file = os.path.join('data', name + '.dat')
+
+        if not os.path.exists(shelf_file):
+            print('Shelf "%s" not found - have you run --download?' % name, file=sys.stderr)
+            sys.exit(1)
+
+        age = int(time.time() - os.path.getmtime(shelf_file))
+        if age > 2 * 60 * 60:
+            print('Warning: Shelf "%s" is over two hours old, you may want to --download again' % name, file=sys.stderr)
+
+        with shelve.open(os.path.join('data', name), 'r') as shelf:
             data = shelf['list']
         return data
