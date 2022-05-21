@@ -87,9 +87,14 @@ class NetboxPopulator:
         with click.progressbar(self.devices, label='Switch Ports',
                                item_show_func=lambda item: item['Hostname'] if item else None) as bar:
             for device in bar:
-                if "Model" in device.keys():
+                if 'Model' in device.keys():
+                    hostname = device['Hostname']
+                    if not 'Port-Prefix' in device.keys():
+                        if self.verbose:
+                            print('Warning: not doing ports on %s because no Port-Prefix set' % hostname)
+                        continue
 
-                    nb_switch = self.helper.get_switch(device['Hostname'])
+                    nb_switch = self.helper.get_switch(hostname)
 
                     port_start = int(device['Port-Start']) - 1
                     copper_ports = self.helper.get_sum_copper_ports(device['Model'])
@@ -111,16 +116,16 @@ class NetboxPopulator:
                     for vlandef in self.vlans:
                         if 'Camper' in vlandef and vlandef['Camper'] == 'y':
                             vlandef_switches = vlandef['Switch'].split(',')
-                            if device['Hostname'] in vlandef_switches:
+                            if hostname in vlandef_switches:
                                 if camper_vlan_id is not None:
-                                    print('Warning: multiple matching Camper-VLANs for %s' % device['Hostname'],
+                                    print('Warning: multiple matching Camper-VLANs for %s' % hostname,
                                           file=sys.stderr)
                                 camper_vlan_id = int(vlandef['VLAN'])
 
                     if camper_vlan_id is None:
-                        print('Warning: no Camper-VLAN found for %s' % device['Hostname'])
+                        print('Warning: no Camper-VLAN found for %s' % hostname)
 
-                    if self.verbose: print('Camper-VLAN for %s is %d' % (device['Hostname'], camper_vlan_id))
+                    if self.verbose: print('Camper-VLAN for %s is %d' % (hostname, camper_vlan_id))
 
                     camper_vlan = self.helper.get_vlan(camper_vlan_id)
 
