@@ -101,6 +101,9 @@ class NetboxPopulator:
                     port_prefix = device['Port-Prefix']
                     port_index = copper_ports + port_start
 
+                    if 'Reserved-Ports' in device:
+                        port_index -= int(device['Reserved-Ports'])
+
                     # Allocate the special-VLAN ports from the top down
                     for key in reversed(device.keys()):
                         if key[0] == "#":
