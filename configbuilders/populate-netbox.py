@@ -102,10 +102,13 @@ class NetboxPopulator:
                     port_index = copper_ports + port_start
 
                     # Allocate the special-VLAN ports from the top down
-                    for key in device.keys():
+                    for key in reversed(device.keys()):
                         if key[0] == "#":
                             vlan = self.helper.get_vlan(vlan_lut[key[1:]])
                             for i in range(int(device[key])):
+                                if port_index <= port_start:
+                                    print('More special ports allocated on %s than actually exist' % hostname)
+                                    sys.exit(1)
                                 self.helper.set_interface_vlan(
                                     nb_switch, port_prefix + str(port_index), vlan
                                 )
