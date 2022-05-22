@@ -133,20 +133,24 @@ def generate(device):
         if special_ports: special_ports += "\n"
         special_ports += '%s: %s' % (pretty_vlan_name, pretty_ports)
 
-    pretty_camper_ports = pretty_port_sequence(port_map[camper_vlan])
+    if camper_vlan:
+        pretty_camper_ports = pretty_port_sequence(port_map[camper_vlan])
 
-    # Get the v4 and v6 prefixes for this camper-vlan
+        # Get the v4 and v6 prefixes for this camper-vlan
 
-    prefixes = helper.netbox.ipam.prefixes.filter(vlan_vid=camper_vlan)
-    camper_ipv4 = camper_ipv6 = None
-    for prefix in prefixes:
-        if (prefix.family.value == 4 and camper_ipv4) or prefix.family.value == 6 and camper_ipv6:
-            print("Multiple camper prefixes for VLAN %d, help!" % camper_vlan, file=sys.stderr)
-            sys.exit(1)
-        if prefix.family.value == 4:
-            camper_ipv4 = prefix.prefix
-        elif prefix.family.value == 6:
-            camper_ipv6 = prefix.prefix
+        prefixes = helper.netbox.ipam.prefixes.filter(vlan_vid=camper_vlan)
+        camper_ipv4 = camper_ipv6 = None
+        for prefix in prefixes:
+            if (prefix.family.value == 4 and camper_ipv4) or prefix.family.value == 6 and camper_ipv6:
+                print("Multiple camper prefixes for VLAN %d, help!" % camper_vlan, file=sys.stderr)
+                sys.exit(1)
+            if prefix.family.value == 4:
+                camper_ipv4 = prefix.prefix
+            elif prefix.family.value == 6:
+                camper_ipv6 = prefix.prefix
+    else:
+        pretty_camper_ports = None
+        camper_ipv4 = camper_ipv6 = None
 
     vars = {
         'SwitchName': device.name.replace(DOMAIN_SUFFIX, ''),
