@@ -3,3 +3,5 @@
 data/*
 out/*
 emfnoc.conf
+/out.png
+/out.svg
