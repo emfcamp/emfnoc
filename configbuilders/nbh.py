@@ -111,6 +111,12 @@ class NetboxHelper:
         else:
             return cable
 
+    def get_interfaces_for_device(self, device):
+        interface = self.netbox.dcim.interfaces.filter(
+            device_id=device.id
+        )
+        return interface
+
     def get_interface_for_device(self, device, interface_name):
         interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=interface_name
@@ -159,7 +165,13 @@ class NetboxHelper:
         nb_vlan_interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=vlan_interface
         )
-        if not nb_vlan_interface:
+        if nb_vlan_interface:
+            nb_vlan_interface.type = 'virtual'
+            nb_vlan_interface.description = 'Management'
+            nb_vlan_interface.mode = 'access'
+            nb_vlan_interface.untagged_vlan = vlan
+            nb_vlan_interface.save()
+        else:
             nb_vlan_interface = self.netbox.dcim.interfaces.create(
                 device=device.id,
                 name=vlan_interface,

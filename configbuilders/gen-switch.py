@@ -5,49 +5,6 @@ import ipaddr, jinja2, configparser, argparse, shelve, code, shelve, os, sys, pp
 from jinja2 import Template, FileSystemLoader, Environment
 
 
-def download(spr_client, spreadsheet):
-    if not os.path.exists("data"):
-        os.mkdir("data")
-
-    print("downloading switches")
-    switches = get_worksheet_data(spr_client, spreadsheet, "Access Switches")
-
-    sws = shelve.open("data/switches")
-    sws["list"] = switches
-    sws.close()
-
-    print("downloading port types")
-    port_types = get_worksheet_data(spr_client, spreadsheet, "Port Types")
-
-    pt = shelve.open("data/port_types")
-    pt["list"] = port_types
-    pt.close()
-
-    print("downloading users")
-    users = get_worksheet_data(spr_client, spreadsheet, "Users")
-    for user in list(users):
-        if not "IOS password" in user:
-            users.remove(user)
-
-    u = shelve.open("data/users")
-    u["list"] = users
-    u.close()
-
-    print("downloading Addressing")
-    addressing = get_worksheet_data(spr_client, spreadsheet, "Addressing")
-
-    v4 = shelve.open("data/addressing")
-    v4["list"] = addressing
-    v4.close()
-
-    print("downloading Links")
-    links = get_worksheet_data(spr_client, spreadsheet, "Links")
-
-    l = shelve.open("data/links")
-    l["list"] = links
-    l.close()
-
-    print("done")
 
 
 def get_vlans(addressing):
@@ -89,9 +46,6 @@ def get_vlans(addressing):
 
     return vlans
 
-
-def dump_worksheet(spr_client, spreadsheet, wks):
-    print(get_worksheet_data(spr_client, spreadsheet, wks))
 
 
 def switch_hostname_exists(switches, name):
