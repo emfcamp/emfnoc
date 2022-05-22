@@ -318,9 +318,7 @@ if __name__ == "__main__":
     parser.add_argument('--print', '-p', action='store_true',
                         help='print each label after generating it')
 
-    # args = parser.parse_args(['-a'])
-    args = parser.parse_args(['SWARCADE'])
-    # args = parser.parse_args()
+    args = parser.parse_args()
 
     if not args.all and len(args.devices) == 0:
         print("Specify the device to generate or use --all", file=sys.stderr)
@@ -347,4 +345,5 @@ if __name__ == "__main__":
             print('Generating %s' % device.name)
             png = generate(device)
             if args.print:
+                print('Printing %s' % device.name)
                 print_label(prepare_label(png))
