@@ -29,6 +29,7 @@ class NetboxPopulator:
         self.port_types = nocsheet.get_shelf(NocSheetHelper.SHELF_PORT_TYPES)
         self.vlans = nocsheet.get_shelf(NocSheetHelper.SHELF_VLANS)
         self.locations = nocsheet.get_shelf(NocSheetHelper.SHELF_LOCATIONS)
+        self.links = nocsheet.get_shelf(NocSheetHelper.SHELF_LINKS)
 
     def populate_locations(self):
         with click.progressbar(self.locations, label='Locations',
@@ -68,7 +69,8 @@ class NetboxPopulator:
 
                     device_type_id = device_type.id
 
-                    device_role_id = DEVICE_ROLE_OVERRIDES[hostname] if hostname in DEVICE_ROLE_OVERRIDES else DEVICE_ROLE_DEFAULT
+                    device_role_id = DEVICE_ROLE_OVERRIDES[
+                        hostname] if hostname in DEVICE_ROLE_OVERRIDES else DEVICE_ROLE_DEFAULT
 
                     nb_switch = self.helper.create_switch(hostname, device_type_id, device_role_id, device['Location'])
 
@@ -78,6 +80,7 @@ class NetboxPopulator:
                         self.helper.create_inband_mgmt(nb_switch)
                         self.helper.set_inband_mgmt_ip(nb_switch,
                                                        device["Mgmt-IP"] + self.helper.config.get('mgmt_subnet_length'))
+                    # TODO remove any SVIs that are not the mgmt vlan
 
     def populate_switch_ports(self):
         vlan_lut = {}
@@ -112,7 +115,7 @@ class NetboxPopulator:
                                 if port_index <= port_start:
                                     print('More special ports allocated on %s than actually exist' % hostname)
                                     sys.exit(1)
-                                self.helper.set_interface_vlan(
+                                self.helper.set_interface_access(
                                     nb_switch, port_prefix + str(port_index), vlan
                                 )
                                 port_index -= 1
@@ -136,9 +139,102 @@ class NetboxPopulator:
                     camper_vlan = self.helper.get_vlan(camper_vlan_id)
 
                     for k in range(port_start + 1, port_index + 1):
-                        self.helper.set_interface_vlan(
+                        self.helper.set_interface_access(
                             nb_switch, port_prefix + str(k), camper_vlan
                         )
+
+    # This creates a direct cable for every logical link even if it's getting coupled.
+    # TODO for a future year, we could model the physical fibre by adding couplers as "patch panels" - this would
+    # also serve to validate the design and enable the production of a physical diagram
+    def populate_links(self):
+
+        # all switches with the leafs last. this assumes the links tab is in such an order
+        # all_switches = []
+        # the switches' uplink ports, switchname->(uplink interface or lag from switch, downlink from parent switch)
+        # uplinks = {}
+
+        # "next lag offset" per switchname
+        lag_counter = {}
+
+        with click.progressbar(self.links, label='Links',
+                               item_show_func=lambda item: '%s-%s' %
+                                                           (item['Switch1'], item['Switch2']) if item else None) as bar:
+            for link in bar:
+                switch1 = self.helper.get_switch(link['Switch1'])
+                switch2 = self.helper.get_switch(link['Switch2'])
+
+                # if switch1 not in all_switches:
+                #     all_switches.append(switch1)
+                # if switch2 not in all_switches:
+                #     all_switches.append(switch2)
+
+                switch1_int1 = self.helper.get_interface_for_device(switch1, link['Switch1-Port1'])
+                switch2_int1 = self.helper.get_interface_for_device(switch2, link['Switch2-Port1'])
+
+                self.helper.link_two_interfaces(switch1_int1, switch2_int1, f"{switch1} - {switch2}")
+
+                # If there is a second port, we need to make a LAG:
+                if 'Switch1-Port2' in link:
+                    switch1_int2 = self.helper.get_interface_for_device(switch1, link['Switch1-Port2'])
+                    switch2_int2 = self.helper.get_interface_for_device(switch2, link['Switch2-Port2'])
+
+                    switch1_int1.description = 'LAG member: downlink to %s port %s' % (switch2, switch2_int1)
+                    switch1_int1.save()
+                    switch2_int1.description = 'LAG member: uplink to %s port %s' % (switch1, switch1_int1)
+                    switch2_int1.save()
+                    switch1_int2.description = 'LAG member: downlink to %s port %s' % (switch2, switch2_int2)
+                    switch1_int2.save()
+                    switch2_int2.description = 'LAG member: uplink to %s port %s' % (switch1, switch1_int2)
+                    switch2_int2.save()
+
+                    self.helper.link_two_interfaces(switch1_int2, switch2_int2, f"{switch1} - {switch2}")
+
+                    switch1_lag_num = self._get_next_lag_num(switch1, lag_counter)
+                    switch2_lag_num = self._get_next_lag_num(switch2, lag_counter)
+
+                    switch1_lag = self.helper.create_lag(switch1, switch1_lag_num, [switch1_int1, switch1_int2])
+                    switch2_lag = self.helper.create_lag(switch2, switch2_lag_num, [switch2_int1, switch2_int2])
+
+                    switch1_trunk = switch1_lag
+                    switch2_trunk = switch2_lag
+                else:
+                    switch1_trunk = switch1_int1
+                    switch2_trunk = switch2_int1
+
+                switch1_trunk.description = 'DOWNLINK: %s port %s' % (switch2, switch2_trunk.name)
+                switch2_trunk.description = 'UPLINK: %s port %s' % (switch1, switch1_trunk.name)
+
+                switch1_trunk.mode = 'tagged'
+                switch2_trunk.mode = 'tagged'
+                switch1_trunk.untagged_vlan = {'vid': self.helper.mgmt_vlan}
+                switch2_trunk.untagged_vlan = {'vid': self.helper.mgmt_vlan}
+
+                switch1_trunk.save()
+                switch2_trunk.save()
+
+                # uplinks[switch2.name] = (switch2_trunk, switch1_trunk)
+            #
+            # # Assign uplinks, starting with the leafs
+            # all_switches.reverse()
+            # with click.progressbar(all_switches, label='Uplinks',
+            #                        item_show_func=lambda item: item.name if item else None) as bar:
+            #
+            #     for switch in bar:
+            #         uplink_int = uplinks[switch.name][0]
+            #         downlink_int = uplinks[switch.name][1]
+            #
+            #         # What VLANs do we need?
+            #         switch_vlans = self.helper.get_vlans_for_switch(switch, uplink_int)
+            #         # todo add any ports needed by children
+            #         # TODO: add non sitewide downstream vlans
+            #
+            #         self.helper.set_interface_trunk(uplink_int, switch_vlans)
+            #         self.helper.set_interface_trunk(downlink_int, switch_vlans)
+
+    def _get_next_lag_num(self, switch, lag_counter):
+        switch_lag_num = lag_counter[switch.name] if switch.name in lag_counter else 0
+        lag_counter[switch.name] = switch_lag_num + 1
+        return switch_lag_num
 
 
 if __name__ == "__main__":
@@ -155,6 +251,8 @@ if __name__ == "__main__":
     parser.add_argument("--populate-vlans", action="store_true", help="Populate VLANs and prefixes")
     parser.add_argument("--populate-switches", action="store_true", help="Populate switches")
     parser.add_argument("--populate-switch-ports", action="store_true", help="Populate switch ports")
+    parser.add_argument("--populate-links", action="store_true", help="Populate links between switches")
+    # parser.add_argument("--populate-trunks", action="store_true", help="Assigns trunks to uplinks and downlinks")
 
     args = parser.parse_args()
 
@@ -177,6 +275,15 @@ if __name__ == "__main__":
     if args.populate_all or args.populate_switch_ports:
         populator.populate_switch_ports()
         done_something = True
+
+    if args.populate_all or args.populate_links:
+        populator.populate_links()
+        done_something = True
+
+    # if args.populate_all or args.populate_trunks:
+    #     populator.populate_trunks()
+    #     done_something = True
+    # TODO move from fixup-vlans.py
 
     # populator.populate_core_svis()
 

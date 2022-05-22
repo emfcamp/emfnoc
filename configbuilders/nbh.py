@@ -29,6 +29,18 @@ class NetboxHelper:
         "Brocade": "ve {0}",
     }
 
+    __lag_interfaces = {
+        "Arista": "Port-Channel{0}",
+        "Cisco": "Port-Channel{0}",
+        "Juniper": "ae{0}"
+    }
+
+    __lag_interface_offsets = {
+        "Arista": 1,
+        "Cisco": 1,
+        "Juniper": 0
+    }
+
     def __init__(self, netbox_cfg):
         url = netbox_cfg['url']
         token = netbox_cfg['token']
@@ -68,18 +80,16 @@ class NetboxHelper:
     def set_verbose(self, verbose):
         self.verbose = verbose
 
-    def set_interface_tagged_vlan(self, device, interface_name, vlans):
-        interface = self.netbox.dcim.interfaces.get(
-            device_id=device.id, name=interface_name
-        )
+    def set_interface_trunk(self, interface, vlan_ids):
+        # TODO broken
+        # vlan_ids = map(lambda x: x.id, vlans)
 
-        vlan_ids = map(lambda x: x.id, vlans)
-
-        interface.mode = "tagged"
+        interface.mode = 'tagged'
         interface.save()
+        interface.untagged_vlan = self.mgmt_vlan
         interface.tagged_vlans = list(vlan_ids)
         interface.save()
-        self.logger.info(f"{device} -  {interface_name}, to vlans {vlans}")
+        self.logger.info(f"{interface.device.name} -  {interface.name}, to vlans {vlan_ids}")
         return interface
 
     def link_two_interfaces(self, i1, i2, description):
@@ -111,31 +121,81 @@ class NetboxHelper:
         else:
             return cable
 
-    def get_interfaces_for_device(self, device):
-        interface = self.netbox.dcim.interfaces.filter(
-            device_id=device.id
+    # here the lag_num is 0 for the first interface (which we might pump up to Port-Channel1 for cisco etc)
+    def create_lag(self, device, lag_num, members):
+        manufacturer = device.device_type.manufacturer.name
+        interface_name = self.__lag_interfaces[manufacturer].format(
+            self.__lag_interface_offsets[manufacturer] + lag_num
         )
-        return interface
 
-    def get_interface_for_device(self, device, interface_name):
         interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=interface_name
         )
+        if interface:
+            interface.tenant = self.tenant_id
+            interface.type = 'lag'
+            interface.save()
+        else:
+            interface = self.netbox.dcim.interfaces.create(device=device.id, name=interface_name,
+                                                           type='lag')
+
+        # Now make sure the interfaces are in this LAG
+        # TODO we should probably make sure no OTHER interfaces remain in this lag
+        for member in members:
+            member.lag = interface.id
+            member.save()
+
         return interface
 
-    def set_interface_vlan(self, device, interface_name, vlan):
+    def get_interfaces_for_device(self, device):
+        interfaces = self.netbox.dcim.interfaces.filter(
+            device_id=device.id
+        )
+        return interfaces
+
+    def _get_interface_for_device(self, device, interface_name):
         interface = self.netbox.dcim.interfaces.get(
             device_id=device.id, name=interface_name
         )
         if interface is None:
-            print('Interface %s does not exist on device %s' % (interface_name, device.name), file=sys.stderr)
-            sys.exit(1)
+            raise ValueError('Interface %s does not exist on device %s' % (interface_name, device.name))
+        return interface
 
-        interface.mode = "access"
+    def get_interface_for_device(self, device, interface_name):
+        return self._get_interface_for_device(device, interface_name)
+
+    def set_interface_access(self, device, interface_name, vlan):
+        interface = self._get_interface_for_device(device, interface_name)
+
+        interface.mode = 'access'
         interface.untagged_vlan = vlan.id
         interface.save()
-        self.logger.info(f"{device} -  {interface_name}, to vlan {vlan}")
+        self.logger.info(f"{device} - {interface_name}, to vlan {vlan}")
         return interface
+
+    # Return all VLAN IDs that are present on access ports on this switch or are on trunk ports
+    # EXCLUDING the passed in interface
+    def get_vlans_for_switch(self, device, exclude_interface=None):
+        vlan_ids = set()
+        interfaces = self.get_interfaces_for_device(device)
+        for interface in interfaces:
+            if interface == exclude_interface:
+                print("Excluding %s" % exclude_interface.name)
+                continue
+            if interface.mode == 'access' and interface.untagged_vlan:
+                vlan_ids.add(interface.untagged_vlan.id)
+                print("Access %d" % interface.untagged_vlan.id)
+            if interface.mode == 'tagged':
+                if interface.untagged_vlan:
+                    vlan_ids.add(interface.untagged_vlan.id)
+                    print("Trunk untagged %d" % interface.untagged_vlan.id)
+                if interface.tagged_vlans:
+                    for tagged_vlan in interface.tagged_vlans:
+                        vlan_ids.add(tagged_vlan.id)
+                        print("Trunk tagged %d" % tagged_vlan.id)
+
+        print('Device %s requires VLANs %s' % (device.name, str(vlan_ids)))
+        return list(vlan_ids)
 
     def create_inband_mgmt(self, device):
         return self.create_svi(device, self.mgmt_vlan)
@@ -143,10 +203,11 @@ class NetboxHelper:
     def set_inband_mgmt_ip(self, device, ip):
         mgmt_ip = self.netbox.ipam.ip_addresses.get(address=ip)
         if not mgmt_ip:
-            mgmt_ip = self.netbox.ipam.ip_addresses.create(address=ip)
+            mgmt_ip = self.netbox.ipam.ip_addresses.create(address=ip, tenant=self.tenant_id)
         mgmt_interface = self.create_inband_mgmt(device)
         mgmt_ip.assigned_object_type = "dcim.interface"
         mgmt_ip.assigned_object_id = mgmt_interface.id
+        mgmt_ip.tenant = self.tenant_id
         mgmt_ip.save()
         device.primary_ip4 = mgmt_ip.id
         device.save()
