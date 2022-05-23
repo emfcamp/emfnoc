@@ -84,6 +84,19 @@ generation, etc.
 pip install -r requirements.txt
 ```
 
+### dhcpd
+
+You need this in your config file:
+
+```ini
+[dhcpd]
+domain_campers=gchq.org.uk
+domain_orga=emf.camp
+dns_ipv4=78.158.87.11,78.158.87.12
+dns_ipv6=2a05:e201:0:57::11,2a05:e201:0:57::12
+sntp_ipv6=2a05:e201:0:57::11,2a05:e201:0:57::12
+```
+
 ### Scripts
 
 * `gen-dhcp.py` - Generates the DHCP server scopes
