@@ -312,8 +312,6 @@ if __name__ == "__main__":
 
     helper = NetboxHelper.getInstance()
 
-    pprint(helper.netbox.dcim.devices.all())
-
     parser = argparse.ArgumentParser(description='Generate and optionally print device labels.')
     parser.add_argument('devices', metavar='DEVICE', type=str, nargs='*',
                         help='devices to generate labels for')

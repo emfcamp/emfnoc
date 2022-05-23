@@ -8,3 +8,4 @@ cairosvg
 qrcode
 brother_ql
 pyusb
+jinja2

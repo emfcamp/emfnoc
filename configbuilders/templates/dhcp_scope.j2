@@ -1,0 +1,43 @@
+# {{ prefix.description }}
+shared-network vlan{{ prefix.vlan.vid }} {
+{%- if prefix.family.value == 4 %}
+  subnet {{ network.network_address }} netmask {{ network.netmask }} {
+	option domain-name "{{ domain }}";
+    option domain-name-servers {{ dns }};
+    option routers {{ gateway }};
+	{#
+    hosts = None
+    if False or hosts:
+        file.write("    group {\n")
+        for h in hosts:
+            indent = " " * 8
+            file.write(indent + "host " + h["name"] + " {\n")
+            indent = " " * 12
+            file.write(indent + "hardware ethernet " + h["mac"] + ";\n")
+            file.write(indent + "fixed-address " + h["ip"] + ";\n")
+            if "extra" in h:
+                file.write(h["extra"])
+            indent = " " * 8
+            file.write(indent + "}\n")
+        file.write("    }\n")
+ #}
+    pool {
+      failover peer "failover-partner";
+      range {{ pool_start }} {{ pool_end }};
+    }
+  }
+{% elif prefix.family.value == 6 %}
+	subnet6 {{ network }} {
+	  {# stateful and temporay addresses:
+	  range6 {{ pool_start }} {{ pool_end }};
+	  range6 {{ network }} temporary;
+	  -#}
+
+	  option dhcp6.domain-search "{{ domain }}"
+      option dhcp6.name-servers {{ dns }};
+      option dhcp6.sntp-servers {{ sntp }};
+    }
+{% endif -%}
+}
+
+
