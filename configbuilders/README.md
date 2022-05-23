@@ -55,6 +55,7 @@ url=https://netbox.noc.emfcamp.org/
 token=<token>
 mgmt_vlan=87
 mgmt_subnet_length=/24
+mgmt_domain=emf.camp
 tenant=emf2022
 vlan_group=emf2022-site-vlans
 site=eastnor

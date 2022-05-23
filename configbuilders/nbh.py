@@ -200,7 +200,7 @@ class NetboxHelper:
     def create_inband_mgmt(self, device):
         return self.create_svi(device, self.mgmt_vlan)
 
-    def set_inband_mgmt_ip(self, device, ip):
+    def set_inband_mgmt_ip(self, device, ip, dns, dhcp_mac=None):
         mgmt_ip = self.netbox.ipam.ip_addresses.get(address=ip)
         if not mgmt_ip:
             mgmt_ip = self.netbox.ipam.ip_addresses.create(address=ip, tenant=self.tenant_id)
@@ -208,6 +208,8 @@ class NetboxHelper:
         mgmt_ip.assigned_object_type = "dcim.interface"
         mgmt_ip.assigned_object_id = mgmt_interface.id
         mgmt_ip.tenant = self.tenant_id
+        mgmt_ip.dns_name = dns
+        mgmt_ip.custom_fields['dhcp_mac'] = dhcp_mac
         mgmt_ip.save()
         device.primary_ip4 = mgmt_ip.id
         device.save()
@@ -333,7 +335,7 @@ class NetboxHelper:
             raise ValueError('Tried to use device with hostname %s but does not exist fool' % hostname)
         return device
 
-    def create_switch(self, hostname, model_id, device_role_id, location_name):
+    def create_switch(self, hostname, model_id, device_role_id, location_name, asset_tag, serial):
         device = NetboxHelper._get_device(self.netbox, hostname)
         location = self.get_location(location_name)
 
@@ -348,6 +350,8 @@ class NetboxHelper:
             device.site = self.site_id
             device.device_role = device_role_id
             device.location = location
+            device.serial = serial
+            device.asset_tag = asset_tag
             if device.updates():
                 if self.verbose:
                     print("Device %s has changed, saving" % hostname)
@@ -360,7 +364,9 @@ class NetboxHelper:
                 device_role=device_role_id,
                 tenant=self.tenant_id,
                 site=self.site_id,
-                location={'id': location.id}
+                location={'id': location.id},
+                serial=serial,
+                asset_tag=asset_tag
             )
             NetboxHelper._get_device.cache_clear()
         return device

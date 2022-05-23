@@ -55,6 +55,8 @@ class NetboxPopulator:
                                               dhcp, dhcp_reserved)
 
     def populate_switches(self):
+        mgmt_domain = self.helper.config.get('mgmt_domain')
+
         with click.progressbar(self.devices, label='Switches',
                                item_show_func=lambda item: item['Hostname'] if item else None) as bar:
 
@@ -72,14 +74,22 @@ class NetboxPopulator:
                     device_role_id = DEVICE_ROLE_OVERRIDES[
                         hostname] if hostname in DEVICE_ROLE_OVERRIDES else DEVICE_ROLE_DEFAULT
 
-                    nb_switch = self.helper.create_switch(hostname, device_type_id, device_role_id, device['Location'])
+                    asset_tag = device['Asset-Tag'] if 'Asset-Tag' in device else None
+                    serial = device['Serial'] if 'Serial' in device else ''
+
+                    nb_switch = self.helper.create_switch(hostname, device_type_id, device_role_id, device['Location'],
+                                                          asset_tag, serial)
+
+                    dns = '%s.%s' % (hostname, mgmt_domain)
+                    mgmt_mac = device['MAC-Address'].lower() if 'MAC-Address' in device else None
 
                     # For now hardcode a /24
                     # TODO just get the prefix that has already been created
                     if 'Mgmt-IP' in device:
                         self.helper.create_inband_mgmt(nb_switch)
                         self.helper.set_inband_mgmt_ip(nb_switch,
-                                                       device["Mgmt-IP"] + self.helper.config.get('mgmt_subnet_length'))
+                                                       device["Mgmt-IP"] + self.helper.config.get('mgmt_subnet_length'),
+                                                       dns, mgmt_mac)
                     # TODO remove any SVIs that are not the mgmt vlan
 
     def populate_switch_ports(self):
