@@ -110,10 +110,10 @@ class NetboxPopulator:
 
                     nb_switch = self.helper.get_switch(hostname)
 
-                    port_start = int(device['Port-Start']) - 1
+                    port_start = int(device['Port-Start'])
                     copper_ports = self.helper.get_sum_copper_ports(device['Model'])
                     port_prefix = device['Port-Prefix']
-                    port_index = copper_ports + port_start
+                    port_index = copper_ports + port_start - 1
 
                     if 'Reserved-Ports' in device:
                         port_index -= int(device['Reserved-Ports'])
@@ -123,7 +123,7 @@ class NetboxPopulator:
                         if key[0] == "#":
                             vlan = self.helper.get_vlan(vlan_lut[key[1:]])
                             for i in range(int(device[key])):
-                                if port_index <= port_start:
+                                if port_index < port_start:
                                     print('More special ports allocated on %s than actually exist' % hostname)
                                     sys.exit(1)
                                 self.helper.set_interface_access(
@@ -149,7 +149,7 @@ class NetboxPopulator:
 
                     camper_vlan = self.helper.get_vlan(camper_vlan_id)
 
-                    for k in range(port_start + 1, port_index + 1):
+                    for k in range(port_start, port_index + 1):
                         self.helper.set_interface_access(
                             nb_switch, port_prefix + str(k), camper_vlan
                         )
