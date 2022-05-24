@@ -1,0 +1,7 @@
+#!/bin/bash
+. ../venv/bin/activate
+./gen-dhcp.py || exit 1
+scp out/dhcpd-subnets.conf puppet.emf.camp:/etc/puppet/code/environments/production/modules/dhcpserver/files/ || exit 1
+scp out/dhcpd6-subnets.conf puppet.emf.camp:/etc/puppet/code/environments/production/modules/dhcpserver/files/ || exit 1
+ssh services1.emf.camp sudo puppet agent -vt || exit 1
+ssh services2.emf.camp sudo puppet agent -vt || exit 1
