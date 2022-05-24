@@ -168,6 +168,7 @@ class NetboxHelper:
 
         interface.mode = 'access'
         interface.untagged_vlan = vlan.id
+        interface.description = vlan.name + ' port'
         interface.save()
         self.logger.info(f"{device} - {interface_name}, to vlan {vlan}")
         return interface
