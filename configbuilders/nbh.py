@@ -1,9 +1,7 @@
 import logging
 import re
-import sys
 from dataclasses import dataclass
 from functools import lru_cache
-from pprint import pprint
 
 import pynetbox
 
@@ -27,6 +25,7 @@ class NetboxHelper:
         "Juniper": "vlan.{0}",
         "JuniperELS": "irb.{0}",
         "Brocade": "ve {0}",
+        "MikroTik": "vlan{0}",
     }
 
     __lag_interfaces = {
@@ -198,19 +197,11 @@ class NetboxHelper:
         return list(vlan_ids)
 
     def create_inband_mgmt(self, device):
-        return self.create_svi(device, self.mgmt_vlan)
+        return self.create_svi(device, self.mgmt_vlan, 'Management')
 
     def set_inband_mgmt_ip(self, device, ip, dns, dhcp_mac=None):
-        mgmt_ip = self.netbox.ipam.ip_addresses.get(address=ip)
-        if not mgmt_ip:
-            mgmt_ip = self.netbox.ipam.ip_addresses.create(address=ip, tenant=self.tenant_id)
         mgmt_interface = self.create_inband_mgmt(device)
-        mgmt_ip.assigned_object_type = "dcim.interface"
-        mgmt_ip.assigned_object_id = mgmt_interface.id
-        mgmt_ip.tenant = self.tenant_id
-        mgmt_ip.dns_name = dns
-        mgmt_ip.custom_fields['dhcp_mac'] = dhcp_mac
-        mgmt_ip.save()
+        mgmt_ip = self.set_svi_ip(mgmt_interface, ip, dns, dhcp_mac)
         device.primary_ip4 = mgmt_ip.id
         device.save()
         self.logger.info(
@@ -218,7 +209,19 @@ class NetboxHelper:
         )
         return mgmt_ip
 
-    def create_svi(self, device, vlan_id):
+    def set_svi_ip(self, interface, ip, dns, dhcp_mac=None):
+        mgmt_ip = self.netbox.ipam.ip_addresses.get(address=ip)
+        if not mgmt_ip:
+            mgmt_ip = self.netbox.ipam.ip_addresses.create(address=ip, tenant=self.tenant_id)
+        mgmt_ip.assigned_object_type = "dcim.interface"
+        mgmt_ip.assigned_object_id = interface.id
+        mgmt_ip.tenant = self.tenant_id
+        mgmt_ip.dns_name = dns
+        mgmt_ip.custom_fields['dhcp_mac'] = dhcp_mac
+        mgmt_ip.save()
+        return mgmt_ip
+
+    def create_svi(self, device, vlan_id, interface_description):
         manufacturer = device.device_type.manufacturer.name
         model = device.device_type.model
         if re.match("EX(2300|3400|4300|4600|9200).*", model):
@@ -230,7 +233,7 @@ class NetboxHelper:
         )
         if nb_vlan_interface:
             nb_vlan_interface.type = 'virtual'
-            nb_vlan_interface.description = 'Management'
+            nb_vlan_interface.description = interface_description
             nb_vlan_interface.mode = 'access'
             nb_vlan_interface.untagged_vlan = vlan
             nb_vlan_interface.save()
@@ -239,7 +242,7 @@ class NetboxHelper:
                 device=device.id,
                 name=vlan_interface,
                 type="virtual",
-                description="Management",
+                description=interface_description,
                 mode="access",
                 untagged_vlan=vlan.id,
             )

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import ipaddress
 import sys
 
 import click
@@ -246,11 +247,34 @@ class NetboxPopulator:
         lag_counter[switch.name] = switch_lag_num + 1
         return switch_lag_num
 
+    def populate_gateways(self):
+        mgmt_domain = self.helper.config.get('mgmt_domain')
+
+        with click.progressbar(self.vlans, label='Gateways',
+                               item_show_func=lambda item: item['Name'] if item else None) as bar:
+            for vlandef in bar:
+                if not 'Routed-On' in vlandef:
+                    continue
+
+                router = self.helper.get_switch(vlandef['Routed-On'])
+
+                vid = int(vlandef['VLAN'])
+                svi = self.helper.create_svi(router, vid, 'Gateway for %s' % vlandef['Name'])
+                dns = 'vlan%d.%s.%s' % (vid, router.name, mgmt_domain)
+
+                if 'IPv4-Prefix' in vlandef:
+                    ipv4_prefix = ipaddress.IPv4Network(vlandef['IPv4-Prefix'])
+                    ipv4 = '%s/%d' % (str(ipv4_prefix.network_address + 1), ipv4_prefix.prefixlen)
+                    self.helper.set_svi_ip(svi, ipv4, dns)
+
+                if 'IPv6-Prefix' in vlandef:
+                    ipv6_prefix = ipaddress.IPv6Network(vlandef['IPv6-Prefix'])
+                    ipv6 = '%s/%d' % (ipv6_prefix.network_address + 0xff00, ipv6_prefix.prefixlen)
+                    self.helper.set_svi_ip(svi, ipv6, dns)
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Populate Netbox with summary data from google sheets."
-    )
+    parser = argparse.ArgumentParser(description="Populate Netbox with summary data from google sheets.")
 
     nocsheet = NocSheetHelper()
     nocsheet.add_arguments(parser)
@@ -263,6 +287,7 @@ if __name__ == "__main__":
     parser.add_argument("--populate-switch-ports", action="store_true", help="Populate switch ports")
     parser.add_argument("--populate-links", action="store_true", help="Populate links between switches")
     # parser.add_argument("--populate-trunks", action="store_true", help="Assigns trunks to uplinks and downlinks")
+    parser.add_argument("--populate-gateways", action="store_true", help="Populate gateways on each VLAN")
 
     args = parser.parse_args()
 
@@ -272,30 +297,31 @@ if __name__ == "__main__":
 
     if args.populate_all or args.populate_locations:
         populator.populate_locations()
-        done_something = True
+    done_something = True
 
     if args.populate_all or args.populate_vlans:
         populator.populate_vlans()
-        done_something = True
+    done_something = True
 
     if args.populate_all or args.populate_switches:
         populator.populate_switches()
-        done_something = True
+    done_something = True
 
     if args.populate_all or args.populate_switch_ports:
         populator.populate_switch_ports()
-        done_something = True
+    done_something = True
 
     if args.populate_all or args.populate_links:
         populator.populate_links()
-        done_something = True
+    done_something = True
 
     # if args.populate_all or args.populate_trunks:
     #     populator.populate_trunks()
     #     done_something = True
     # TODO move from fixup-vlans.py
 
-    # populator.populate_core_svis()
+    if args.populate_all or args.populate_gateways:
+        populator.populate_gateways()
 
     if not done_something:
         print("Nothing to do, try " + sys.argv[0] + " --help")
