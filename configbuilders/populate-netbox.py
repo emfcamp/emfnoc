@@ -257,6 +257,9 @@ class NetboxPopulator:
         for interface in self.helper.netbox.dcim.interfaces.filter(device_id=device.id):
             if interface.untagged_vlan:
                 vlans.add(interface.untagged_vlan)
+            elif interface.mode and interface.mode.value == "tagged" and not interface.connected_endpoint_reachable:
+                vlans.update(interface.tagged_vlans)
+
         return set(map(lambda x: x.id, vlans))
 
     def _walk_tree_r(self, path, vlans=[], cables=[]):
