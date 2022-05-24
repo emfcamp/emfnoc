@@ -167,15 +167,17 @@ class NocSheetHelper:
         return out
 
     def get_shelf(self, name):
-        shelf_file = os.path.join('data', name + '.dat')
+        # Removed these checks as Linux uses different filenames
 
-        if not os.path.exists(shelf_file):
-            print('Shelf "%s" not found - have you run --download?' % name, file=sys.stderr)
-            sys.exit(1)
+        # shelf_file = os.path.join('data', name + '.dat')
+        #
+        # if not os.path.exists(shelf_file):
+        #     print('Shelf "%s" not found - have you run --download?' % name, file=sys.stderr)
+        #     sys.exit(1)
 
-        age = int(time.time() - os.path.getmtime(shelf_file))
-        if age > 2 * 60 * 60:
-            print('Warning: Shelf "%s" is over two hours old, you may want to --download again' % name, file=sys.stderr)
+        # age = int(time.time() - os.path.getmtime(shelf_file))
+        # if age > 2 * 60 * 60:
+        #     print('Warning: Shelf "%s" is over two hours old, you may want to --download again' % name, file=sys.stderr)
 
         with shelve.open(os.path.join('data', name), 'r') as shelf:
             data = shelf['list']
