@@ -2,7 +2,7 @@
 shared-network vlan{{ prefix.vlan.vid }} {
 {%- if prefix.family.value == 4 %}
   subnet {{ network.network_address }} netmask {{ network.netmask }} {
-	option domain-name "{{ domain }}";
+    option domain-name "{{ domain }}";
     option domain-name-servers {{ dns }};
     option routers {{ gateway }};
 	{#
