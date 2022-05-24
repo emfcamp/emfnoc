@@ -278,11 +278,11 @@ class NetboxHelper:
         }
         sum_copper = None
         if device_type := NetboxHelper._get_device_type(netbox, model_type):
-            sum_copper = -1
+            sum_copper = 0
             for interface in netbox.dcim.interface_templates.filter(
                     devicetype_id=device_type.id
             ):
-                if interface.type.value in copper_ports:
+                if interface.type.value in copper_ports and not interface.mgmt_only:
                     sum_copper += 1
         logger.info(str(device_type) + " " + str(sum_copper))
         return sum_copper
