@@ -110,7 +110,7 @@ def render_svg(svg, out_height=696):
     svg.set("width", "%spx" % out_width)
     svg.set("height", "%spx" % out_height)
 
-    return cairosvg.svg2png(bytestring=ET.tostring(svg))
+    return cairosvg.svg2png(bytestring=ET.tostring(svg), background_color="#ffffff")
 
 
 def generate(device):
@@ -118,7 +118,7 @@ def generate(device):
     interfaces = helper.get_interfaces_for_device(device)
     interfaces = list(interfaces)  # make a copy since we'll need to iterate it repeatedly
 
-    camper_vlan, port_map, vlan_map = get_access_ports(device, interfaces)
+    camper_vlan, port_map, vlan_map, links = get_interface_summary(device, interfaces)
 
     special_ports = ''
 
@@ -152,6 +152,11 @@ def generate(device):
         pretty_camper_ports = None
         camper_ipv4 = camper_ipv6 = None
 
+    links_out = ''
+    for link_switch, link_ports in links.items():
+        if links_out: links_out += "\n"
+        links_out += 'To %s: %s' % (link_switch, ','.join(link_ports))
+
     vars = {
         'SwitchName': device.name.replace(DOMAIN_SUFFIX, ''),
         'CamperVLAN': camper_vlan,
@@ -161,7 +166,7 @@ def generate(device):
         'SwitchModel': device.device_type.model,
         'SwitchSerial': device.serial,
         'SwitchAsset': device.asset_tag,
-        'Links': 'TODO\nTODO',
+        'Links': links_out,
         'Ports': special_ports
     }
 
@@ -178,17 +183,25 @@ def generate(device):
     return png
 
 
-def get_access_ports(device, interfaces):
+def short_interface(name):
+    name = name.replace("TenGigabitEthernet", "Te")
+    name = name.replace("GigabitEthernet", "Gi")
+    name = name.replace("FastEthernet", "Fa")
+    name = name.replace("Ethernet", "Eth")
+    return name
+
+
+def get_interface_summary(device, interfaces):
     # port_map, key: vlan_id, value: list of tuples with low and high interface numbers
     # e.g { 87: [(1,2), (23,24)] }
     port_map: dict[int, list[tuple[int, int]]] = {}
     # vlan_map: key: vlan_name, value: vlan_id
     vlan_map: dict[str, int] = {}
+    # links: key: connected switch name, value: list of interfaces
+    links = {}
     camper_vlan = None
     for interface in interfaces:
-        # pprint(interface.type.__dict__)
         if interface.mode and interface.mode.value == 'access' and interface.type.value != 'virtual':
-            # pprint(interface.__dict__)
             int_number = get_interface_shortnumber(interface.name)
 
             # Add this port's VLAN to the vlan_map and maybe set camper_vlan
@@ -225,7 +238,15 @@ def get_access_ports(device, interfaces):
 
             # TODO Fix up any ranges that are now contiguous, e.g. [ (2,3), (4,5) ] becomes [(2,5)]
             # (may not be necessary if ports are always ordered)
-    return camper_vlan, port_map, vlan_map
+        elif interface.type.value != 'virtual' and interface.connected_endpoint_reachable:
+            connected_device_name = interface.connected_endpoint.device.name
+            short_interface_name = short_interface(interface.name)
+            if connected_device_name in links:
+                links[connected_device_name].append(short_interface_name)
+            else:
+                links[connected_device_name] = [short_interface_name]
+
+    return camper_vlan, port_map, vlan_map, links
 
 
 def pretty_port_sequence(port_sequences):
