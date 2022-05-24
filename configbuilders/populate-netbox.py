@@ -247,6 +247,50 @@ class NetboxPopulator:
         lag_counter[switch.name] = switch_lag_num + 1
         return switch_lag_num
 
+    def populate_trunks(self):
+        startpoint = "ESNORE"
+        device = self.helper.netbox.dcim.devices.get(name=startpoint)
+        self._walk_tree_r([device])
+
+    def _get_vlans_for_device(self, device):
+        vlans = set()
+        for interface in self.helper.netbox.dcim.interfaces.filter(device_id=device.id):
+            if interface.untagged_vlan:
+                vlans.add(interface.untagged_vlan)
+            elif interface.mode and interface.mode.value == "tagged":
+                vlans.update(interface.tagged_vlans)
+        return set(map(lambda x: x.id, vlans))
+
+    def _walk_tree_r(self, path, vlans=[], cables=[]):
+        cur_vlans = self._get_vlans_for_device(path[-1])
+        vlans = vlans.copy()
+        vlans.append(cur_vlans)
+        if path[-1] in path[:-1]:
+            print(path[:-1], vlans[1:-1], cables[-1])
+            if len(cables[:-1]) != 0:
+                rvlan = set()
+                for cable, vlan in zip(reversed(cables[:-1]), reversed(vlans[1:-1])):
+                    rvlan = rvlan.union(vlan)
+                    a_tagged = rvlan.union(cable.termination_a.tagged_vlans)
+                    b_tagged = rvlan.union(cable.termination_b.tagged_vlans)
+                    i1 = cable.termination_a
+                    i2 = cable.termination_b
+                    i1.tagged_vlans = list(a_tagged)
+                    i1.save()
+                    i2.tagged_vlans = list(b_tagged)
+                    i2.save()
+                    rvlan = rvlan.union(a_tagged, b_tagged)
+            return
+        device = self.helper.netbox.dcim.devices.get(name=path[-1])
+        cur_vlans = self._get_vlans_for_device(path[-1])
+        for interface in self.helper.netbox.dcim.interfaces.filter(device_id=device.id):
+            if interface.connected_endpoint_reachable:
+                npath = path.copy()
+                npath.append(interface.link_peer.device)
+                ncables = cables.copy()
+                ncables.append(interface.cable)
+                self._walk_tree_r(npath, vlans, ncables)
+
     def populate_gateways(self):
         mgmt_domain = self.helper.config.get('mgmt_domain')
 
@@ -286,7 +330,7 @@ if __name__ == "__main__":
     parser.add_argument("--populate-switches", action="store_true", help="Populate switches")
     parser.add_argument("--populate-switch-ports", action="store_true", help="Populate switch ports")
     parser.add_argument("--populate-links", action="store_true", help="Populate links between switches")
-    # parser.add_argument("--populate-trunks", action="store_true", help="Assigns trunks to uplinks and downlinks")
+    parser.add_argument("--populate-trunks", action="store_true", help="Assigns trunks to uplinks and downlinks")
     parser.add_argument("--populate-gateways", action="store_true", help="Populate gateways on each VLAN")
 
     args = parser.parse_args()
@@ -313,15 +357,15 @@ if __name__ == "__main__":
 
     if args.populate_all or args.populate_links:
         populator.populate_links()
-    done_something = True
+        done_something = True
 
-    # if args.populate_all or args.populate_trunks:
-    #     populator.populate_trunks()
-    #     done_something = True
-    # TODO move from fixup-vlans.py
+    if args.populate_all or args.populate_trunks:
+        populator.populate_trunks()
+        done_something = True
 
     if args.populate_all or args.populate_gateways:
         populator.populate_gateways()
+        done_something = True
 
     if not done_something:
         print("Nothing to do, try " + sys.argv[0] + " --help")
