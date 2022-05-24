@@ -14,6 +14,7 @@ class EmfNoc:
 
         files = ['emfnoc.conf', '~/.emfnoc.conf', '/etc/emfnoc.conf']
         for file in files:
+            file = os.path.expanduser(file)
             if os.path.exists(file):
                 config = ConfigParser()
                 if config.read(file):
