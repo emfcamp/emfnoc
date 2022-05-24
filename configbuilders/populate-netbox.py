@@ -189,13 +189,13 @@ class NetboxPopulator:
                     switch1_int2 = self.helper.get_interface_for_device(switch1, link['Switch1-Port2'])
                     switch2_int2 = self.helper.get_interface_for_device(switch2, link['Switch2-Port2'])
 
-                    switch1_int1.description = 'LAG member: downlink to %s port %s' % (switch2, switch2_int1)
+                    switch1_int1.description = 'DOWNLINK: %s port %s (LAG member)' % (switch2, switch2_int1)
                     switch1_int1.save()
-                    switch2_int1.description = 'LAG member: uplink to %s port %s' % (switch1, switch1_int1)
+                    switch2_int1.description = 'UPLINK: %s port %s (LAG member)' % (switch1, switch1_int1)
                     switch2_int1.save()
-                    switch1_int2.description = 'LAG member: downlink to %s port %s' % (switch2, switch2_int2)
+                    switch1_int2.description = 'DOWNLINK: %s port %s (LAG member)' % (switch2, switch2_int2)
                     switch1_int2.save()
-                    switch2_int2.description = 'LAG member: uplink to %s port %s' % (switch1, switch1_int2)
+                    switch2_int2.description = 'UPLINK: %s port %s (LAG member)' % (switch1, switch1_int2)
                     switch2_int2.save()
 
                     self.helper.link_two_interfaces(switch1_int2, switch2_int2, f"{switch1} - {switch2}")
