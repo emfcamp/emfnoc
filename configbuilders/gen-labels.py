@@ -359,13 +359,11 @@ if __name__ == "__main__":
         os.mkdir('out/labels')
 
     if args.all:
-        devices = helper.netbox.dcim.devices.all()  # TODO filter on switches
-        devices = list(devices)
+        devices = helper.netbox.dcim.devices.filter(role='access-switch')
         with click.progressbar(devices, label='Labels',
                                item_show_func=lambda item: item.name if item is not None else 'Unknown') as bar:
             for device in bar:
-                if 'switch' in device.device_role.slug:
-                    generate(device)
+                generate(device)
     else:
         with click.progressbar(args.devices, label='Labels',
                                item_show_func=lambda item: item) as bar:
