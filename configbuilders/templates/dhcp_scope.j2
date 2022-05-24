@@ -5,7 +5,7 @@ shared-network vlan{{ prefix.vlan.vid }} {
     option domain-name "{{ domain }}";
     option domain-name-servers {{ dns }};
     option routers {{ gateway }};
-	{#
+{#
     hosts = None
     if False or hosts:
         file.write("    group {\n")
@@ -27,13 +27,13 @@ shared-network vlan{{ prefix.vlan.vid }} {
     }
   }
 {% elif prefix.family.value == 6 %}
-	subnet6 {{ network }} {
-	  {# stateful and temporay addresses:
+    subnet6 {{ network }} {
+{# stateful and temporay addresses:
 	  range6 {{ pool_start }} {{ pool_end }};
 	  range6 {{ network }} temporary;
-	  -#}
+-#}
 
-	  option dhcp6.domain-search "{{ domain }}"
+      option dhcp6.domain-search "{{ domain }}";
       option dhcp6.name-servers {{ dns }};
       option dhcp6.sntp-servers {{ sntp }};
     }
