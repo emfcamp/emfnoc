@@ -2,11 +2,12 @@
 import argparse
 import copy
 import io
+import os
 import sys
 import xml.etree.ElementTree as ET
-from pprint import pprint
 
 import cairosvg
+import click
 import qrcode
 import qrcode.image.svg
 from PIL import Image
@@ -175,9 +176,9 @@ def generate(device):
     svg = svg_from_template('label-template.svg', vars, netbox_url)
     png = render_svg(svg)
 
-    with open('out.svg', 'wb') as f:
+    with open('out/labels/%s.svg' % device.name, 'wb') as f:
         f.write(ET.tostring(svg))
-    with open('out.png', 'wb') as f:
+    with open('out/labels/%s.png' % device.name, 'wb') as f:
         f.write(png)
 
     return png
@@ -351,22 +352,32 @@ if __name__ == "__main__":
         print("Cannot specify a list of devices when using --all", file=sys.stderr)
         sys.exit(1)
 
-    if args.all:
-        devices = helper.netbox.dcim.devices.all()
-        for device in devices:
-            if 'switch' in device.device_role.slug:
-                generate(device)
-    else:
-        for devicename in args.devices:
-            device = helper.netbox.dcim.devices.get(name=devicename)
-            if device is None:
-                device = helper.netbox.dcim.devices.get(name=devicename + DOMAIN_SUFFIX)
-            if device is None:
-                print("No device named %s could be found" % devicename, file=sys.stderr)
-                sys.exit(1)
+    if not os.path.exists('out'):
+        os.mkdir('out')
 
-            print('Generating %s' % device.name)
-            png = generate(device)
-            if args.print:
-                print('Printing %s' % device.name)
-                print_label(prepare_label(png))
+    if not os.path.exists('out/labels'):
+        os.mkdir('out/labels')
+
+    if args.all:
+        devices = helper.netbox.dcim.devices.all()  # TODO filter on switches
+        devices = list(devices)
+        with click.progressbar(devices, label='Labels',
+                               item_show_func=lambda item: item.name if item is not None else 'Unknown') as bar:
+            for device in bar:
+                if 'switch' in device.device_role.slug:
+                    generate(device)
+    else:
+        with click.progressbar(args.devices, label='Labels',
+                               item_show_func=lambda item: item) as bar:
+            for devicename in bar:
+
+                device = helper.netbox.dcim.devices.get(name=devicename)
+                if device is None:
+                    device = helper.netbox.dcim.devices.get(name=devicename + DOMAIN_SUFFIX)
+                if device is None:
+                    print("No device named %s could be found" % devicename, file=sys.stderr)
+                    sys.exit(1)
+
+                png = generate(device)
+                if args.print:
+                    print_label(prepare_label(png))
