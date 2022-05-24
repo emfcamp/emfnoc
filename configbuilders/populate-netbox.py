@@ -252,7 +252,7 @@ class NetboxPopulator:
         device = self.helper.netbox.dcim.devices.get(name=startpoint)
         self._walk_tree_r([device])
 
-    def _get_vlans_for_device(self, device,end=False):
+    def _get_vlans_for_device(self, device, end=False):
         vlans = set()
         for interface in self.helper.netbox.dcim.interfaces.filter(device_id=device.id):
             if interface.untagged_vlan:
@@ -272,8 +272,10 @@ class NetboxPopulator:
                 rvlan = set()
                 for cable, vlan in zip(reversed(cables[:-1]), reversed(vlans[1:-1])):
                     rvlan = rvlan.union(vlan)
-                    a_tagged = list(rvlan.union(map(lambda x: x if type(x) == int else x.id, cable.termination_a.tagged_vlans)))
-                    b_tagged = list(rvlan.union(map(lambda x: x if type(x) == int else x.id, cable.termination_b.tagged_vlans)))
+                    a_tagged = list(
+                        rvlan.union(map(lambda x: x if type(x) == int else x.id, cable.termination_a.tagged_vlans)))
+                    b_tagged = list(
+                        rvlan.union(map(lambda x: x if type(x) == int else x.id, cable.termination_b.tagged_vlans)))
                     i1 = cable.termination_a
                     i2 = cable.termination_b
                     if i1.untagged_vlan and i1.untagged_vlan.id in a_tagged:
@@ -346,19 +348,19 @@ if __name__ == "__main__":
 
     if args.populate_all or args.populate_locations:
         populator.populate_locations()
-    done_something = True
+        done_something = True
 
     if args.populate_all or args.populate_vlans:
         populator.populate_vlans()
-    done_something = True
+        done_something = True
 
     if args.populate_all or args.populate_switches:
         populator.populate_switches()
-    done_something = True
+        done_something = True
 
     if args.populate_all or args.populate_switch_ports:
         populator.populate_switch_ports()
-    done_something = True
+        done_something = True
 
     if args.populate_all or args.populate_links:
         populator.populate_links()
