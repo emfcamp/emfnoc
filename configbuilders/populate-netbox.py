@@ -252,13 +252,11 @@ class NetboxPopulator:
         device = self.helper.netbox.dcim.devices.get(name=startpoint)
         self._walk_tree_r([device])
 
-    def _get_vlans_for_device(self, device):
+    def _get_vlans_for_device(self, device,end=False):
         vlans = set()
         for interface in self.helper.netbox.dcim.interfaces.filter(device_id=device.id):
             if interface.untagged_vlan:
                 vlans.add(interface.untagged_vlan)
-            elif interface.mode and interface.mode.value == "tagged":
-                vlans.update(interface.tagged_vlans)
         return set(map(lambda x: x.id, vlans))
 
     def _walk_tree_r(self, path, vlans=[], cables=[]):
@@ -271,13 +269,17 @@ class NetboxPopulator:
                 rvlan = set()
                 for cable, vlan in zip(reversed(cables[:-1]), reversed(vlans[1:-1])):
                     rvlan = rvlan.union(vlan)
-                    a_tagged = rvlan.union(cable.termination_a.tagged_vlans)
-                    b_tagged = rvlan.union(cable.termination_b.tagged_vlans)
+                    a_tagged = list(rvlan.union(map(lambda x: x if type(x) == int else x.id, cable.termination_a.tagged_vlans)))
+                    b_tagged = list(rvlan.union(map(lambda x: x if type(x) == int else x.id, cable.termination_b.tagged_vlans)))
                     i1 = cable.termination_a
                     i2 = cable.termination_b
-                    i1.tagged_vlans = list(a_tagged)
+                    if i1.untagged_vlan and i1.untagged_vlan.id in a_tagged:
+                        a_tagged.remove(i1.untagged_vlan.id)
+                    i1.tagged_vlans = a_tagged
                     i1.save()
-                    i2.tagged_vlans = list(b_tagged)
+                    if i2.untagged_vlan and i2.untagged_vlan.id in b_tagged:
+                        b_tagged.remove(i2.untagged_vlan.id)
+                    i2.tagged_vlans = b_tagged
                     i2.save()
                     rvlan = rvlan.union(a_tagged, b_tagged)
             return
