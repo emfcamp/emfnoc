@@ -14,8 +14,7 @@ import re
 import shutil
 import sys
 import time
-from pprint import pprint
-from typing import Dict, Set
+from typing import Dict
 
 import dns.rdata
 import dns.rdataclass
@@ -49,7 +48,7 @@ NS_LIST_HACK_EMF_CAMP = ['ns1.emfcamp.org.', 'A.AUTHNS.BITFOLK.COM.', 'B.AUTHNS.
 
 
 def get_rev_zone(address):
-    return str(reversename.from_address(str(address)).parent())
+    return reversename.from_address(str(address)).parent()
 
 
 def add_soa_and_ns(zone):
@@ -66,64 +65,61 @@ def add_soa_and_ns(zone):
 
 
 def generate_zones():
-    # global zones, aggregates, subnet, zone, name, address
     zones: Dict[str, dns.zone.Zone] = {}
-    reverse_supernets: Set[ipaddress._BaseNetwork] = set()
+    reverse_zones: hash[ipaddress._BaseNetwork, dns.zone.Zone] = {}
     aggregates = helper.netbox.ipam.aggregates.all()
     for aggregate in aggregates:
         supernet = ipaddress.ip_network(aggregate)
-        reverse_supernets.add(supernet)
         if supernet.version == 4:
             for subnet in supernet.subnets(new_prefix=24):
-                rev_zone_name = get_rev_zone(subnet.network_address)
+                rev_zone_name = str(get_rev_zone(subnet.network_address))
                 zone = dns.zone.Zone(rev_zone_name)
                 add_soa_and_ns(zone)
                 zones[rev_zone_name] = zone
+                reverse_zones[subnet] = zone
         elif supernet.version == 6:
-            # rev_zone = reversename.from_address(str(subnet.network_address)).parent()
-            # TODO get a zone name of the length of this agggregate (mod 4 bits)
-            pass
+            rev_zone_name = str(rev_zone_for_ipv6_prefix(supernet))
+            zone = dns.zone.Zone(rev_zone_name)
+            add_soa_and_ns(zone)
+            zones[rev_zone_name] = zone
+            reverse_zones[supernet] = zone
+
     for zone_name in FWD_DOMAINS:
         zone = dns.zone.Zone(zone_name)
         add_soa_and_ns(zone)
         zones[zone_name] = zone
+
     addresses = helper.netbox.ipam.ip_addresses.all()
     for nb_address in addresses:
         name = dns.name.from_text(nb_address.dns_name)
-        address = ipaddress.ip_address(nb_address.address.split('/')[0])
+        address = ipaddress.ip_interface(nb_address.address).ip
 
-        forward_parent = None
+        forward_zone = None
         for zone in zones.values():
             if name.is_subdomain(zone.origin):
-                forward_parent = zone
+                forward_zone = zone
 
-        if forward_parent:
+        if forward_zone:
             record_type = dns.rdatatype.A if address.version == 4 else dns.rdatatype.AAAA
-            forward_rdataset = forward_parent.find_rdataset(name, record_type, create=True)
+            forward_rdataset = forward_zone.find_rdataset(name, record_type, create=True)
 
             if address.version == 4:
                 forward_rdataset.add(dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, str(address)), TTL)
             else:
                 forward_rdataset.add(dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, str(address)), TTL)
 
-        do_reverse: bool = False
-        for supernet in reverse_supernets:
+        reverse_zone: dns.zone.Zone = None
+        for supernet, zone in reverse_zones.items():
             if address in supernet:
-                do_reverse = True
+                reverse_zone = zone
                 break
 
-        if do_reverse:
-            if address.version == 4:
-                # zones[get_fwd_zone(address)] = dns.rdtypes.IN.A()
-                # zones[get_rev_zone(address)][address.]
-                rev_name = reversename.from_address(str(address))
+        if reverse_zone:
+            rev_name = reversename.from_address(str(address))
 
-                ptr_rdataset = zones[get_rev_zone(address)].find_rdataset(rev_name, dns.rdatatype.PTR, create=True)
-
-                # ns_rdataset.add(dns.rdtypes.ANY.NS.NS(dns.rdataclass.IN, dns.rdatatype.NS, ns), TTL)
-                ptr_rdataset.add(dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.IN, dns.rdatatype.PTR, nb_address.dns_name),
-                                 TTL)
-                # zones[get_rev_zone(address)][rev_name] = value
+            ptr_rdataset = reverse_zone.find_rdataset(rev_name, dns.rdatatype.PTR, create=True)
+            ptr_rdataset.add(dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.IN, dns.rdatatype.PTR, nb_address.dns_name),
+                             TTL)
 
     # Add extras
     with open('dns-extra.yaml', 'r') as f:
@@ -136,6 +132,23 @@ def generate_zones():
                 zone.replace_rdataset(rrset.name, rrset)
 
     return zones
+
+
+def rev_zone_for_ipv6_prefix(prefix):
+    # Find the shortest prefix that covers this and is a multiple of 4 and return the .ip6.arpa reverse zone
+    parts: list[str] = []
+    length = prefix.prefixlen
+    pos = 0
+    all_bytes = prefix.network_address.packed
+    while length > 0:
+        parts.append(format((all_bytes[pos] >> 4) & 0xf, 'x'))
+        if length > 4:
+            parts.append(format(all_bytes[pos] & 0xf, 'x'))
+        length -= 8
+        pos += 1
+
+    zone_origin = dns.name.from_text('.'.join(reversed(parts)), origin=reversename.ipv6_reverse_domain)
+    return zone_origin
 
 
 def is_zone_signed(zone):
@@ -163,15 +176,6 @@ def write_zone(zone, tempfile):
         f.write(";\n")
         f.write("; DO NOT EDIT THIS FILE!\n")
         f.write("; This file is automatically generated and changes will be lost next time it is built.\n")
-        # f.write("      IN      NS  ns1.emfcamp.org.\n")
-        # if domainname == "emf.camp":
-        #     f.write("      IN      NS  A.AUTHNS.BITFOLK.COM.\n")
-        #     f.write("      IN      NS  B.AUTHNS.BITFOLK.COM.\n")
-        #     f.write("      IN      NS  C.AUTHNS.BITFOLK.COM.\n")
-        # else:
-        #     f.write("      IN      NS  auth1.ns.sargasso.net.\n")
-        #     f.write("      IN      NS  auth2.ns.sargasso.net.\n")
-        #     f.write("      IN      NS  auth3.ns.sargasso.net.\n")
         f.write(";\n")
 
         zone.to_file(f, sorted=True)
