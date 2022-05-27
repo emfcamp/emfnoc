@@ -4,7 +4,6 @@
 # Generate EMF zone files from Netbox
 #
 
-# TODO ipv6 reverse
 # TODO auto codenames for dhcp sections of dhcp-enabled prefixes
 import argparse
 import getpass
@@ -32,205 +31,187 @@ from dns import reversename
 from emfnoc import EmfNoc
 from nbh import NetboxHelper
 
-SOA_NS = 'ns1.emfcamp.org'
-SOA_ADMIN = 'noc.emfcamp.org'
-SOA_REFRESH = 3600
-SOA_RETRY = 120
-SOA_EXPIRE = 1 * 60 * 60
 
-TTL = 30 * 60
-
-FWD_DOMAINS = ['gchq.org.uk.', 'emf.camp.']
-
-NS_LIST = ['ns1.emfcamp.org.', 'auth1.ns.sargasso.net.', 'auth2.ns.sargasso.net.', 'auth3.ns.sargasso.net.']
-
-NS_LIST_HACK_EMF_CAMP = ['ns1.emfcamp.org.', 'A.AUTHNS.BITFOLK.COM.', 'B.AUTHNS.BITFOLK.COM.', 'C.AUTHNS.BITFOLK.COM.']
-
-
-def get_rev_zone(address):
-    return reversename.from_address(str(address)).parent()
-
-
-def add_soa_and_ns(zone):
-    # Add SOA
-    serial = 123  # TODO
-    soa_rdataset = zone.find_rdataset('@', dns.rdatatype.SOA, create=True)
-    soa_rdataset.add(dns.rdtypes.ANY.SOA.SOA(dns.rdataclass.IN, dns.rdatatype.SOA, SOA_NS, SOA_ADMIN,
-                                             serial, SOA_REFRESH, SOA_RETRY, SOA_EXPIRE, TTL), TTL)
-
-    ns_rdataset = zone.find_rdataset('@', dns.rdatatype.NS, create=True)
-
-    for ns in NS_LIST_HACK_EMF_CAMP if zone.origin.to_text(omit_final_dot=True) == 'emf.camp' else NS_LIST:
-        ns_rdataset.add(dns.rdtypes.ANY.NS.NS(dns.rdataclass.IN, dns.rdatatype.NS, ns), TTL)
-
-
-def generate_zones():
+class ZonesGenerator:
     zones: Dict[str, dns.zone.Zone] = {}
-    reverse_zones: hash[ipaddress._BaseNetwork, dns.zone.Zone] = {}
-    aggregates = helper.netbox.ipam.aggregates.all()
-    for aggregate in aggregates:
-        supernet = ipaddress.ip_network(aggregate)
-        if supernet.version == 4:
-            for subnet in supernet.subnets(new_prefix=24):
-                rev_zone_name = str(get_rev_zone(subnet.network_address))
+
+    SOA_NS = 'ns1.emfcamp.org'
+    SOA_ADMIN = 'noc.emfcamp.org'
+    SOA_REFRESH = 3600
+    SOA_RETRY = 120
+    SOA_EXPIRE = 1 * 60 * 60
+
+    TTL = 30 * 60
+
+    FWD_DOMAINS = ['gchq.org.uk.', 'emf.camp.']
+
+    NS_LIST = ['ns1.emfcamp.org.', 'auth1.ns.sargasso.net.', 'auth2.ns.sargasso.net.', 'auth3.ns.sargasso.net.']
+
+    NS_LIST_HACK_EMF_CAMP = ['ns1.emfcamp.org.', 'A.AUTHNS.BITFOLK.COM.', 'B.AUTHNS.BITFOLK.COM.',
+                             'C.AUTHNS.BITFOLK.COM.']
+
+    def __init__(self, helper):
+        self.helper = helper
+
+    def get_rev_zone(self, address):
+        return reversename.from_address(str(address)).parent()
+
+    def add_soa_and_ns(self, zone):
+        # Add SOA
+        serial = 123  # TODO
+        soa_rdataset = zone.find_rdataset('@', dns.rdatatype.SOA, create=True)
+        soa_rdataset.add(dns.rdtypes.ANY.SOA.SOA(dns.rdataclass.IN, dns.rdatatype.SOA, self.SOA_NS, self.SOA_ADMIN,
+                                                 serial, self.SOA_REFRESH, self.SOA_RETRY, self.SOA_EXPIRE, self.TTL),
+                         self.TTL)
+
+        ns_rdataset = zone.find_rdataset('@', dns.rdatatype.NS, create=True)
+
+        for ns in self.NS_LIST_HACK_EMF_CAMP if zone.origin.to_text(
+                omit_final_dot=True) == 'emf.camp' else self.NS_LIST:
+            ns_rdataset.add(dns.rdtypes.ANY.NS.NS(dns.rdataclass.IN, dns.rdatatype.NS, ns), self.TTL)
+
+    def generate_zones(self):
+        reverse_zones: hash[ipaddress._BaseNetwork, dns.zone.Zone] = {}
+        aggregates = self.helper.netbox.ipam.aggregates.all()
+        for aggregate in aggregates:
+            supernet = ipaddress.ip_network(aggregate)
+            if supernet.version == 4:
+                for subnet in supernet.subnets(new_prefix=24):
+                    rev_zone_name = str(self.get_rev_zone(subnet.network_address))
+                    zone = dns.zone.Zone(rev_zone_name)
+                    self.add_soa_and_ns(zone)
+                    self.zones[rev_zone_name] = zone
+                    reverse_zones[subnet] = zone
+            elif supernet.version == 6:
+                rev_zone_name = str(self.rev_zone_for_ipv6_prefix(supernet))
                 zone = dns.zone.Zone(rev_zone_name)
-                add_soa_and_ns(zone)
-                zones[rev_zone_name] = zone
-                reverse_zones[subnet] = zone
-        elif supernet.version == 6:
-            rev_zone_name = str(rev_zone_for_ipv6_prefix(supernet))
-            zone = dns.zone.Zone(rev_zone_name)
-            add_soa_and_ns(zone)
-            zones[rev_zone_name] = zone
-            reverse_zones[supernet] = zone
+                self.add_soa_and_ns(zone)
+                self.zones[rev_zone_name] = zone
+                reverse_zones[supernet] = zone
 
-    for zone_name in FWD_DOMAINS:
-        zone = dns.zone.Zone(zone_name)
-        add_soa_and_ns(zone)
-        zones[zone_name] = zone
+        for zone_name in self.FWD_DOMAINS:
+            zone = dns.zone.Zone(zone_name)
+            self.add_soa_and_ns(zone)
+            self.zones[zone_name] = zone
 
-    addresses = helper.netbox.ipam.ip_addresses.all()
-    for nb_address in addresses:
-        name = dns.name.from_text(nb_address.dns_name)
-        address = ipaddress.ip_interface(nb_address.address).ip
+        addresses = self.helper.netbox.ipam.ip_addresses.all()
+        for nb_address in addresses:
+            name = dns.name.from_text(nb_address.dns_name)
+            address = ipaddress.ip_interface(nb_address.address).ip
 
-        forward_zone = None
-        for zone in zones.values():
-            if name.is_subdomain(zone.origin):
-                forward_zone = zone
+            forward_zone = None
+            for zone in self.zones.values():
+                if name.is_subdomain(zone.origin):
+                    forward_zone = zone
 
-        if forward_zone:
-            record_type = dns.rdatatype.A if address.version == 4 else dns.rdatatype.AAAA
-            forward_rdataset = forward_zone.find_rdataset(name, record_type, create=True)
+            if forward_zone:
+                record_type = dns.rdatatype.A if address.version == 4 else dns.rdatatype.AAAA
+                forward_rdataset = forward_zone.find_rdataset(name, record_type, create=True)
 
-            if address.version == 4:
-                forward_rdataset.add(dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, str(address)), TTL)
-            else:
-                forward_rdataset.add(dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, str(address)), TTL)
+                if address.version == 4:
+                    forward_rdataset.add(dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, str(address)), self.TTL)
+                else:
+                    forward_rdataset.add(dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, str(address)),
+                                         self.TTL)
 
-        reverse_zone: dns.zone.Zone = None
-        for supernet, zone in reverse_zones.items():
-            if address in supernet:
-                reverse_zone = zone
-                break
+            reverse_zone: dns.zone.Zone = None
+            for supernet, zone in reverse_zones.items():
+                if address in supernet:
+                    reverse_zone = zone
+                    break
 
-        if reverse_zone:
-            rev_name = reversename.from_address(str(address))
+            if reverse_zone:
+                rev_name = reversename.from_address(str(address))
 
-            ptr_rdataset = reverse_zone.find_rdataset(rev_name, dns.rdatatype.PTR, create=True)
-            ptr_rdataset.add(dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.IN, dns.rdatatype.PTR, nb_address.dns_name),
-                             TTL)
+                ptr_rdataset = reverse_zone.find_rdataset(rev_name, dns.rdatatype.PTR, create=True)
+                ptr_rdataset.add(dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.IN, dns.rdatatype.PTR, nb_address.dns_name),
+                                 self.TTL)
 
-    # Add extras
-    with open('dns-extra.yaml', 'r') as f:
-        dns_extra = yaml.safe_load(f)
-    for zone_name, records in dns_extra.items():
-        zone = zones[zone_name + '.']
-        for record in records:
-            rrsets = dns.zonefile.read_rrsets(record, rdclass=None, default_ttl=TTL, origin=zone.origin)
-            for rrset in rrsets:
-                zone.replace_rdataset(rrset.name, rrset)
+        # Add extras
+        with open('dns-extra.yaml', 'r') as f:
+            dns_extra = yaml.safe_load(f)
+        for zone_name, records in dns_extra.items():
+            zone = self.zones[zone_name + '.']
+            for record in records:
+                rrsets = dns.zonefile.read_rrsets(record, rdclass=None, default_ttl=self.TTL, origin=zone.origin)
+                for rrset in rrsets:
+                    zone.replace_rdataset(rrset.name, rrset)
 
-    return zones
+    def rev_zone_for_ipv6_prefix(self, prefix):
+        # Find the shortest prefix that covers this and is a multiple of 4 and return the .ip6.arpa reverse zone
+        parts: list[str] = []
+        length = prefix.prefixlen
+        pos = 0
+        all_bytes = prefix.network_address.packed
+        while length > 0:
+            parts.append(format((all_bytes[pos] >> 4) & 0xf, 'x'))
+            if length > 4:
+                parts.append(format(all_bytes[pos] & 0xf, 'x'))
+            length -= 8
+            pos += 1
 
+        zone_origin = dns.name.from_text('.'.join(reversed(parts)), origin=reversename.ipv6_reverse_domain)
+        return zone_origin
 
-def rev_zone_for_ipv6_prefix(prefix):
-    # Find the shortest prefix that covers this and is a multiple of 4 and return the .ip6.arpa reverse zone
-    parts: list[str] = []
-    length = prefix.prefixlen
-    pos = 0
-    all_bytes = prefix.network_address.packed
-    while length > 0:
-        parts.append(format((all_bytes[pos] >> 4) & 0xf, 'x'))
-        if length > 4:
-            parts.append(format(all_bytes[pos] & 0xf, 'x'))
-        length -= 8
-        pos += 1
+    def is_zone_signed(self, zone):
+        if os.path.isdir("/etc/bind/signed-zones/%s" % zone):
+            return True
+        else:
+            return False
 
-    zone_origin = dns.name.from_text('.'.join(reversed(parts)), origin=reversename.ipv6_reverse_domain)
-    return zone_origin
+    def live_zone_file(self, zone):
+        #  /etc/bind/signed-zones/emf.camp
+        if self.is_zone_signed(zone):
+            return "/etc/bind/signed-zones/%s/zone.db" % zone
+        else:
+            return "/etc/bind/master/%s" % zone
 
+    def _write_zone(self, zone, tempfile):
+        if os.path.exists(tempfile) == True:
+            os.remove(tempfile)
+        with open(tempfile, 'w') as f:
+            f.write(";\n")
+            f.write("; zone file built by gen-zones.py from EMF NOC Google Spreadsheet\n")
+            f.write("; %s\n" % (zone.origin))
+            f.write(";\n")
+            f.write("; DO NOT EDIT THIS FILE!\n")
+            f.write("; This file is automatically generated and changes will be lost next time it is built.\n")
+            f.write(";\n")
 
-def is_zone_signed(zone):
-    if os.path.isdir("/etc/bind/signed-zones/%s" % zone):
-        return True
-    else:
-        return False
+            zone.to_file(f, sorted=True)
 
+            f.write(";\n")
+            f.write("; DO NOT EDIT THIS FILE!\n")
+            f.write("; This file is automatically generated and changes will be lost next time it is built.\n")
+            f.close()
+            return
 
-def live_zone_file(zone):
-    #  /etc/bind/signed-zones/emf.camp
-    if is_zone_signed(zone):
-        return "/etc/bind/signed-zones/%s/zone.db" % zone
-    else:
-        return "/etc/bind/master/%s" % zone
+    def _check_zone(self, zone, file):
+        checkcmd = '/usr/sbin/named-checkzone %s %s' % (zone, file)
+        checkresult = os.popen(checkcmd).read()
+        return checkresult.endswith("OK\n")
 
+    def _get_temp_file(self, zone):
+        zone_name = zone.origin.to_text(omit_final_dot=True)
+        return 'out/zones/%s' % (zone_name)
 
-def write_zone(zone, tempfile):
-    if os.path.exists(tempfile) == True:
-        os.remove(tempfile)
-    with open(tempfile, 'w') as f:
-        f.write(";\n")
-        f.write("; zone file built by gen-zones.py from EMF NOC Google Spreadsheet\n")
-        f.write("; %s\n" % (zone.origin))
-        f.write(";\n")
-        f.write("; DO NOT EDIT THIS FILE!\n")
-        f.write("; This file is automatically generated and changes will be lost next time it is built.\n")
-        f.write(";\n")
+    def output_zones(self):
 
-        zone.to_file(f, sorted=True)
+        for zone_name, zone in self.zones.items():
+            tempfile = self._get_temp_file(zone)
+            # zoneserial = get_serial(zonename)
+            # print("* %s" % (zone_name))
+            self._write_zone(zone, tempfile)
 
-        f.write(";\n")
-        f.write("; DO NOT EDIT THIS FILE!\n")
-        f.write("; This file is automatically generated and changes will be lost next time it is built.\n")
-        f.close()
-        return
-
-
-def check_zone(zone, file):
-    checkcmd = '/usr/sbin/named-checkzone %s %s' % (zone, file)
-    checkresult = os.popen(checkcmd).read()
-    return checkresult.endswith("OK\n")
-
-
-def get_temp_file(zone):
-    zone_name = zone.origin.to_text(omit_final_dot=True)
-    return 'out/zones/%s' % (zone_name)
-
-
-if __name__ == "__main__":
-    helper = NetboxHelper.getInstance()
-
-    parser = argparse.ArgumentParser(description='Generate Oxidized config.')
-
-    args = parser.parse_args()
-
-    config = EmfNoc.load_config()
-
-    if not os.path.exists('out'):
-        os.mkdir('out')
-    if not os.path.exists('out/zones'):
-        os.mkdir('out/zones')
-
-    print("Generating zones")
-
-    zones = generate_zones()
-
-    print("Outputting zones")
-
-    for zone_name, zone in zones.items():
-        tempfile = get_temp_file(zone)
-        # zoneserial = get_serial(zonename)
-        # print("* %s" % (zone_name))
-        write_zone(zone, tempfile)
-
-    if os.name != 'nt':
-        print("Verifying zones")
+    def verify_zones(self):
+        if os.name == 'nt':
+            print("Unable to verify zones under Windows - skipping")
+            return
 
         ok = not_ok = 0
         for zone_name, zone in zones.items():
-            tempfile = get_temp_file(zone)
-            if check_zone(zone_name, tempfile):
+            tempfile = self._get_temp_file(zone)
+            if self._check_zone(zone_name, tempfile):
                 ok += 1
             else:
                 print("VALIDATION FAILED: %s for %s" % (tempfile, zone_name))
@@ -241,6 +222,35 @@ if __name__ == "__main__":
         if not_ok > 0:
             print("Validation failed, aborting")
             sys.exit(1)
+
+
+if __name__ == "__main__":
+    helper = NetboxHelper.getInstance()
+
+    parser = argparse.ArgumentParser(description='Generate DNS zone files.')
+
+    args = parser.parse_args()
+
+    config = EmfNoc.load_config()
+
+    if not os.path.exists('out'):
+        os.mkdir('out')
+    if not os.path.exists('out/zones'):
+        os.mkdir('out/zones')
+
+    zonegen = ZonesGenerator(helper)
+
+    print("Generating zones")
+
+    zonegen.generate_zones()
+
+    print("Outputting zones")
+
+    zonegen.output_zones()
+
+    print("Verifying zones")
+
+    zonegen.verify_zones()
 
     sys.exit(0)
 
