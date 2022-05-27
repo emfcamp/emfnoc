@@ -9,3 +9,4 @@ qrcode
 brother_ql
 pyusb
 jinja2
+dnspython

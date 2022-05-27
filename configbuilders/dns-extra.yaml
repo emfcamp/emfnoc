@@ -1,0 +1,29 @@
+emf.camp:
+  - oob.DOCKLANDS IN A 5.57.94.165
+  - oob.DOCKLANDS IN AAAA 2a00:eb20:434::165
+  #  - SLOUGH IN A 5.57.94.167
+  #  eth1.DOCKLANDS  IN  A 45.15.104.1
+  #  eth1.ESNORE IN  A 45.15.104.2
+
+  # Public peering
+  # TODO can these be in netbox?
+  - lonap4  IN A 5.57.81.222
+  - lonap6  IN AAAA 2001:7f8:17::eaaf:1
+
+  # NOC/Monitoring
+  - stats IN CNAME plt-mon-1
+  - dashboard IN CNAME plt-mon-1
+  - monitoring IN CNAME plt-mon-1
+  - chronograf.monitoring IN CNAME plt-mon-1
+  - influxdb.monitoring IN CNAME plt-mon-1
+  - kapacitor.monitoring IN CNAME plt-mon-1
+  - alert.manager.prometheus.monitoring IN CNAME plt-mon-1
+  - prometheus.monitoring IN CNAME plt-mon-1
+  - snmp.prometheus.monitoring IN CNAME plt-mon-1
+  - node.plt.mon.1.prometheus.monitoring IN CNAME plt-mon-1
+  - node.plt.mon.2.prometheus.monitoring IN CNAME plt-mon-2
+  - proxy.plt.mon.1.prometheus.monitoring IN CNAME plt-mon-1
+  - proxy.plt.mon.2.prometheus.monitoring IN CNAME plt-mon-2
+
+  # Phone team
+  - jambonz IN A 45.15.105.22
