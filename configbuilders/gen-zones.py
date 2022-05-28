@@ -15,6 +15,7 @@ import shutil, sys, getpass
 
 from subprocess import Popen, PIPE
 from nocsheet import login, get_worksheets, get_worksheet_data
+from nbh import NetboxHelper
 
 codenamepos = 0
 
@@ -223,106 +224,6 @@ def get_sshfps():
   fh.close()
   return fps
 
-
-default_domain = "emf.camp"
-
-if not os.path.exists('out'):
-  os.mkdir('out')
-if not os.path.exists('out/zones'):
-  os.mkdir('out/zones')
-
-config = ConfigParser.ConfigParser()
-if not config.read("/etc/emf-gdata.conf"):
-  print "Warning: config file /etc/emf-gdata.conf could not be found or read"
-
-
-parser = argparse.ArgumentParser(description='Generate cisco IOS config files from gdocs.')
-
-parser.add_argument('--deploy', action='store_true',
-                    help='deploy zone files after generating')
-
-parser.add_argument('--diff', action='store_true',
-                    help='diff zone files against live versions after generating')
-
-args = parser.parse_args()
-
-spreadsheet = config.get('gdata', 'noc_combined')
-
-spr_client = login("emfcamp DNS zone generator", config)
-
-print "downloading Addressing"
-addressing = get_worksheet_data(spr_client, spreadsheet, "Addressing")
-
-print "downloading codenames"
-codenames = get_worksheet_data(spr_client, spreadsheet, "Codenames")
-
-#for x in range(0, 2560000):
-#  print pretty_host("gchq.org.uk", None)
-
-sshfps = get_sshfps()
-zones = {}
-
-for row in addressing:
-  if "Domain" in row:
-    fwd_zonename = row["Domain"];
-  else:
-    fwd_zonename = default_domain
-
-  # is it a host?
-  if "Hostname" in row and "dns" in row and (row["dns"] == "y" or row["dns"] == "fwd" or row["dns"] == "rev"):
-    hostname = row["Hostname"]
-    if "Subdomain" in row:
-      hostname += "." + row["Subdomain"]
-
-    if "IPv4" in row:
-      ipv4 = ipaddr.IPv4Address(row["IPv4"])
-      add_ipv4_host(hostname, fwd_zonename, ipv4, (row["dns"] == "fwd"), (row["dns"] == "rev"))
-
-    if "IPv6" in row:
-      ipv6 = ipaddr.IPv6Address(row["IPv6"])
-      add_ipv6_host(hostname, fwd_zonename, ipv6, (row["dns"] == "fwd"), (row["dns"] == "rev"))
-
-  # is it a subnet with auto dns?
-  elif "IPv4-Subnet" in row and "dns" in row and row["dns"] == "auto":
-    subnet = ipaddr.IPv4Network(row["IPv4-Subnet"])
-    # router entry
-    if "VLAN" in row:
-      vlan = row["VLAN"]
-      add_ipv4_host("vlan" + vlan + ".ESNORE", "emf.camp", subnet.network + 1, False, False)
-#      if "IPv6" in row:
-      ipv6 = ipaddr.IPv6Network(row["IPv6"])
-      add_ipv6_host("vlan" + vlan + ".ESNORE", "emf.camp", ipv6.network + 1, False, False)
-
-    # host entries
-    for ipv4 in subnet.iterhosts():
-      if ipv4 == subnet.network + 1: # first host is the gateway
-        continue
-      hostname = pretty_host(fwd_zonename, ipv4)
-      if "Subdomain" in row:
-        hostname += "." + row["Subdomain"]
-      add_ipv4_host(hostname, fwd_zonename, ipv4, False, False)
-
-  # is it a cname or other fixed record?
-  elif "dns" in row and row["dns"] == "record":
-    hostname = row["Hostname"]
-    if "Subdomain" in row:
-      hostname += "." + row["Subdomain"]
-    add_record(fwd_zonename, hostname + "\t" + row["Description"])
-
-  # if it's a Network with dns='y', we need to 'touch' all the reverse dns to make sure
-  # every individual zone exists
-  elif "Network" in row and "dns" in row and row["dns"] == "y":
-    net = ipaddr.IPv4Network(row["Network"])
-    for subnet in net.iter_subnets(new_prefix = 24):
-      zonename = reverse_zone(subnet)
-      if zonename not in zones.keys():
-        zones[zonename] = []
-
-#print "ZONES:"
-#pprint.pprint(zones)
-
-# write out zone files
-
 def get_serial(zonename):
   realzone = live_zone_file(zonename)
   if not os.path.exists(realzone):
@@ -349,67 +250,215 @@ def get_serial(zonename):
     return int(time.time())
   return zoneserial
 
+def slugify(value):
+  value = str(value)
 
-if args.deploy and args.diff:
-  print "only one of --deploy and --diff can be specified"
-  raise SystemExit
+  value = re.sub(r"[^\w\s-]", "-", value.lower())
+  return re.sub(r"[-\s]+", "-", value).strip("-_")
 
-print "Generating zones"
-success = 0
-failed = 0
-for zonename in zones.keys():
-  tempfile = "out/zones/%s" % (zonename)
-  zoneserial = get_serial(zonename)
-  print "* %s" % (zonename),
-  writezone(zonename, zoneserial, zones[zonename], tempfile)
-  if checkzone(zonename, tempfile) == True:
-    print " ok"
-    if args.deploy:
-      ret = makezonelive(zonename, tempfile)
-      if ret:
-        success += 1
+def extract_zone(full_hostname):
+  known_zones = ['emf.camp', 'gchq.org.uk', 'emfcamp.org']
+
+def load_codenames(filename):
+  with open(filename, 'rt') as codename_file:
+    codenames = codename_file.read().split('\n')
+    to_remove = []
+    for idx, codename in enumerate(codenames):
+      if not re.match(r'^[0-9A-Z\- ]+$', codename):
+        to_remove.append(idx)
+        print(f"Codename '{codename}' in position {idx} is not valid, removing")
+
+    for idx in sorted(to_remove, reverse=True):
+      del codenames[idx]
+
+  return codenames
+
+def get_addressing(helper):
+  addressing = []
+
+  all_ips = helper.netbox.ipam.ip_addresses.all()
+  for ip in all_ips:
+    address = {}
+    if ip.family.value == 4:
+      address['address'] = ipaddress.IPv4Interface(ip.address).ip
+    elif ip.family.value == 6:
+      address['address'] = ipaddress.IPv6Interface(ip.address).ip
+
+    if ip.dns_name is not None:
+      hostname, zone = extract_zone(ip.dns_name)
+      address['hostname'] == hostname
+      address['zone'] = zone
+
+    elif ip.assigned_object is not None:
+      interface = ip.assigned_object.name
+      device = None
+      if hasattr(ip.assigned_object, 'device'):
+        device = ip.assigned_object.device.name
       else:
-        failed += 1
-    if args.diff:
-      cmd = "diff -u %s %s" % (live_zone_file(zonename), tempfile)
-      p = os.popen(cmd)
-      out = p.read()
-      ret = p.close()
-      # no diff
-      if ret == None:
-        pass
-      else:
-        # some change
-        z = """
---- /etc/bind/master/223.216.151.in-addr.arpa	2018-08-30 18:08:01.787143282 +0000
-+++ out/zones/223.216.151.in-addr.arpa	2018-08-30 18:08:44.023682338 +0000
-@@ -8,7 +8,7 @@
- $TTL    1h
- $ORIGIN 223.216.151.in-addr.arpa.
- @   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (
--            1469569893 ; serial
-+            1469569894 ; serial
-             3H ; refresh
-             15 ; retry
-             1w ; expire
+        device = ip.assigned_object.virtual_machine.name
 
-             """
-        if ret == 256:
-          q = out.split("\n")
-          # don't print if just the serial changes
-          if len(q) == 12 and q[6].endswith("serial") and q[7].endswith("serial"):
-            pass
-          else:
-            print out
+      full_hostname = slugify()
+
+
+if __name__ == "__main__":
+
+  default_domain = "emf.camp"
+  camper_subnet = ''
+
+  helper = NetboxHelper.getInstance()
+
+  parser = argparse.ArgumentParser(description='Generate zone files from NetBox data')
+  parser.add_argument('--deploy', action='store_true',
+                      help='deploy zone files after generating')
+  parser.add_argument('--diff', action='store_true',
+                      help='diff zone files against live versions after generating')
+
+  args = parser.parse_args()
+
+  if args.deploy and args.diff:
+    print "only one of --deploy and --diff can be specified"
+    raise SystemExit
+
+  if not os.path.exists('out'):
+    os.mkdir('out')
+  if not os.path.exists('out/zones'):
+    os.mkdir('out/zones')
+
+  codenames = load_codenames('./codenames.txt')
+
+  addressing = get_addressing(helper)
+
+
+  #for x in range(0, 2560000):
+  #  print pretty_host("gchq.org.uk", None)
+
+  #sshfps = get_sshfps()
+  zones = {}
+
+
+
+  for row in addressing:
+    if "Domain" in row:
+      fwd_zonename = row["Domain"];
+    else:
+      fwd_zonename = default_domain
+
+    # is it a host?
+    if "Hostname" in row and "dns" in row and (row["dns"] == "y" or row["dns"] == "fwd" or row["dns"] == "rev"):
+      hostname = row["Hostname"]
+      if "Subdomain" in row:
+        hostname += "." + row["Subdomain"]
+
+      if "IPv4" in row:
+        ipv4 = ipaddr.IPv4Address(row["IPv4"])
+        add_ipv4_host(hostname, fwd_zonename, ipv4, (row["dns"] == "fwd"), (row["dns"] == "rev"))
+
+      if "IPv6" in row:
+        ipv6 = ipaddr.IPv6Address(row["IPv6"])
+        add_ipv6_host(hostname, fwd_zonename, ipv6, (row["dns"] == "fwd"), (row["dns"] == "rev"))
+
+    # is it a subnet with auto dns?
+    elif "IPv4-Subnet" in row and "dns" in row and row["dns"] == "auto":
+      subnet = ipaddr.IPv4Network(row["IPv4-Subnet"])
+      # router entry
+      if "VLAN" in row:
+        vlan = row["VLAN"]
+        add_ipv4_host("vlan" + vlan + ".ESNORE", "emf.camp", subnet.network + 1, False, False)
+  #      if "IPv6" in row:
+        ipv6 = ipaddr.IPv6Network(row["IPv6"])
+        add_ipv6_host("vlan" + vlan + ".ESNORE", "emf.camp", ipv6.network + 1, False, False)
+
+      # host entries
+      for ipv4 in subnet.iterhosts():
+        if ipv4 == subnet.network + 1: # first host is the gateway
+          continue
+        hostname = pretty_host(fwd_zonename, ipv4)
+        if "Subdomain" in row:
+          hostname += "." + row["Subdomain"]
+        add_ipv4_host(hostname, fwd_zonename, ipv4, False, False)
+
+    # is it a cname or other fixed record?
+    elif "dns" in row and row["dns"] == "record":
+      hostname = row["Hostname"]
+      if "Subdomain" in row:
+        hostname += "." + row["Subdomain"]
+      add_record(fwd_zonename, hostname + "\t" + row["Description"])
+
+    # if it's a Network with dns='y', we need to 'touch' all the reverse dns to make sure
+    # every individual zone exists
+    elif "Network" in row and "dns" in row and row["dns"] == "y":
+      net = ipaddr.IPv4Network(row["Network"])
+      for subnet in net.iter_subnets(new_prefix = 24):
+        zonename = reverse_zone(subnet)
+        if zonename not in zones.keys():
+          zones[zonename] = []
+
+#print "ZONES:"
+#pprint.pprint(zones)
+
+# write out zone files
+
+
+
+
+
+
+  print "Generating zones"
+  success = 0
+  failed = 0
+  for zonename in zones.keys():
+    tempfile = "out/zones/%s" % (zonename)
+    zoneserial = get_serial(zonename)
+    print "* %s" % (zonename),
+    writezone(zonename, zoneserial, zones[zonename], tempfile)
+    if checkzone(zonename, tempfile) == True:
+      print " ok"
+      if args.deploy:
+        ret = makezonelive(zonename, tempfile)
+        if ret:
+          success += 1
         else:
-          print "error diffing %s" % (str(ret))
-          print out
-  else:
-    print " VALIDATION FAILED: %s" % (tempfile)
+          failed += 1
+      if args.diff:
+        cmd = "diff -u %s %s" % (live_zone_file(zonename), tempfile)
+        p = os.popen(cmd)
+        out = p.read()
+        ret = p.close()
+        # no diff
+        if ret == None:
+          pass
+        else:
+          # some change
+          z = """
+  --- /etc/bind/master/223.216.151.in-addr.arpa	2018-08-30 18:08:01.787143282 +0000
+  +++ out/zones/223.216.151.in-addr.arpa	2018-08-30 18:08:44.023682338 +0000
+  @@ -8,7 +8,7 @@
+  $TTL    1h
+  $ORIGIN 223.216.151.in-addr.arpa.
+  @   IN  SOA ns1.emfcamp.org. noc.emfcamp.org. (
+  -            1469569893 ; serial
+  +            1469569894 ; serial
+              3H ; refresh
+              15 ; retry
+              1w ; expire
 
-if args.deploy:
-  print "Signing..."
-  # tell zkt-signer that the zones have changed
-  os.system("zkt-signer -v -r")
+              """
+          if ret == 256:
+            q = out.split("\n")
+            # don't print if just the serial changes
+            if len(q) == 12 and q[6].endswith("serial") and q[7].endswith("serial"):
+              pass
+            else:
+              print out
+          else:
+            print "error diffing %s" % (str(ret))
+            print out
+    else:
+      print " VALIDATION FAILED: %s" % (tempfile)
 
-  print("zones deployed: %d successfully, %d failed" % (success, failed))
+  if args.deploy:
+    print "Signing..."
+    # tell zkt-signer that the zones have changed
+    os.system("zkt-signer -v -r")
+
+    print("zones deployed: %d successfully, %d failed" % (success, failed))
