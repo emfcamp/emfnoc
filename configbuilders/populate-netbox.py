@@ -78,8 +78,10 @@ class NetboxPopulator:
                     asset_tag = device['Asset-Tag'] if 'Asset-Tag' in device else None
                     serial = device['Serial'] if 'Serial' in device else ''
 
+                    camper_vlan_vid = self._get_camper_vlan(hostname)
+
                     nb_switch = self.helper.create_switch(hostname, device_type_id, device_role_id, device['Location'],
-                                                          asset_tag, serial)
+                                                          asset_tag, serial, camper_vlan_vid=camper_vlan_vid)
 
                     dns = '%s.%s' % (hostname, mgmt_domain)
                     mgmt_mac = device['MAC-Address'].lower() if 'MAC-Address' in device else None
@@ -131,28 +133,32 @@ class NetboxPopulator:
                                 )
                                 port_index -= 1
 
-                    # See if it needs a camper VLAN, look for a VLAN with camper='y' and this switch name in the Switch column
-                    camper_vlan_id = None
-                    for vlandef in self.vlans:
-                        if 'Camper' in vlandef and vlandef['Camper'] == 'y':
-                            vlandef_switches = vlandef['Switch'].split(',')
-                            if hostname in vlandef_switches:
-                                if camper_vlan_id is not None:
-                                    print('Warning: multiple matching Camper-VLANs for %s' % hostname,
-                                          file=sys.stderr)
-                                camper_vlan_id = int(vlandef['VLAN'])
+                    camper_vlan_vid = nb_switch.custom_fields['camper_vlan_vid']
 
-                    if camper_vlan_id is None:
+                    if camper_vlan_vid is None:
                         print('Warning: no Camper-VLAN found for %s' % hostname)
 
-                    if self.verbose: print('Camper-VLAN for %s is %d' % (hostname, camper_vlan_id))
+                    if self.verbose: print('Camper-VLAN for %s is %d' % (hostname, camper_vlan_vid))
 
-                    camper_vlan = self.helper.get_vlan(camper_vlan_id)
+                    camper_vlan = self.helper.get_vlan(camper_vlan_vid)
 
                     for k in range(port_start, port_index + 1):
                         self.helper.set_interface_access(
                             nb_switch, port_prefix + str(k), camper_vlan
                         )
+
+    def _get_camper_vlan(self, switch_hostname):
+        # See if it needs a camper VLAN, look for a VLAN with camper='y' and this switch name in the Switch column
+        camper_vlan_vid = None
+        for vlandef in self.vlans:
+            if 'Camper' in vlandef and vlandef['Camper'] == 'y':
+                vlandef_switches = vlandef['Switch'].split(',')
+                if switch_hostname in vlandef_switches:
+                    if camper_vlan_vid is not None:
+                        print('Warning: multiple matching Camper-VLANs for %s' % switch_hostname,
+                              file=sys.stderr)
+                    camper_vlan_vid = int(vlandef['VLAN'])
+        return camper_vlan_vid
 
     # This creates a direct cable for every logical link even if it's getting coupled.
     # TODO for a future year, we could model the physical fibre by adding couplers as "patch panels" - this would

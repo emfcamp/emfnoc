@@ -339,7 +339,7 @@ class NetboxHelper:
             raise ValueError('Tried to use device with hostname %s but does not exist fool' % hostname)
         return device
 
-    def create_switch(self, hostname, model_id, device_role_id, location_name, asset_tag, serial):
+    def create_switch(self, hostname, model_id, device_role_id, location_name, asset_tag, serial, camper_vlan_vid=None):
         device = NetboxHelper._get_device(self.netbox, hostname)
         location = self.get_location(location_name)
 
@@ -356,6 +356,7 @@ class NetboxHelper:
             device.location = location
             device.serial = serial
             device.asset_tag = asset_tag
+            device.custom_fields['camper_vlan_vid'] = camper_vlan_vid
             if device.updates():
                 if self.verbose:
                     print("Device %s has changed, saving" % hostname)
@@ -370,7 +371,8 @@ class NetboxHelper:
                 site=self.site_id,
                 location={'id': location.id},
                 serial=serial,
-                asset_tag=asset_tag
+                asset_tag=asset_tag,
+                custom_fields={'camper_vlan_vid': camper_vlan_vid}
             )
             NetboxHelper._get_device.cache_clear()
         return device
