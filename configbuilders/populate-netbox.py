@@ -13,7 +13,7 @@ from nocsheet import NocSheetHelper
 # TODO should warn about things that exist on this tenant that we didn't create (old stuff that probably needs removing)
 
 # no time to do this in a better way right now
-DEVICE_ROLE_DEFAULT = 3
+DEVICE_ROLE_ACCESS_SWITCH = 3
 DEVICE_ROLE_OVERRIDES = {'ESNORE': 2, 'LATVIA': 1}
 
 
@@ -75,12 +75,15 @@ class NetboxPopulator:
                     device_type_id = device_type.id
 
                     device_role_id = DEVICE_ROLE_OVERRIDES[
-                        hostname] if hostname in DEVICE_ROLE_OVERRIDES else DEVICE_ROLE_DEFAULT
+                        hostname] if hostname in DEVICE_ROLE_OVERRIDES else DEVICE_ROLE_ACCESS_SWITCH
 
                     asset_tag = device['Asset-Tag'] if 'Asset-Tag' in device else None
                     serial = device['Serial'] if 'Serial' in device else ''
 
                     camper_vlan_vid = self._get_camper_vlan(hostname)
+
+                    if device_role_id == DEVICE_ROLE_ACCESS_SWITCH and camper_vlan_vid is None:
+                        print('Warning: no Camper-VLAN found for %s' % hostname)
 
                     nb_switch = self.helper.create_switch(hostname, device_type_id, device_role_id, device['Location'],
                                                           asset_tag, serial, camper_vlan_vid=camper_vlan_vid)
