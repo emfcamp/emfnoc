@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import argparse
 import ipaddress
+import re
 import sys
+from textwrap import wrap
 
 import click
 
@@ -85,6 +87,10 @@ class NetboxPopulator:
 
                     dns = '%s.%s' % (hostname, mgmt_domain)
                     mgmt_mac = device['MAC-Address'].lower() if 'MAC-Address' in device else None
+                    if mgmt_mac:
+                        mgmt_mac = mgmt_mac.replace('.', '')
+                        if re.search('^[0-9a-f]{12}$', mgmt_mac):
+                            mgmt_mac = ':'.join(wrap(mgmt_mac, 2))
 
                     # For now hardcode a /24
                     # TODO just get the prefix that has already been created
