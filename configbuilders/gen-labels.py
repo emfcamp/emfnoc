@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+
 import argparse
 import copy
 import io
+import logging
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -331,6 +333,7 @@ def get_interface_shortnumber(interface_name):
 
 
 if __name__ == "__main__":
+    logging.basicConfig()
 
     helper = NetboxHelper.getInstance()
 
