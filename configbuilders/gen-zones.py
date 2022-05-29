@@ -4,6 +4,8 @@
 # Generate EMF zone files from Netbox
 #
 
+import logging
+
 # TODO some way of making codenames deterministic based on actual IP if we change prefixes during the event
 import argparse
 import ipaddress
@@ -290,6 +292,8 @@ class ZonesGenerator:
 
 
 if __name__ == "__main__":
+    logging.basicConfig()
+
     helper = NetboxHelper.getInstance()
 
     parser = argparse.ArgumentParser(description='Generate DNS zone files.')
