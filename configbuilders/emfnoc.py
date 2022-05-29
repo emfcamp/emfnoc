@@ -4,11 +4,10 @@ from configparser import ConfigParser
 
 
 class EmfNoc:
-
     _config: ConfigParser = None
 
     @staticmethod
-    def load_config():
+    def load_config() -> ConfigParser:
         if EmfNoc._config:
             return EmfNoc._config
 
