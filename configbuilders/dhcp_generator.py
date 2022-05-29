@@ -80,7 +80,7 @@ class Reservation:
     mac: str
     ip: ipaddress.IPv4Address  # pylint: disable=invalid-name
     section_name: str = ''
-    extra_config: List[str] = field(default_factory=list)
+    config_lines: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         if not self.section_name:
@@ -96,7 +96,7 @@ class DhcpGroup:
     template, i.e. str values must generally be valid dhcpd.conf(5) syntax.
     """
     reservations: List[Reservation]
-    extra_config: List[str] = field(default_factory=list)
+    config_lines: List[str] = field(default_factory=list)
 
 
 class DhcpGenerator:
@@ -217,7 +217,7 @@ class DhcpGenerator:
 
         manufacturer_dhcp_reservations = defaultdict(list)
 
-        def build_extra_config(full_config, overrides_only):
+        def build_config_lines(full_config, overrides_only):
             extra = []
 
             if vspace := overrides_only.get('vendor-space'):
@@ -270,18 +270,18 @@ class DhcpGenerator:
                     name=device.name,
                     mac=mac_with_offset.format(netaddr.mac_unix_expanded),
                     ip=str(ipaddress.IPv4Interface(ip_addr).ip),
-                    extra_config=build_extra_config(device_config, device_overrides),
+                    config_lines=build_config_lines(device_config, device_overrides),
                 )
                 manufacturer_dhcp_reservations[manuf_slug].append(res)
 
         groups = []
         for manuf_slug, reservations in manufacturer_dhcp_reservations.items():
             manuf_config = cf.for_manufacturer(manuf_slug)
-            extra = build_extra_config(manuf_config, manuf_config)
+            extra = build_config_lines(manuf_config, manuf_config)
             extra.append(f"option domain-name {cf.network_info('domain-name')}")
             manuf_group = DhcpGroup(
                 reservations=reservations,
-                extra_config=extra,
+                config_lines=extra,
             )
             groups.append(manuf_group)
 

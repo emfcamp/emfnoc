@@ -18,7 +18,7 @@ group {
     filename "{{ group.filename }}";
     {%- endif %}
 
-    {%- for line in group.extra_config %}
+    {%- for line in group.config_lines %}
     {{ line }};
     {%- endfor %}
 
@@ -27,7 +27,7 @@ group {
         hardware ethernet {{ res.mac }};
         fixed-address {{ res.ip }};
 
-        {%- for line in res.extra_config %}
+        {%- for line in res.config_lines %}
         {{ line }};
         {%- endfor %}
     }
