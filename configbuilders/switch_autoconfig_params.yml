@@ -59,7 +59,7 @@ switches:
       # TFTP server, config filename, and image filename information in the
       # DHCP offer.
       # Normally you should not need to override this outside of the 'defaults'
-      # section.
+      # section for a given manufacturer.
       tftp-server-methods: [option-66, option-150]
       tftp-config-methods: [filename]
 
@@ -69,7 +69,7 @@ switches:
       # Model-specific overrides to the defaults for this manufacturer.
       # Models are identified by NetBox slug.
     devices:
-      # Device-specific hacks, if necessary
+      # Device-specific hacks, if necessary.
       # Devices are identified by their full name in NetBox.
 
   cisco:
