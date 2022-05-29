@@ -1,0 +1,12 @@
+#!/bin/bash
+. ../venv/bin/activate
+./gen-zones.py || exit 1
+
+scp out/zones/* ns1.emfcamp.org:/etc/bind/master/ || exit 1
+for file in out/signed-zones/*; do
+    domain=`basename ${file}`
+    scp ${file} ns1.emfcamp.org:/etc/bind/signed-zones/${domain}/zone.db || exit 1
+done
+
+ssh ns1.emfcamp.org sudo zkt-signer -v || exit 1
+ssh ns1.emfcamp.org sudo rndc reload
