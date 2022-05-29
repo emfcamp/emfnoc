@@ -73,7 +73,6 @@ switches:
       # Devices are identified by their full name in NetBox.
 
   cisco:
-    meta:
     defaults:
       mac-offset: 0
       filename: "ios-stage1.cfg"

@@ -22,17 +22,10 @@ group {
     {{ line }};
     {%- endfor %}
 
-    {%- for key, value in group.dhcp_options.items() %}
-    option {{ key }} {{ value }};
-    {%- endfor %}
-
     {%- for res in group.reservations %}
     host {{ res.name }} {
         hardware ethernet {{ res.mac }};
         fixed-address {{ res.ip }};
-        {%- for key, value in res.dhcp_options.items() %}
-        option {{ key }} {{ value }};
-        {%- endfor %}
 
         {%- for line in res.extra_config %}
         {{ line }};

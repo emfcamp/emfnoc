@@ -69,15 +69,6 @@ def get_scope_ipv6(prefix):
 
 
 @dataclass
-class TftpServer:
-    """
-    Information about a TFTP server.
-    """
-    hostname: str
-    ip: ipaddress.IPv4Address  # pylint: disable=invalid-name
-
-
-@dataclass
 class Reservation:
     """
     Template data for a single DHCP reservation.
@@ -89,7 +80,6 @@ class Reservation:
     mac: str
     ip: ipaddress.IPv4Address  # pylint: disable=invalid-name
     section_name: str = ''
-    dhcp_options: Dict[str, str] = field(default_factory=dict)
     extra_config: List[str] = field(default_factory=list)
 
     def __post_init__(self):
@@ -106,7 +96,6 @@ class DhcpGroup:
     template, i.e. str values must generally be valid dhcpd.conf(5) syntax.
     """
     reservations: List[Reservation]
-    dhcp_options: Dict[str, str] = field(default_factory=dict)
     extra_config: List[str] = field(default_factory=list)
 
 
