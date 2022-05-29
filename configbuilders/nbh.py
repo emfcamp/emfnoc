@@ -180,21 +180,21 @@ class NetboxHelper:
         interfaces = self.get_interfaces_for_device(device)
         for interface in interfaces:
             if interface == exclude_interface:
-                print("Excluding %s" % exclude_interface.name)
+                self.logger.debug("Excluding %s", exclude_interface.name)
                 continue
             if interface.mode == 'access' and interface.untagged_vlan:
                 vlan_ids.add(interface.untagged_vlan.id)
-                print("Access %d" % interface.untagged_vlan.id)
+                self.logger.debug("Access %d", interface.untagged_vlan.id)
             if interface.mode == 'tagged':
                 if interface.untagged_vlan:
                     vlan_ids.add(interface.untagged_vlan.id)
-                    print("Trunk untagged %d" % interface.untagged_vlan.id)
+                    self.logger.debug("Trunk untagged %d", interface.untagged_vlan.id)
                 if interface.tagged_vlans:
                     for tagged_vlan in interface.tagged_vlans:
                         vlan_ids.add(tagged_vlan.id)
-                        print("Trunk tagged %d" % tagged_vlan.id)
+                        self.logger.debug("Trunk tagged %d", tagged_vlan.id)
 
-        print('Device %s requires VLANs %s' % (device.name, str(vlan_ids)))
+        self.logger.info('Device %s requires VLANs %s', device.name, vlan_ids)
         return list(vlan_ids)
 
     def create_inband_mgmt(self, device):
@@ -307,6 +307,7 @@ class NetboxHelper:
 
         return vlan
 
+
     def create_prefix(self, prefix_str: str, description: str, vlan, dhcp: bool, dhcp_reserved: int):
         prefix = self.netbox.ipam.prefixes.get(prefix=prefix_str)
         if prefix:
@@ -359,7 +360,7 @@ class NetboxHelper:
             device.custom_fields['camper_vlan_vid'] = camper_vlan_vid
             if device.updates():
                 if self.verbose:
-                    print("Device %s has changed, saving" % hostname)
+                    self.logger.info("Device %s has changed, saving", hostname)
                 device.save()  # TODO should we be checking return value?
                 NetboxHelper._get_device.cache_clear()
         else:
@@ -396,7 +397,7 @@ class NetboxHelper:
             location.site = self.site_id
             if location.updates():
                 if self.verbose:
-                    print("Location %s has changed, saving" % name)
+                    self.logger.info("Location %s has changed, saving it", name)
                 location.save()  # TODO should we be checking return value?
                 NetboxHelper._get_location.cache_clear()
         else:

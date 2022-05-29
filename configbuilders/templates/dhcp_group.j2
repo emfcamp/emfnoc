@@ -1,0 +1,36 @@
+# Better than Cisco docs: https://vincent.bernat.ch/en/blog/2020-dhcp-cisco-ios
+
+# Better than JunOS docs: https://vincent.bernat.ch/en/blog/2020-dhcp-ztp-juniper
+option space juniper;
+option juniper.image-file-name code 0 = text;
+option juniper.config-file-name code 1 = text;
+option juniper.image-file-type code 2 = text; 
+option juniper.transfer-mode code 3 = text;
+option juniper.alt-image-file-name code 4 = text;
+option juniper.http-port code 5 = text;
+
+{% for group in groups -%}
+group {
+    {%- if group.next_server %}
+    next-server {{ group.next_server }};
+    {%- endif %}
+    {%- if group.filename %}
+    filename "{{ group.filename }}";
+    {%- endif %}
+
+    {%- for line in group.config_lines %}
+    {{ line }};
+    {%- endfor %}
+
+    {%- for res in group.reservations %}
+    host {{ res.name }} {
+        hardware ethernet {{ res.mac }};
+        fixed-address {{ res.ip }};
+
+        {%- for line in res.config_lines %}
+        {{ line }};
+        {%- endfor %}
+    }
+    {%- endfor %}
+}
+{% endfor %}

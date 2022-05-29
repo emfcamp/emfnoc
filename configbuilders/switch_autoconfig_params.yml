@@ -1,0 +1,92 @@
+scope:
+  # Role slugs to filter for.
+  # We will only generate dhcpd autoconfig support for devices with one of
+  # these roles.
+  roles:
+    - access-switch
+
+  # VLAN names to filter for.
+  # We will only generate dhcpd autoconfig support for devices with primary
+  # IPv4 address under a prefix that is assigned to one of these VLANs.
+  vlans:
+    - Global-SwitchMgmt
+
+
+# Contextual network information, which will be supplied to DHCP clients.
+network:
+  domain-name: emf.camp
+
+  tftp-servers: &services-vms
+    - hostname: services1.emf.camp
+      address: 78.158.87.11
+    - hostname: services2.emf.camp
+      address: 78.158.87.12
+
+  # TODO implement output in dhcpd config
+  ntp-servers: *services-vms
+
+  # TODO implement output in dhcpd config
+  syslog-servers:
+    # none, yet
+
+
+# Map of manufacturers to settings.
+# Manufacturers are identified by NetBox slug.
+switches:
+
+  example:
+    # Defaults for this manufacturer.  Keys/values used here will be used
+    # for a given device and model, unless if overrides are specified under
+    # 'models' or 'devices' as appropriate.
+    defaults:
+      # Offset, from the 'DHCP MAC address' recorded in NetBox for the
+      # reserved IP address, that the switch will actually use for DHCP.
+      # This is generally manufacturer-dependent.
+      mac-offset:
+
+      # TFTP filename for the 'initial-stage' configuration.
+      # It's intended that this configuration is generic and minimal, just
+      # enough for the switch to be 'final-stage' configurable via Ansible.
+      # Again, this is probably going to be software- and hence manufacturer-dependent.
+      # (optional)
+      filename: example-os
+
+      # Info for the vendor-specific options (DHCP Option 43)
+      # (optional)
+      vendor:
+
+      # Manufacturer-wide methods (see switch_autoconfig_helper.py) of placing
+      # TFTP server, config filename, and image filename information in the
+      # DHCP offer.
+      # Normally you should not need to override this outside of the 'defaults'
+      # section for a given manufacturer.
+      tftp-server-methods: [option-66, option-150]
+      tftp-config-methods: [filename]
+
+      vendor-space: example
+
+    models:
+      # Model-specific overrides to the defaults for this manufacturer.
+      # Models are identified by NetBox slug.
+    devices:
+      # Device-specific hacks, if necessary.
+      # Devices are identified by their full name in NetBox.
+
+  cisco:
+    defaults:
+      mac-offset: 0
+      filename: "ios-stage1.cfg"
+      tftp-server-methods: [option-150]
+      tftp-config-methods: [option-67]
+    models:
+    devices:
+
+  juniper:
+    defaults:
+      mac-offset: 1
+      tftp-server-methods: [option-150]
+      tftp-config-methods: [PASSTHRU.juniper.config-file-name]
+      vendor-space: juniper
+      filename: "junos-stage1.cfg"
+    models:
+    devices:
