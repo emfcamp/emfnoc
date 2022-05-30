@@ -34,7 +34,7 @@ def get_scope_ipv4(prefix):
     """
     network = ipaddress.IPv4Network(prefix.prefix)
 
-    reserved = prefix.dhcp_reserved if 'dhcp_reserved' in prefix else 10
+    reserved = prefix.custom_fields.get('dhcp_reserved', 10)
     pool_start = network.network_address + 1 + reserved
     pool_end = network.broadcast_address - 1
 
