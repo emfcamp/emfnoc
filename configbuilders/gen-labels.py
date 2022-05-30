@@ -16,6 +16,7 @@ from PIL import Image
 from brother_ql import BrotherQLRaster, create_label
 from brother_ql.backends import backend_factory
 
+from emfnoc import EmfNoc
 from nbh import NetboxHelper
 
 DOMAIN_SUFFIX = '.emf.camp'
@@ -272,9 +273,9 @@ def prepare_label(img):
     return qlr
 
 
-def print_label(qlr):
-    be = backend_factory('network')
-    printer_url = 'tcp://192.168.0.17:9100'
+def print_label(label_config, qlr):
+    be = backend_factory(label_config['printer_backend'])
+    printer_url = label_config['printer_url']
 
     BrotherQLBackend = be['backend_class']
     printer = BrotherQLBackend(printer_url)
@@ -336,6 +337,8 @@ if __name__ == "__main__":
     logging.basicConfig()
 
     helper = NetboxHelper.getInstance()
+    config = EmfNoc.load_config()
+    label_config = config['labels']
 
     parser = argparse.ArgumentParser(description='Generate and optionally print device labels.')
     parser.add_argument('devices', metavar='DEVICE', type=str, nargs='*',
@@ -381,4 +384,4 @@ if __name__ == "__main__":
 
                 png = generate(device)
                 if args.print:
-                    print_label(prepare_label(png))
+                    print_label(label_config, prepare_label(png))

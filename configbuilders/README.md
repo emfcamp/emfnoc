@@ -98,6 +98,16 @@ dns_ipv6=2a05:e201:0:57::11,2a05:e201:0:57::12
 sntp_ipv6=2a05:e201:0:57::11,2a05:e201:0:57::12
 ```
 
+### labels
+
+Config section:
+
+```ini
+[labels]
+printer_backend=network 
+printer_url=tcp://192.168.0.17:9100
+```
+
 ### Scripts
 
 * `gen-dhcp.py` - Generates the DHCP server scopes
