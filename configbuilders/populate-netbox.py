@@ -4,7 +4,7 @@ import ipaddress
 import re
 import sys
 from textwrap import wrap
-
+import pprint
 import click
 
 from nbh import NetboxHelper
@@ -296,10 +296,28 @@ class NetboxPopulator:
                     if i1.untagged_vlan and i1.untagged_vlan.id in a_tagged:
                         a_tagged.remove(i1.untagged_vlan.id)
                     i1.tagged_vlans = a_tagged
+                    if i1.lag:
+                        lag_id = i1.lag.id
+                        lag_int = self.helper.netbox.dcim.interfaces.get(lag_id)
+                        if lag_int.untagged_vlan and lag_int.untagged_vlan.id in a_tagged:
+                            a_tagged.remove(lag_int.untagged_vlan.id)
+                        lag_int.tagged_vlans = a_tagged
+                        lag_int.save()
+                        i1.tagged_vlans = []
+                        i1.mode = None
                     i1.save()
                     if i2.untagged_vlan and i2.untagged_vlan.id in b_tagged:
                         b_tagged.remove(i2.untagged_vlan.id)
                     i2.tagged_vlans = b_tagged
+                    if i2.lag:
+                        lag_id = i2.lag.id
+                        lag_int = self.helper.netbox.dcim.interfaces.get(lag_id)
+                        if lag_int.untagged_vlan and lag_int.untagged_vlan.id in b_tagged:
+                            b_tagged.remove(lag_int.untagged_vlan.id)
+                        lag_int.tagged_vlans = b_tagged
+                        lag_int.save()
+                        i2.tagged_vlans = []
+                        i2.mode = None
                     i2.save()
                     rvlan = rvlan.union(a_tagged, b_tagged)
             return
