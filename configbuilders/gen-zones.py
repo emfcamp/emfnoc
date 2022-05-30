@@ -46,9 +46,6 @@ class ZonesGenerator:
 
     NS_LIST = ['ns1.emfcamp.org.', 'auth1.ns.sargasso.net.', 'auth2.ns.sargasso.net.', 'auth3.ns.sargasso.net.']
 
-    NS_LIST_HACK_EMF_CAMP = ['ns1.emfcamp.org.', 'A.AUTHNS.BITFOLK.COM.', 'B.AUTHNS.BITFOLK.COM.',
-                             'C.AUTHNS.BITFOLK.COM.']
-
     # All zones including reverse
     zones: Dict[str, dns.zone.Zone] = {}
     # Reverse only
@@ -98,8 +95,7 @@ class ZonesGenerator:
 
         ns_rdataset = zone.find_rdataset('@', dns.rdatatype.NS, create=True)
 
-        for ns in self.NS_LIST_HACK_EMF_CAMP if zone.origin.to_text(
-                omit_final_dot=True) == 'emf.camp' else self.NS_LIST:
+        for ns in self.NS_LIST:
             ns_rdataset.add(dns.rdtypes.ANY.NS.NS(dns.rdataclass.IN, dns.rdatatype.NS, ns), self.TTL)
 
     def generate_zones(self):
