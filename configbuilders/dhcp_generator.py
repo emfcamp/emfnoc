@@ -169,8 +169,6 @@ class DhcpGenerator:
 
     def _build_generic_lease_group(self, existing_ips_by_id):
         all_reserved_ips = list(
-            # Hacky filter - see if ':' in the custom field to determine if it's populated.
-            # We have field value validation in Netbox that means this is actually fine.
             self.helper.netbox.ipam.ip_addresses.all()
         )
         all_reserved_ips = filter(lambda ip: ip.custom_fields['dhcp_mac'] is not None,all_reserved_ips)
@@ -182,7 +180,7 @@ class DhcpGenerator:
         for ip in generic_reserved_ips:
             if not ip.dns_name:
                 continue
-            if ":" in ip.address:
+            if ip.family == 6:
                 res = Reservation(
                     name=ip.dns_name,
                     mac=ip.custom_fields['dhcp_mac'],
