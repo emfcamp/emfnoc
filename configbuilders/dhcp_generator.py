@@ -167,6 +167,32 @@ class DhcpGenerator:
                     conf = template.render(params)
                     file.write(conf)
 
+    def _build_generic_lease_group(self, existing_ips_by_id):
+        all_reserved_ips = list(
+            # Hacky filter - see if ':' in the custom field to determine if it's populated.
+            # We have field value validation in Netbox that means this is actually fine.
+            self.helper.netbox.ipam.ip_addresses.filter(cf_dhcp_mac__ic=':')
+        )
+
+        generic_reserved_ips = filter(
+            lambda ip: ip.id not in existing_ips_by_id.keys(),
+            all_reserved_ips
+        )
+
+        reservations = []
+        for ip in generic_reserved_ips:
+            res = Reservation(
+                name=ip.dns_name,
+                mac=ip.custom_fields['dhcp_mac'],
+                ip=str(ipaddress.IPv4Interface(ip.address).ip),
+            )
+            reservations.append(res)
+
+        group = DhcpGroup(
+            reservations=reservations,
+        )
+        return group
+
     def render_switch_autoconfig(self):
         """
         Render and write out files to configure switch autoconfig/ZTP support.
@@ -284,6 +310,8 @@ class DhcpGenerator:
                 config_lines=extra,
             )
             groups.append(manuf_group)
+
+        groups.append(self._build_generic_lease_group(full_ip_info))
 
         template = self.jinja.get_template('dhcp_group.j2')
 
