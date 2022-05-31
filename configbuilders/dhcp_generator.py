@@ -13,7 +13,7 @@ from typing import Dict, List, Optional
 from switch_autoconfig_helper import SwitchAutoconfigHelper, render_tftp_file, render_tftp_server
 
 import jinja2
-
+import pprint
 
 def write_header(file):
     """
@@ -171,21 +171,29 @@ class DhcpGenerator:
         all_reserved_ips = list(
             # Hacky filter - see if ':' in the custom field to determine if it's populated.
             # We have field value validation in Netbox that means this is actually fine.
-            self.helper.netbox.ipam.ip_addresses.filter(cf_dhcp_mac__ic=':')
+            self.helper.netbox.ipam.ip_addresses.all()
         )
-
+        all_reserved_ips = filter(lambda ip: ip.custom_fields['dhcp_mac'] is not None,all_reserved_ips)
         generic_reserved_ips = filter(
             lambda ip: ip.id not in existing_ips_by_id.keys(),
             all_reserved_ips
         )
-
         reservations = []
         for ip in generic_reserved_ips:
-            res = Reservation(
-                name=ip.dns_name,
-                mac=ip.custom_fields['dhcp_mac'],
-                ip=str(ipaddress.IPv4Interface(ip.address).ip),
-            )
+            if not ip.dns_name:
+                continue
+            if ":" in ip.address:
+                res = Reservation(
+                    name=ip.dns_name,
+                    mac=ip.custom_fields['dhcp_mac'],
+                    ip=str(ipaddress.IPv6Interface(ip.address).ip),
+                )
+            else:
+                res = Reservation(
+                    name=ip.dns_name,
+                    mac=ip.custom_fields['dhcp_mac'],
+                    ip=str(ipaddress.IPv4Interface(ip.address).ip),
+                )
             reservations.append(res)
 
         group = DhcpGroup(
