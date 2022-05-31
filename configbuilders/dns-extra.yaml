@@ -27,3 +27,6 @@ emf.camp:
 
   # Phone team
   - jambonz IN A 45.15.105.22
+
+  # Web team
+  - checkin IN CNAME www.emfcamp.org.
