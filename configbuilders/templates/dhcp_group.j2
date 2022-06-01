@@ -11,16 +11,6 @@ option juniper.http-port code 5 = text;
 
 {% for group in groups -%}
 group {
-    {%- if group.next_server %}
-    next-server {{ group.next_server }};
-    {%- endif %}
-    {%- if group.filename %}
-    filename "{{ group.filename }}";
-    {%- endif %}
-
-    {%- for line in group.config_lines %}
-    {{ line }};
-    {%- endfor %}
 
     {%- for res in group.reservations %}
     host {{ res.name }} {
