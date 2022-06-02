@@ -30,3 +30,7 @@ emf.camp:
 
   # Web team
   - checkin IN CNAME www.emfcamp.org.
+
+gchq.org.uk:
+  # WiFi controller discovery for APs on Camper VLANs
+  - aruba-master CNAME aruba-master.emf.camp.
