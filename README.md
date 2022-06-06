@@ -32,3 +32,6 @@ EMF 2018:
 - [Pre-event Blog Post](https://blog.emfcamp.org/2018/08/21/the-internet-emf-delivers/)
 - [An interview with Computerphile](https://www.youtube.com/watch?v=394BLf2wikk)
 - [NetLdn Presentation Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2018/documents/EMF_Talk_NetLdn_December_2019.pdf) - December 2019
+
+EMF 2022:
+- [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2022/documents/EMF_2022_Infrastructure_Review.pdf)
