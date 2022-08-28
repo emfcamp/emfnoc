@@ -35,3 +35,4 @@ EMF 2018:
 
 EMF 2022:
 - [Slides](https://github.com/emfcamp/emfnoc/blob/master/archives/2022/documents/EMF_2022_Infrastructure_Review.pdf)
+- [Video](https://www.youtube.com/watch?v=8grwYpDD4D0)
