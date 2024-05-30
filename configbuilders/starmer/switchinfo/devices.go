@@ -10,14 +10,15 @@ import (
 )
 
 type Switch struct {
-	Name string
-	MgmtIP netip.Addr
-	Loc Location
-	Status netbox.DeviceStatus
+	Name       string
+	MgmtIP     netip.Addr
+	Loc        Location
+	Status     netbox.DeviceStatus
+	DeviceType netbox.NestedDeviceType
 }
 
-func GetSwitchesWithRoles(ctx context.Context, dcim *netbox.DcimAPIService, roles []string) ([]Switch, error) {
-	req := dcim.DcimDevicesList(ctx).Role(roles).Limit(500)
+func GetSwitchesWithRoles(ctx context.Context, dcim *netbox.DcimAPIService, roles []string, deviceTypes []string) ([]Switch, error) {
+	req := dcim.DcimDevicesList(ctx).Role(roles).DeviceType(deviceTypes).Limit(500)
 
 	results := make([]Switch, 0)
 
@@ -35,14 +36,15 @@ func GetSwitchesWithRoles(ctx context.Context, dcim *netbox.DcimAPIService, role
 			nloc.Name,
 			orb.Point{52, 0},
 		}
-	
+
 		results = append(results, Switch{
-			Name: dev.GetName(),
-			MgmtIP: netip.MustParsePrefix(dev.GetPrimaryIp4().Address).Addr(),
-			Loc: loc,
-			Status: dev.GetStatus(),
+			Name:       dev.GetName(),
+			MgmtIP:     netip.MustParsePrefix(dev.GetPrimaryIp4().Address).Addr(),
+			Loc:        loc,
+			Status:     dev.GetStatus(),
+			DeviceType: dev.DeviceType,
 		})
-		
+
 	}
 
 	return results, nil

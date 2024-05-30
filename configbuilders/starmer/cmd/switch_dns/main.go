@@ -14,7 +14,7 @@ const zone string = "net.emf.camp."
 
 func main() {
 	cl := cmdlib.GetNetboxClient()
-	switches, err := switchinfo.GetSwitchesWithRoles(context.TODO(), cl.DcimAPI, []string{"access-switch", "distribution-switch"})
+	switches, err := switchinfo.GetSwitchesWithRoles(context.TODO(), cl.DcimAPI, []string{"access-switch", "distribution-switch"}, []string{})
 
 	if err != nil {
 		log.Fatalf("Error getting access switches: %s", err)

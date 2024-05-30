@@ -16,9 +16,10 @@ func SwitchPromTarget(s *Switch) *targetgroup.Group {
 	})
 
 	group.Labels = prom.LabelSet{
-		"device_name": prom.LabelValue(s.Name),
+		"device_name":   prom.LabelValue(s.Name),
 		"location_name": prom.LabelValue(s.Loc.Name),
-		"status": prom.LabelValue(*s.Status.Value),
+		"status":        prom.LabelValue(*s.Status.Value),
+		"device_type":   prom.LabelValue(s.DeviceType.Slug),
 	}
 
 	return group
